@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.min.store.impl.LoginMapper">
+
+	<select id="loginMem" resultType="Member">
+		SELECT MEM_ID, PASSWORD, NAME, EMAIL, PHONE 
+		FROM MEMBER 
+		WHERE MEM_ID = #{mem_id}
+		AND PASSWORD= #{password}
+	</select>
+	
+	<select id="loginSeller" resultType="Seller">
+		SELECT SELLER_ID, PASSWORD, NAME, PHONE, B_LICENSE_NO 
+		FROM SELLER 
+		WHERE SELLER_ID = #{seller_id} 
+		AND PASSWORD = #{password}
+	</select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- 오라클 컬럼이 first_name 를 VO firstName 처럼 카멜케이스로 변환 언더바를 대문자로 false 하면 적용ㄴㄴ-->
+		<setting name="mapUnderscoreToCamelCase" value="false" />
+	</settings>
+	
+	
+	<typeAliases>
+		<package name="com.min.store.vo"/>
+	</typeAliases>
+	
+	
+</configuration>  
