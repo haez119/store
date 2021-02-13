@@ -11,4 +11,5 @@ public class Seller {
 	private String phone;
 	private String b_license_no;
 	
+	private String nic_name; // 0213 추가
 }

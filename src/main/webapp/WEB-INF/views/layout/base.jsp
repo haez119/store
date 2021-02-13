@@ -42,6 +42,7 @@
 		padding: 100px 0px 150px 0px;
 	}
 </style>
+
 </head>
 <body>
 	<!-- 모바일 버전일 때 헤더 -->
@@ -127,22 +128,19 @@
             <div class="row">
                 <div class="col-lg-12">
                     <nav class="header__menu mobile-menu">
-                        <ul>
+                        <ul class="menu">
                             <li class="active"><a href="${pageContext.request.contextPath}/home">Home</a></li>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li id="shop"><a href="${pageContext.request.contextPath}/shopMain">Shop</a></li>
+                            <li id="cart"><a href="#">Cart</a></li>
+                            <li id="order"><a href="#">Order</a></li>
+                            <li id="myPage"><a href="#">My Page</a>
                                 <ul class="dropdown">
-                                    <li><a href="#">Shop Details</a></li>
-                                    <li><a href="#">Shoping Cart</a></li>
-                                    <li><a href="#">Check Out</a></li>
-                                    <li><a href="#">Wisslist</a></li>
-                                    <li><a href="#">Class</a></li>
-                                    <li><a href="#">Blog Details</a></li>
+                                    <li><a href="#">정보수정</a></li>
+                                    <li><a href="#">찜목록</a></li>
+                                    <li><a href="#">내가 쓴 리뷰</a></li>
+                                    <li><a href="#">문의 내역</a></li>
                                 </ul>
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contact</a></li>
                         </ul>
                     </nav>
                 </div>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.min.store.impl.ShopMapper">
+	
+	<!--전체조회 -->
+	<select id="itemAll" resultType="Item">
+		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
+		FROM ITEM
+	</select>
+	
+	<!--필터링 -->
+	<select id="itemFiltering" resultType="Item" parameterType="string">
+		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D
+		FROM ITEM
+		WHERE TYPE = #{type}
+	</select>
+	
+	<!--단건 조회 -->
+	<select id="itemDetail" resultType="Item" parameterType="string">
+		SELECT S.NIC_NAME, I.ITEM_NO, I.SELLER_ID, I.TYPE, TO_CHAR(I.ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, I.TITLE, I.CONTENT, I.PRICE, I.STOCK, I.PIC, I.PIC_D, I.CONTENT_D
+		FROM SELLER S , ITEM I
+		WHERE S.SELLER_ID = I.SELLER_ID
+		AND ITEM_NO = #{no}
+	</select>
+	
+	<select id="itemSeller" resultType="Item" parameterType="string">
+		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
+		FROM ITEM
+		WHERE SELLER_ID = #{seller_id}
+	</select>
+
+</mapper>
