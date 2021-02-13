@@ -17,4 +17,43 @@
 		WHERE SELLER_ID = #{seller_id} 
 		AND PASSWORD = #{password}
 	</select>
+	
+	<select id="memIdCheck" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM MEMBER WHERE MEM_ID = #{id}
+	</select>
+	
+	<select id="memMailCheck" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM MEMBER WHERE EMAIL = #{mail}
+	</select>
+	
+	<insert id="memInsert">
+		INSERT INTO MEMBER(MEM_ID, PASSWORD, NAME, EMAIL, PHONE
+			<if test="addr_no != null and addr_no != '' ">
+				, ADDR_NO
+			</if>
+			<if test="addr != null and addr != '' ">
+				, ADDR
+			</if>
+			<if test="addr_d != null and addr_d != '' ">
+				, ADDR_D
+			</if>
+		) 
+		
+		VALUES( #{mem_id},
+				#{password},
+				#{name},
+				#{email},
+				#{phone}
+				
+			<if test="addr_no != null and addr_no != '' ">
+				, #{addr_no}
+			</if>
+			<if test="addr != null and addr != '' ">
+				, #{addr}
+			</if>
+			<if test="addr_d != null and addr_d != '' ">
+				, #{addr_d}
+			</if>	
+			)
+	</insert>
 </mapper>

@@ -9,4 +9,8 @@ public interface LoginMapper {
 	public Member loginMem(Member member);
 	public Seller loginSeller(Seller seller);
 	
+	public int memIdCheck(String id);
+	public int memMailCheck(String mail);
+	
+	public void memInsert(Member member);
 }

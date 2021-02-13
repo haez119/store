@@ -8,7 +8,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.min.store.impl.LoginMapper;
@@ -20,24 +23,24 @@ public class LoginController {
 	
 	@Autowired LoginMapper dao;
 	
-	@RequestMapping(value="/loginForm")
+	@RequestMapping(value="/loginForm") //로그인 화면
 	public ModelAndView loginForm(HttpServletResponse response) throws IOException{
 		return new ModelAndView("login/login");
 	}
 	
-	@RequestMapping(value="/registerForm")
+	@RequestMapping("/registerForm") //가입화면
 	public ModelAndView registerForm(HttpServletResponse response) throws IOException{
 		return new ModelAndView("login/register");
 	}
 	
-	@RequestMapping(value="/logout")
+	@RequestMapping("/logout") //로그아웃 처리
 	public ModelAndView logout(HttpSession session) throws IOException{
 		session.invalidate();
 		return new ModelAndView("redirect:loginForm");
 	}
 	
 	
-	@RequestMapping(value="/login")
+	@RequestMapping("/login") //로그인 처리
 	public ModelAndView login(HttpServletResponse response, Member member, Seller seller , ModelAndView mav , HttpSession session ) throws IOException{
 		
 		// 일반회원 로그인
@@ -69,5 +72,35 @@ public class LoginController {
 		
 		return mav;
 	}
+	
+	
+	@RequestMapping("/memId/{id}") //개인 아이디 중복확인
+	@ResponseBody
+	public boolean memId(@PathVariable String id) throws IOException{
+		
+		if(dao.memIdCheck(id) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@RequestMapping("/memEmail/{mail}") //개인 메일 중복확인
+	@ResponseBody
+	public boolean memEmail(@PathVariable String mail) throws IOException{
+		
+		if(dao.memMailCheck(mail) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@PostMapping("/registerMem") //개인 회원가입
+	@ResponseBody
+	public void registerMem(Member member) throws IOException{
+		dao.memInsert(member);
+	}
+
 	
 }

@@ -37,7 +37,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/store/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/store/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/store/css/style.css" type="text/css">
-
+<style>
+	.myContent{
+		padding: 100px 0px 150px 0px;
+	}
+</style>
 </head>
 <body>
 	<!-- 모바일 버전일 때 헤더 -->
@@ -61,7 +65,7 @@
         <div class="offcanvas__option">
             <ul>
             	<c:if test="${sessionScope.member.mem_id eq null }" >
-					<li><a href="#">Sign in</a> <span class="arrow_carrot-down"></span>
+					<li><a href="${pageContext.request.contextPath}/loginForm">Sign in</a> <span class="arrow_carrot-down"></span>
 	                	<ul>
 	                        <li style="width: 100px;"><a href="${pageContext.request.contextPath}/loginForm" style="color: white;">Sign in</a></li>
 	                        <li style="width: 100px;"><a href="${pageContext.request.contextPath}/registerForm" style="color: white;">Sign up</a></li>
@@ -88,7 +92,7 @@
                             <div class="header__top__left">
                                 <ul>
                                 	<c:if test="${sessionScope.member.mem_id eq null }" >
-	 									<li><a href="#">Sign in</a> <span class="arrow_carrot-down"></span>
+	 									<li><a href="${pageContext.request.contextPath}/loginForm">Sign in</a> <span class="arrow_carrot-down"></span>
 	                                    	<ul>
 	                                            <li style="width: 100px;"><a href="${pageContext.request.contextPath}/loginForm" style="color: white;">Sign in</a></li>
 	                                            <li style="width: 100px;"><a href="${pageContext.request.contextPath}/registerForm" style="color: white;">Sign up</a></li>
@@ -150,7 +154,7 @@
 	 <tiles:insertAttribute name="body"/>
 	 
 	  <!-- Footer Section Begin -->
-    <footer class="footer set-bg" data-setbg="img/footer-bg.jpg">
+    <footer class="footer set-bg" data-setbg="${pageContext.request.contextPath}/store/img/footer-bg.jpg">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-6 col-sm-6">
