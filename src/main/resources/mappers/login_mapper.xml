@@ -56,4 +56,25 @@
 			</if>	
 			)
 	</insert>
+	
+	<select id="sellerIdCheck" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM SELLER WHERE SELLER_ID = #{id}
+	</select>
+	
+	<select id="sellerNoCheck" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM SELLER WHERE B_LICENSE_NO = #{no}
+	</select>
+	
+	<insert id="sellerInsert" parameterType="Seller" >
+		INSERT INTO SELLER(SELLER_ID, PASSWORD, NAME, PHONE, B_LICENSE_NO) 
+		VALUES(
+			#{seller_id},
+			#{password},
+			#{name},
+			#{phone},
+			#{b_license_no}
+		)
+	</insert>
+	
+	
 </mapper>

@@ -7,6 +7,11 @@
 var mem_id_check;
 var mempwChk;
 var mem_mail_chk;
+var seller_id_check;
+var sellerpwChk;
+var b_license_no_chk;
+var pattern_phone = /^\d{2,3}\d{3,4}\d{4}$/; //전화번호 정규식
+
 
 // 사업자/개인 가입화면 처리
 function selected(user) {
@@ -106,20 +111,18 @@ $(function() {
 			alert("메일 형식이 올바르지 않습니다.");
 			$("#memEmail").focus();
 		}
-		
-		
 	});
 	
-
-	
-	
-	// 우편번호 검색
+	// 우편번호 검색 
 	$("#btnAddrNo").on('click', function() {
 		openDaumZipAddress();
 	});
 	
 	//개인 회원가입
 	$("#btnMemUp").on('click', function() {
+
+		var phoneCk = pattern_phone.test($("#memPhone").val());
+		console.log(phoneCk);
 		
 		if( $("#mem_id").val() == null || $("#mem_id").val() == '') {
 			alert("아이디를 입력하세요.");
@@ -135,6 +138,9 @@ $(function() {
 			$("#memEmail").focus();
 		} else if( $("#memPhone").val() == null || $("#memPhone").val() == '' ) {
 			alert("전화번호를 입력하세요.");
+			$("#memPhone").focus();
+		} else if ( !phoneCk ) {
+			alert("전화번호의 형식을 확인하세요.");
 			$("#memPhone").focus();
 		} else if(mem_id_check) {
 			if(mempwChk) {
@@ -160,21 +166,116 @@ $(function() {
 			alert("아이디를 확인하세요.");
 			$("#mem_id").focus();
 		}
-
-		 
+	});
+	
+	
+	//판매자 아이디 중복확인
+	$("#btnSellId").on('click', function() {
+		var seller_id = $("#seller_id").val();
+		
+		 $.ajax({
+			  url: '${pageContext.request.contextPath}/sellerId/' + seller_id ,
+			  success: function(data) {
+				  seller_id_check = data;
+				  if(data) {
+					  $("#sellIdCheck").text("사용 가능한 아이디입니다.").css('color', 'green');
+					  $("#seller_id").attr('readonly', true);
+				  } else {
+					  $("#sellIdCheck").text("중복된 아이디입니다.").css('color', 'red');
+				  }
+			}
+		});
+	});
+	
+	//비밀번호 확인
+	$("#sellPw").keyup(function(){ //비밀번호 입력할때
+		$("#sellPwChk").text(""); //유효성검사창 초기화
+		sellerpwChk=false;
+	});
+	$("#sellPw2").keyup(function(){
+		if( $("#sellPw").val() != $("#sellPw2").val() ){
+			$("#sellPwChk").text("비밀번호가 일치하지 않습니다.").css("color","red");
+			sellerpwChk=false;
+		}else{
+			$("#sellPwChk").text("비밀번호가 일치합니다.").css("color","green");
+			sellerpwChk=true;
+		}
+	});
+	
+	//사업자번호  중복확인(인증)
+	$("#btnSellNo").on('click', function() {
+		var license_no = /^\d{3}\d{2}\d{5}$/; // 개인 사업자번호는 10자리  3-2-5
+		var b_license_no = $("#b_license_no").val();
+		var noCk = pattern_phone.test(b_license_no);
+		console.log("사업자번호 정규식 ", noCk)
+		
+		if ( noCk ) {
+			 $.ajax({
+				  url: '${pageContext.request.contextPath}/license/' + b_license_no ,
+				  success: function(data) {
+					  b_license_no_chk = data;
+					  if(data) {
+						  alert("인증되었습니다.");
+						  $("#b_license_no").attr("readonly", true);
+					  } else {
+						  alert("사업자 번호가 올바르지 않습니다.");
+						  $("#b_license_no").focus();
+					  }
+				}
+			});
+		} else {
+			alert("사업자번호의 형식이 올바르지 않습니다.");
+			$("#b_license_no").focus();
+		}
 	});
 	
 	//사업자 회원가입
-	$("#btnMemUp").on('click', function() {
-		/*  $.ajax({
-			  url: '${pageContext.request.contextPath}/registerMem' ,
-			  data : $("#memFrm").serialize(), 
-			  method : "post",
-			  success: function() {
-				  alert("가입 되었습니다.");
-				  $(location).attr('href','${pageContext.request.contextPath}/loginForm');
+	$("#btnSellUp").on('click', function() {
+		
+		var phoneCk = pattern_phone.test($("#sellPhone").val());
+		
+		if( $("#seller_id").val() == null || $("#seller_id").val() == '') {
+			alert("아이디를 입력하세요.");
+			$("#seller_id").focus();
+		} else if( $("#sellPw").val() == null || $("#sellPw").val() == '' ) {
+			alert("비밀번호를 입력하세요.");
+			$("#sellPw").focus();
+		} else if( $("#b_license_no").val() == null || $("#b_license_no").val() == '' ) {
+			alert("사업자번호를 입력하세요.");
+			$("#b_license_no").focus();
+		} else if( $("#sellName").val() == null || $("#sellName").val() == '' ) {
+			alert("이름을 입력하세요.");
+			$("#sellName").focus();
+		} else if( $("#sellPhone").val() == null || $("#sellPhone").val() == '' ) {
+			alert("전화번호를 입력하세요.");
+			$("#sellPhone").focus();
+		} else if ( !phoneCk ) {
+			alert("전화번호의 형식을 확인하세요.");
+			$("#sellPhone").focus();
+		}  else if(seller_id_check) {
+			if(sellerpwChk) {
+				if(b_license_no_chk) {
+					$.ajax({
+						  url: '${pageContext.request.contextPath}/registerSeller' ,
+						  data : $("#sellFrm").serialize(), 
+						  method : "post",
+						  success: function() {
+							  alert("가입 되었습니다.");
+							  $(location).attr('href','${pageContext.request.contextPath}/loginForm');
+						}
+					});
+				} else {
+					alert("사업자번호를 확인하세요");
+					$("#b_license_no").focus();
+				}
+			} else {
+				alert("비밀번호를 확인하세요");
+				$("#sellPw2").focus();
 			}
-		}); */
+		} else {
+			alert("아이디를 확인하세요.");
+			$("#seller_id").focus();
+		}
 	});
 	
 	
@@ -201,7 +302,7 @@ $(function() {
 	        <div>
 	        	<select id="user" name="user">
 	                <option value="member" selected="selected">일반 회원</option>
-	                <option value="seller">사업자 회원</option>
+	                <option value="seller">판매자 회원</option>
 	            </select>
 	        </div>
 	        
@@ -270,13 +371,54 @@ $(function() {
             </div>
 	            
             <div id="seller" style="display: none;">
-            	<form action="${pageContext.request.contextPath}/register" method="post">
-            		<input type="text" id="" name="" placeholder="">
-		            <input type="password" id="" name="" placeholder="">
-		            
-		            <button type="submit" class="site-btn">IN</button>
+            	<form id="sellFrm">
+            	<div align="left">
+            		<table style="width: 100%">
+            			<tr>
+            				<td style="width: 15%">아이디<z>*</z></td>
+            				<td style="width: 75%">
+            					<input type="text" id="seller_id" name="seller_id" >
+            				</td>
+            				<td style="width: 10%"><input type="button" id="btnSellId" value="중복확인" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
+            			</tr>
+            			<tr>
+            				<td></td>
+            				<td><a id="sellIdCheck"></a></td>
+            			</tr>
+            			<tr>
+            				<td>비밀번호<z>*</z></td>
+            				<td><input type="password" id="sellPw" name="password"></td>
+            			</tr>
+            			<tr>
+            				<td>비밀번호 확인<z>*</z></td>
+            				<td><input type="password" id="sellPw2" name="password2" ></td>
+            			</tr>
+            			<tr>
+            				<td></td>
+            				<td id="sellPwChk" style="padding-bottom: 10px;"></td>
+            			</tr>
+            			<tr>
+            				<td>사업자번호<z>*</z></td>
+            				<td><input type="text" id="b_license_no" name="b_license_no" placeholder="-없이 입력"></td>
+            				<td style="width: 10%"><input type="button" id="btnSellNo" value="인증" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
+            			</tr>
+            			<tr>
+            				<td>이름<z>*</z></td>
+            				<td><input type="text" id="sellName" name="name" ></td>
+            			</tr>
+            			<tr>
+            				<td>전화번호<z>*</z></td>
+            				<td><input type="text" id="sellPhone" name="phone" placeholder="-없이 입력"></td>
+            			</tr>
+            			<tr>
+            			<td></td>
+            			<td><button type="button" class="site-btn" id="btnSellUp">UP</button></td>
+            			</tr>
+            		</table>
+            	</div>
             	</form>
             </div>
+            
 	        </div>   
 	        
 	    </div>

@@ -24,7 +24,7 @@
 	            <input type="password" id="password" name="password" placeholder="PASSWORD">
 	            <select id="user" name="user">
 	                <option value="member" selected="selected">일반 회원</option>
-	                <option value="seller">사업자 회원</option>
+	                <option value="seller">판매자 회원</option>
 	            </select>
 	            <div align="right" style="padding-bottom: 15px;"><a href="${pageContext.request.contextPath}/registerForm" style="color: #f08632">SIGN UP</a></div>
 	            <button type="submit" class="site-btn">IN</button>

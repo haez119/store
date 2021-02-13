@@ -101,6 +101,34 @@ public class LoginController {
 	public void registerMem(Member member) throws IOException{
 		dao.memInsert(member);
 	}
-
+	
+	
+	@RequestMapping("/sellerId/{id}") //개인 아이디 중복확인 
+	@ResponseBody
+	public boolean sellerId(@PathVariable String id) throws IOException{
+		
+		if(dao.sellerIdCheck(id) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@RequestMapping("/license/{no}") //개인 아이디 중복확인 license
+	@ResponseBody
+	public boolean license(@PathVariable String no) throws IOException{
+		
+		if(dao.sellerNoCheck(no) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@PostMapping("/registerSeller") //판매자 회원가입
+	@ResponseBody
+	public void registerSeller(Seller seller) throws IOException{
+		dao.sellerInsert(seller);
+	}
 	
 }

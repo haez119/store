@@ -11,6 +11,11 @@ public interface LoginMapper {
 	
 	public int memIdCheck(String id);
 	public int memMailCheck(String mail);
-	
 	public void memInsert(Member member);
+	
+	public int sellerIdCheck(String id);
+	public int sellerNoCheck(String no);
+	public void sellerInsert(Seller seller);
+	
+	
 }
