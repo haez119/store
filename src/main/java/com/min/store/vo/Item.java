@@ -17,5 +17,7 @@ public class Item {
 	private String content_d; //0213 추가
 	
 	private String nic_name; //조인 용
+	
+	private String keyword; // 검색용
 
 }

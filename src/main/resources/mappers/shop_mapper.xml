@@ -8,6 +8,7 @@
 	<select id="itemAll" resultType="Item">
 		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
 		FROM ITEM
+		ORDER BY 1
 	</select>
 	
 	<!--필터링 -->
@@ -15,6 +16,15 @@
 		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D
 		FROM ITEM
 		WHERE TYPE = #{type}
+		ORDER BY 1
+	</select>
+	
+	<!--검색 -->
+	<select id="searchItem" parameterType="Item" resultType="Item"> 
+		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
+		FROM ITEM
+		WHERE TYPE = #{type}
+		AND TITLE LIKE '%' ||  #{keyword} || '%'
 	</select>
 	
 	<!--단건 조회 -->
@@ -25,10 +35,63 @@
 		AND ITEM_NO = #{no}
 	</select>
 	
+	<!--상세내역 안 item list -->
 	<select id="itemSeller" resultType="Item" parameterType="string">
 		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
 		FROM ITEM
 		WHERE SELLER_ID = #{seller_id}
+		ORDER BY 1
+	</select>
+	
+	<!--장바구니 중복 확인 -->
+	<select id="cartCheck" parameterType="Cart" resultType="int">
+		SELECT COUNT(*) 
+		FROM CART 
+		WHERE MEM_ID = #{mem_id}
+		AND ITEM_NO = #{item_no}
+	</select>
+	
+	<!--장바구니 insert-->
+	<insert id="cartInsert" parameterType="Cart">
+		INSERT INTO CART (CART_NO, ITEM_NO, MEM_ID, QUANTITY) 
+		VALUES( CART_SEQ.NEXTVAL, 
+				#{item_no} , 
+				#{mem_id} , 
+				#{quantity} )
+	</insert>
+	
+	<!--장바구니 리스트 -->
+	<select id="cartList" parameterType="string" resultType="Cart">
+		SELECT I.TITLE, I.PIC, C.CART_NO, C.ITEM_NO, C.MEM_ID, C.QUANTITY, I.PRICE, (I.PRICE * C.QUANTITY) AS TOTAL
+		FROM CART C , ITEM I
+		WHERE C.ITEM_NO = I.ITEM_NO
+		AND MEM_ID = #{id}
+		ORDER BY 3
+	</select>
+	
+	<!--장바구니 삭제-->
+	<delete id="CartDel" parameterType="string">
+		DELETE FROM CART 
+		WHERE CART_NO = #{cart_no}
+	</delete>
+	
+	<!--카트 업데이트 -->
+	<update id="updateCart" parameterType="Cart">
+		UPDATE CART SET QUANTITY = #{quantity}
+		WHERE CART_NO = #{cart_no}
+	</update>
+	
+	<!--카트에서 주문하기-->
+	<select id="orderCart" resultType="Cart" parameterType="Cart">
+		SELECT I.TITLE, I.PIC, C.CART_NO, C.ITEM_NO, C.MEM_ID, C.QUANTITY, I.PRICE, (I.PRICE * C.QUANTITY) AS TOTAL
+		FROM CART C , ITEM I
+		WHERE C.ITEM_NO = I.ITEM_NO
+		AND CART_NO IN
+		<!--  <c:if>의 var == item , items == collection , separator은 구분기호-->  
+		<foreach collection="list" item="no" open="(" close=")" separator=",">
+			#{no}
+		</foreach>
+
 	</select>
 
 </mapper>

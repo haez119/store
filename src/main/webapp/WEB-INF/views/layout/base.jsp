@@ -43,9 +43,36 @@
 	}
 </style>
 
+<script>
+$(function() {
+	
+	var id = "${sessionScope.member.mem_id}";
+	if (id == null || id == '') {
+		$(".my").on('click', function() {
+			alert("로그인 후에 이용할 수 있습니다.");
+		});
+	} else {
+		$("#idUL").addClass("dropdown").css('display', '');
+		
+		$(".my").on('click', function() {
+			var name = $(this).text();
+			if(name == 'Cart') {
+				$(location).attr('href','${pageContext.request.contextPath}/cartMain');
+			} else if (name == 'Order' ) {
+				$(location).attr('href','${pageContext.request.contextPath}/getOrder');
+				//바꿔야 겠네
+			} else if (name == 'My Page') {
+				//$(location).attr('href','${pageContext.request.contextPath}/cartMain');
+			}
+		});
+	}
+
+});
+</script>
+
 </head>
 <body>
-	<!-- 모바일 버전일 때 헤더 -->
+	<!-- 모바일 버전일 때 헤더  -->
     <!-- Offcanvas Menu Begin -->
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
@@ -55,7 +82,7 @@
                 <a href="#"><img src="${pageContext.request.contextPath}/store/img/icon/heart.png" alt=""></a>
             </div>
             <div class="offcanvas__cart__item">
-                <a href="#"><img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> <span>0</span></a>
+                <a href="${pageContext.request.contextPath}/cartMain"><img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> <span>0</span></a>
                 <div class="cart__price">Cart: <span>$0.00</span></div>
             </div>
         </div>
@@ -114,7 +141,7 @@
                                     <a href="#"><img src="${pageContext.request.contextPath}/store/img/icon/heart.png" alt=""></a>
                                 </div>
                                 <div class="header__top__right__cart">
-                                    <a href="#"><img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> <span>0</span></a>
+                                    <a href="${pageContext.request.contextPath}/cartMain"><img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> <span>0</span></a>
                                     <div class="cart__price">Cart: <span>$0.00</span></div>
                                 </div>
                             </div>
@@ -131,10 +158,10 @@
                         <ul class="menu">
                             <li class="active"><a href="${pageContext.request.contextPath}/home">Home</a></li>
                             <li id="shop"><a href="${pageContext.request.contextPath}/shopMain">Shop</a></li>
-                            <li id="cart"><a href="#">Cart</a></li>
-                            <li id="order"><a href="#">Order</a></li>
-                            <li id="myPage"><a href="#">My Page</a>
-                                <ul class="dropdown">
+                            <li id="cart"><a class="my" href="#">Cart</a></li>
+                            <li id="order"><a class="my" href="#">Order</a></li>
+                            <li id="myPage"><a class="my" href="#">My Page</a>
+                                <ul id="idUL" style="display: none;">
                                     <li><a href="#">정보수정</a></li>
                                     <li><a href="#">찜목록</a></li>
                                     <li><a href="#">내가 쓴 리뷰</a></li>

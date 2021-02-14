@@ -4,7 +4,7 @@
 	
 	
 	$(function() {
-		var re = ${login}
+		var re = "${login}";
 		if(re) {
 			alert("로그인 되었습니다.");
 		}

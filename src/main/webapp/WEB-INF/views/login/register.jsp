@@ -8,6 +8,7 @@ var mem_id_check;
 var mempwChk;
 var mem_mail_chk;
 var seller_id_check;
+var nic_check;
 var sellerpwChk;
 var b_license_no_chk;
 var pattern_phone = /^\d{2,3}\d{3,4}\d{4}$/; //전화번호 정규식
@@ -187,6 +188,27 @@ $(function() {
 		});
 	});
 	
+	// 닉네임 중복확인 nic_name
+	$("#btnNic").on('click', function() {
+		var nic = $("#nic_name").val();
+		$.ajax({
+			  url: '${pageContext.request.contextPath}/nicCheck/' + nic ,
+			  success: function(data) {
+				  nic_check = data;
+				  if(data) {
+					 alert("사용 가능한 이름입니다.");
+					  $("#nic_name").attr('readonly', true);
+				  } else {
+					  alert("중복된 이름입니다.");
+					  $("#nic_name").focus();
+					  
+				  }
+			}
+		});
+		
+	});
+	
+	
 	//비밀번호 확인
 	$("#sellPw").keyup(function(){ //비밀번호 입력할때
 		$("#sellPwChk").text(""); //유효성검사창 초기화
@@ -255,15 +277,20 @@ $(function() {
 		}  else if(seller_id_check) {
 			if(sellerpwChk) {
 				if(b_license_no_chk) {
-					$.ajax({
-						  url: '${pageContext.request.contextPath}/registerSeller' ,
-						  data : $("#sellFrm").serialize(), 
-						  method : "post",
-						  success: function() {
-							  alert("가입 되었습니다.");
-							  $(location).attr('href','${pageContext.request.contextPath}/loginForm');
-						}
-					});
+					if( nic_check ) {
+						$.ajax({
+							  url: '${pageContext.request.contextPath}/registerSeller' ,
+							  data : $("#sellFrm").serialize(), 
+							  method : "post",
+							  success: function() {
+								  alert("가입 되었습니다.");
+								  $(location).attr('href','${pageContext.request.contextPath}/loginForm');
+							}
+						});
+					}else {
+						alert("스토어 이름을 확인하세요");
+						$("#nic_name").focus();
+					}
 				} else {
 					alert("사업자번호를 확인하세요");
 					$("#b_license_no").focus();
@@ -351,7 +378,7 @@ $(function() {
             			<tr>
             				<td>우편번호</td>
             				<td><input type="text" id="addr_no" name="addr_no" readonly="readonly"></td>
-            				<td><input type="button" id="btnAddrNo" value="우편번호 검색" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
+            				<td><input type="button" id="btnAddrNo" value="검색" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
             			</tr>
             			<tr>
             				<td>주소</td>
@@ -400,11 +427,16 @@ $(function() {
             			<tr>
             				<td>사업자번호<z>*</z></td>
             				<td><input type="text" id="b_license_no" name="b_license_no" placeholder="-없이 입력"></td>
-            				<td style="width: 10%"><input type="button" id="btnSellNo" value="인증" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
+            				<td><input type="button" id="btnSellNo" value="인증" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
             			</tr>
             			<tr>
             				<td>이름<z>*</z></td>
             				<td><input type="text" id="sellName" name="name" ></td>
+            			</tr>
+            			<tr>
+            				<td>스토어 이름<z>*</z></td>
+            				<td><input type="text" id="nic_name" name="nic_name" ></td>
+            				<td><input type="button" id="btnNic" value="중복확인" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
             			</tr>
             			<tr>
             				<td>전화번호<z>*</z></td>

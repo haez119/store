@@ -103,7 +103,7 @@ public class LoginController {
 	}
 	
 	
-	@RequestMapping("/sellerId/{id}") //개인 아이디 중복확인 
+	@RequestMapping("/sellerId/{id}") //사업자 아이디 중복확인 
 	@ResponseBody
 	public boolean sellerId(@PathVariable String id) throws IOException{
 		
@@ -114,7 +114,18 @@ public class LoginController {
 		}
 	}
 	
-	@RequestMapping("/license/{no}") //개인 아이디 중복확인 license
+	@RequestMapping("/nicCheck/{nic}") //닉네임 중복확인 
+	@ResponseBody
+	public boolean nicCheck(@PathVariable String nic) throws IOException{
+		
+		if(dao.sellerNicCheck(nic) == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@RequestMapping("/license/{no}") //사업자번호 중복확인
 	@ResponseBody
 	public boolean license(@PathVariable String no) throws IOException{
 		

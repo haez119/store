@@ -14,6 +14,7 @@ public interface LoginMapper {
 	public void memInsert(Member member);
 	
 	public int sellerIdCheck(String id);
+	public int sellerNicCheck(String nic);
 	public int sellerNoCheck(String no);
 	public void sellerInsert(Seller seller);
 	

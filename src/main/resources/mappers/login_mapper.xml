@@ -5,7 +5,7 @@
 <mapper namespace="com.min.store.impl.LoginMapper">
 
 	<select id="loginMem" resultType="Member">
-		SELECT MEM_ID, PASSWORD, NAME, EMAIL, PHONE 
+		SELECT MEM_ID, PASSWORD, NAME, EMAIL, PHONE , ADDR_NO, ADDR, ADDR_D
 		FROM MEMBER 
 		WHERE MEM_ID = #{mem_id}
 		AND PASSWORD= #{password}
@@ -61,18 +61,23 @@
 		SELECT COUNT(*) FROM SELLER WHERE SELLER_ID = #{id}
 	</select>
 	
+	<select id="sellerNicCheck" resultType="int" parameterType="string">
+		SELECT COUNT(*) FROM SELLER WHERE nic_name = #{nic}
+	</select>
+	
 	<select id="sellerNoCheck" resultType="int" parameterType="string">
 		SELECT COUNT(*) FROM SELLER WHERE B_LICENSE_NO = #{no}
 	</select>
 	
 	<insert id="sellerInsert" parameterType="Seller" >
-		INSERT INTO SELLER(SELLER_ID, PASSWORD, NAME, PHONE, B_LICENSE_NO) 
+		INSERT INTO SELLER(SELLER_ID, PASSWORD, NAME, PHONE, B_LICENSE_NO, NIC_NAME) 
 		VALUES(
 			#{seller_id},
 			#{password},
 			#{name},
 			#{phone},
-			#{b_license_no}
+			#{b_license_no},
+			#{nic_name}
 		)
 	</insert>
 	

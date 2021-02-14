@@ -9,10 +9,34 @@
 		
 		// 카테고리별 필터링
 		$("#type").change(function() {
-			type = $("#type :selected").val();
-			$(location).attr('href','${pageContext.request.contextPath}/shopMain?type=' + type);
+			/* type = $("#type :selected").val();
+			$(location).attr('href','${pageContext.request.contextPath}/shopMain?type=' + type); */
+			$("#keyword").focus();
+
 		});
 		
+		$(".addCart").on('click', function() {
+			var id = "${sessionScope.member.mem_id}";
+			var answer = confirm("카트에 담으시겠습니까?");
+			if(answer) {
+				if ( id == null || id == '') {
+					alert("로그인 후에 이용할 수 있습니다.");
+				} else {
+					var no = $(this).next().text();
+					 $.ajax({
+						  url: '${pageContext.request.contextPath}/addCart/' + no + '/1/' + id ,
+						  success: function(data) {
+							  if (data) {
+								  alert("카트에 담겼습니다.");
+							  } else {
+								  alert("동일한 상품이 이미 담겨있습니다.");
+							  }
+						}
+					});
+				}
+			}
+			
+		});
 		
 	});
 </script>
@@ -22,7 +46,7 @@
 
 <section>
 <!-- Breadcrumb Begin -->
-    <div class="breadcrumb-option">
+    <div class="breadcrumb-option" > 
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
@@ -43,39 +67,31 @@
 
     <!-- Shop Section Begin -->
     <section class="shop spad">
-        <div class="container">
-            <div class="shop__option">
+        <div class="container" >
+            <div class="shop__option" >
                 <div class="row">
                     <div class="col-lg-7 col-md-7">
-                        <div class="shop__option__search">
-                            <form action="#">
-                                <select id="type">
+                        <div class="shop__option__search" >
+                            <form action="${pageContext.request.contextPath}/shopMain">
+                                <select id="type" name="type">
                                     <option value="TOP">TOP</option>
                                     <option value="BOTTOM">BOTTOM</option>
                                     <option value="SHOES">SHOES</option>
                                     <option value="BAG">BAG</option>
                                     <option value="ETC">ETC</option>
                                 </select>
-                                <input type="text" placeholder="Search">
+                                <input type="text" placeholder="Search" name="keyword" id="keyword">
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
                     </div>
-                    <!-- <div class="col-lg-5 col-md-5">
-                        <div class="shop__option__right">
-                            <select>
-                                <option value="">Default sorting</option>
-                                <option value="">A to Z</option>
-                                <option value="">1 - 8</option>
-                                <option value="">Name</option>
-                            </select>
-                            <a href="#"><i class="fa fa-list"></i></a>
-                            <a href="#"><i class="fa fa-reorder"></i></a>
-                        </div>
-                    </div> -->
+                   
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="min-height: 300px;">
+            <c:if test="${fn:length(itemList) eq 0}">
+            	<h4 style="padding: 100px 0px 0px 500px;">검색된 결과가 없습니다.</h4>
+            </c:if>
             <c:forEach  items="${itemList}" var="item" >
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="product__item">
@@ -88,21 +104,22 @@
                             </div>
                         </div>
 					</c:forEach>
-
-                       
                         <div class="product__item__text">
                             <h6>
                             	<a href="${pageContext.request.contextPath}/shopDetail?no=${item.item_no}" class="title">${item.title}</a>
                             </h6>
                             <div class="product__item__price">${item.price} 원</div>
                             <div class="cart_add">
-                                <a href="#">Add to cart</a>
+                                <a class="addCart" href="#">Add to cart</a>
+                                <a class="addNo" style="display: none;">${item.item_no}</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </c:forEach > 
+            
             </div>
+            <c:if test="${fn:length(itemList) ne 0}">
             <div class="shop__last__option">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
@@ -120,6 +137,7 @@
                     </div>
                 </div>
             </div>
+            </c:if>
         </div>
     </section>
     <!-- Shop Section End -->

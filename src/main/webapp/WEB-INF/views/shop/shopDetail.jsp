@@ -6,6 +6,35 @@
 	$(function() {
 		$(".menu").children().removeClass('active');
 		$("#shop").addClass('active'); //메뉴 색 
+		
+		$("#addCart").on('click', function() {
+			var q = $("#quantity").val();
+			var id = "${sessionScope.member.mem_id}";
+			var no = $(this).next().next().text();
+
+ 			var answer = confirm("카트에 담으시겠습니까?");
+			if(answer) {
+				if ( id == null || id == '') {
+					alert("로그인 후에 이용할 수 있습니다.");
+				} else {
+					 $.ajax({
+						  url: '${pageContext.request.contextPath}/addCart/' + no + '/'+ q +'/' + id ,
+						  success: function(data) {
+							  if (data) {
+								  alert("카트에 담겼습니다.");
+								  var cart = confirm("카트로 이동하시겠습니까?");
+								  if(cart) {
+									  $(location).attr('href','${pageContext.request.contextPath}/cartMain');
+								  } 
+							  } else {
+								  alert("동일한 상품이 이미 담겨있습니다.");
+							  }
+						}
+					});
+				}
+			} 
+			
+		});
 	});
 </script>
 
@@ -67,11 +96,12 @@
                         <div class="product__details__option">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input type="text" value="1">
+                                    <input type="text" value="1" id="quantity">
                                 </div>
                             </div>
-                            <a href="#" class="primary-btn">Add to cart</a>
+                            <a href="#" id="addCart" class="primary-btn">Add to cart</a>
                             <a href="#" class="heart__btn"><span class="icon_heart_alt"></span></a>
+                            <a style="display: none;">${item.item_no}</a>
                         </div>
                     </div>
                 </div>
