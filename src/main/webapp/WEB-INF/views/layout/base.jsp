@@ -59,8 +59,7 @@ $(function() {
 			if(name == 'Cart') {
 				$(location).attr('href','${pageContext.request.contextPath}/cartMain');
 			} else if (name == 'Order' ) {
-				$(location).attr('href','${pageContext.request.contextPath}/getOrder');
-				//바꿔야 겠네
+				$(location).attr('href','${pageContext.request.contextPath}/buyList?buy_no=no');
 			} else if (name == 'My Page') {
 				//$(location).attr('href','${pageContext.request.contextPath}/cartMain');
 			}

@@ -19,5 +19,12 @@ public class Item {
 	private String nic_name; //조인 용
 	
 	private String keyword; // 검색용
+	
+	// 재고 변경용
+	private String cart_no;
+//	private String item_no;
+//	private String stock;
+	private String mem_id;
+	
 
 }

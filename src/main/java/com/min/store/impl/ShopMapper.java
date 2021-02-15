@@ -1,7 +1,11 @@
 package com.min.store.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import com.min.store.vo.Buyer;
+import com.min.store.vo.Buyer_d;
 import com.min.store.vo.Cart;
 import com.min.store.vo.Item;
 
@@ -24,5 +28,12 @@ public interface ShopMapper {
 	
 	public ArrayList<Cart> orderCart(Cart cart);
 	
+	public void insertBuyer(Buyer buyer);
+	public void insertBuyer_d(Buyer_d buyer_d);
+	public void deleteCart(Cart cart);
 	
+	public ArrayList<Item> selectStock(Cart cart);
+	public void updateStock(Item item);
+	
+	public List<HashMap<String,Object>> selectOrderList(Buyer buyer);
 }

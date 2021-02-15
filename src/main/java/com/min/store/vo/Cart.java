@@ -14,6 +14,6 @@ public class Cart {
 	private String price;
 	private String pic;
 	
-	private String[] list;
+	private String[] list; //장바구니 번호 리스트
 	
 }

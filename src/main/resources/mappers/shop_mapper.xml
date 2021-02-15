@@ -11,7 +11,7 @@
 		ORDER BY 1
 	</select>
 	
-	<!--필터링 -->
+	<!--필터링 사용x-->
 	<select id="itemFiltering" resultType="Item" parameterType="string">
 		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D
 		FROM ITEM
@@ -91,7 +91,86 @@
 		<foreach collection="list" item="no" open="(" close=")" separator=",">
 			#{no}
 		</foreach>
-
+		ORDER BY 3
 	</select>
+	
+	<!--구매자 정보 테이블 -->
+	<insert id="insertBuyer" parameterType="Buyer">
+		INSERT INTO BUYER( BUY_NO, MEM_ID, PAYMENT, PAY_TIME, NAME, PHONE, ADDR_NO, ADDR, ADDR_D, EMAIL) 
+		VALUES( #{buy_no} ,
+				#{mem_id} ,
+				#{payment} ,
+				LOCALTIMESTAMP ,
+				#{name} ,
+				#{phone} ,
+				#{addr_no} ,
+				#{addr} ,
+				#{addr_d} ,
+				#{email}
+		)
+	</insert>
+
+
+	<!--구매자 상세 테이블-->
+	<insert id="insertBuyer_d" parameterType="Buyer_d">
+		INSERT INTO BUYER_D(BUYD_NO, BUY_NO, ITEM_NO, QUANTITY) 
+		VALUES( ORDER_SEQ.NEXTVAL, 
+				#{buy_no} , 
+				#{item_no} , 
+				#{quantity} )
+	
+	</insert>
+
+	<!--카트에서 삭제 -->
+	<delete id="deleteCart" parameterType="Cart">
+		DELETE FROM CART 
+		WHERE CART_NO IN 
+		<foreach collection="list" item="no" open="(" close=")" separator=",">
+			#{no}
+		</foreach>
+	</delete>
+
+	<select id="selectStock" parameterType="Cart" resultType="Item">
+		SELECT C.CART_NO, I.ITEM_NO, I.STOCK, C.MEM_ID
+		FROM CART C , ITEM I
+		WHERE C.ITEM_NO = I.ITEM_NO
+		AND CART_NO IN
+		<foreach collection="list" item="no" open="(" close=")" separator=",">
+			#{no}
+		</foreach>
+		ORDER BY 1
+	</select>
+	
+	<!--재고 수정 -->
+	<update id="updateStock" parameterType="Item">
+		UPDATE ITEM SET STOCK = #{stock}
+		WHERE ITEM_NO = #{item_no}
+	</update>
+
+	<!--주문 리스트 1-->
+	<select id="selectOrderList" parameterType="Buyer" resultType="map">
+		SELECT BUY_NO, MEM_ID, PAYMENT, TO_CHAR(PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') AS PAY_TIME , NAME, PHONE, ADDR || ' ' || ADDR_D AS ADDR, ADDR_NO
+		FROM BUYER 
+		<if test="buy_no == null or buy_no == '' ">
+			WHERE MEM_ID = #{mem_id}
+		</if>
+		<if test="mem_id == null or mem_id =='' ">
+			WHERE BUY_NO = #{buy_no}
+		</if>
+		ORDER BY 1
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>
