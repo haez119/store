@@ -73,9 +73,8 @@ public class LoginController {
 		return mav;
 	}
 	
-	
-	@RequestMapping("/memId/{id}") //개인 아이디 중복확인
 	@ResponseBody
+	@RequestMapping("/memId/{id}") //개인 아이디 중복확인
 	public boolean memId(@PathVariable String id) throws IOException{
 		
 		if(dao.memIdCheck(id) == 0) {

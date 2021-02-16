@@ -165,6 +165,8 @@ public class ShopController {
 	public ModelAndView orderList (ModelAndView mav , HttpServletRequest request, HttpSession session , Member member) throws IOException{
 		
 		String buy_no = request.getParameter("buy_no");
+		buy_no = (buy_no == null || "".equals(buy_no)) ? "no" : buy_no;
+		
 		member = (Member) session.getAttribute("member");
 		Buyer buyer = new Buyer();
 

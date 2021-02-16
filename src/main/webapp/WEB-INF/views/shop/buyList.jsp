@@ -64,7 +64,7 @@
 											 + '<td class="name"><b>상품명</b></td>'
 											 + '<td class="name2" colspan="3">'+data[i].TITLE+'</td>'
 											 + '<td class="reorder" rowspan="2">'
-											 + '<a type="button" class="btn primary-btn" href="${pageContext.request.contextPath}/review/'+data[i].BUY_NO+'">상품후기</button></td>'
+											 + '<a type="button" class="btn primary-btn" href="${pageContext.request.contextPath}/reviewInsertForm/'+data[i].ITEM_NO+'/'+data[i].BUYD_NO+'">상품후기</button></td>'
 											 + '</tr>'
 											 + '<tr class="tr2">'
 											 + '<td style="border-bottom: 3px solid #ebebeb;"><b>구매수량</b></td>'
