@@ -12,9 +12,9 @@ import com.min.store.vo.Item;
 
 public interface ShopMapper {
 
-	public ArrayList<Item> itemAll();
-	public ArrayList<Item> itemFiltering(String type);
-	public ArrayList<Item> searchItem(Item item);
+	public ArrayList<Item> itemAll(Item item);
+
+	public ArrayList<Item> searchItem(Item item);//사용x
 	
 	public Item itemDetail(String no);
 	public ArrayList<Item> itemSeller(String seller_id);
@@ -36,4 +36,6 @@ public interface ShopMapper {
 	public void updateStock(Item item);
 	
 	public List<HashMap<String,Object>> selectOrderList(Buyer buyer);
+	public List<HashMap<String,Object>> OrderListDetail(String buy_no);
+	
 }

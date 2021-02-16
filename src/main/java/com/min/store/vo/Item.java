@@ -26,5 +26,8 @@ public class Item {
 //	private String stock;
 	private String mem_id;
 	
+	//최신/인기순 인기순은 일단 재고 없는 순으로..
+	private String newmax;
+	
 
 }

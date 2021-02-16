@@ -4,19 +4,20 @@
 
 <mapper namespace="com.min.store.impl.ShopMapper">
 	
-	<!--전체조회 -->
-	<select id="itemAll" resultType="Item">
+	<!--전체조회 + 필터링 -->
+	<select id="itemAll" resultType="Item" parameterType="Item">
 		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
 		FROM ITEM
-		ORDER BY 1
-	</select>
-	
-	<!--필터링 사용x-->
-	<select id="itemFiltering" resultType="Item" parameterType="string">
-		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D
-		FROM ITEM
-		WHERE TYPE = #{type}
-		ORDER BY 1
+		<if test="type != 'no'">
+			WHERE TYPE = #{type}
+		</if>
+		<if test="newmax == null or newmax == '' or newmax == 'NEW'">
+			ORDER BY 1 DESC
+		</if>
+		<if test="newmax == 'MAX' ">
+			ORDER BY STOCK
+		</if>
+		
 	</select>
 	
 	<!--검색 -->
@@ -147,7 +148,7 @@
 		WHERE ITEM_NO = #{item_no}
 	</update>
 
-	<!--주문 리스트 1-->
+	<!--주문 리스트 -->
 	<select id="selectOrderList" parameterType="Buyer" resultType="map">
 		SELECT BUY_NO, MEM_ID, PAYMENT, TO_CHAR(PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') AS PAY_TIME , NAME, PHONE, ADDR || ' ' || ADDR_D AS ADDR, ADDR_NO
 		FROM BUYER 
@@ -157,12 +158,18 @@
 		<if test="mem_id == null or mem_id =='' ">
 			WHERE BUY_NO = #{buy_no}
 		</if>
-		ORDER BY 1
+		ORDER BY 1 DESC
 	</select>
 
-
-
-
+	<!--주문리스트 상세-->
+	<select id="OrderListDetail" resultType="map" parameterType="map">
+		SELECT D.ITEM_NO, D.QUANTITY, D.BUY_NO, B.PAYMENT, I.TITLE, I.PIC , (I.PRICE*D.QUANTITY) AS PRICE
+		FROM BUYER_D D , BUYER B, ITEM I
+		WHERE  D.BUY_NO = B.BUY_NO
+		AND D.ITEM_NO = I.ITEM_NO
+		AND D.BUY_NO =  #{buy_no}
+	
+	</select>
 
 
 

@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.min.store.impl.ShopMapper;
+import com.min.store.service.ShopService;
 import com.min.store.vo.Buyer;
 import com.min.store.vo.Buyer_d;
 import com.min.store.vo.Cart;
@@ -32,24 +31,19 @@ import com.min.store.vo.Member;
 public class ShopController {
 	
 	@Autowired ShopMapper dao;
+	@Autowired ShopService service;
 	
 	ArrayList<Cart> orderList = new ArrayList<Cart>();
 	String[] kw;
 	
 	@RequestMapping(value="/shopMain")
 	public ModelAndView shopMain(ModelAndView mav , HttpServletRequest request, Item item) throws IOException{
-		
 		String type = request.getParameter("type");
+		type = (type == null || "".equals(type)) ? "no" : type; 
+		item.setType(type);
+		item.setNewmax(request.getParameter("newmax"));
 		
-		if(item.getKeyword() == null || item.getKeyword().equals("") ) {
-			if (type == null || type.equals("")) {
-				mav.addObject("itemList",dao.itemAll());
-			} else {
-				mav.addObject("itemList",dao.itemFiltering(type));
-			}
-		} else {
-			mav.addObject("itemList", dao.searchItem(item));
-		}
+		mav.addObject("itemList",dao.itemAll(item));
 		mav.setViewName("shop/shopMain");
 		return mav; 
 	}
@@ -157,44 +151,11 @@ public class ShopController {
 			orderNo += (int)(Math.random() * 10);
 		}
 		String buy_no = ymd + "_" + orderNo;
-		buyer.setBuy_no(buy_no);
+		buyer.setBuy_no(buy_no); // 주문번호 넣고
+		cart.setList(kw); // 카트번호 리스트 넣고
+		
+		service.addOrder(orderList, buyer, cart);
 
-		// buyer 테이블에 insert 하고
-		dao.insertBuyer(buyer); 
-		
-		
-		// 구매한 품목의 갯수만큼 insert 반복
-		for(Cart c : orderList) { 
-			buyer_d.setBuy_no(buy_no);
-			buyer_d.setItem_no(c.getItem_no());
-			buyer_d.setQuantity(c.getQuantity());
-			dao.insertBuyer_d(buyer_d);
-		}
-
-		cart.setList(kw);
-
-		// 재고 변경
-		ArrayList<Item> list = new ArrayList<Item>();
-		list = dao.selectStock(cart);
-		for(int i=0; i < list.size(); i++ ) {
-			String db = (String) list.get(i).getCart_no();
-			String order = orderList.get(i).getCart_no();
-			
-			if(db.equals(order)) {
-				int stock = Integer.parseInt(list.get(i).getStock()); //재고
-				int orderStock = Integer.parseInt(orderList.get(i).getQuantity()); // 구매 수량
-				item.setStock(Integer.toString(stock - orderStock));
-				item.setItem_no(orderList.get(i).getItem_no());
-				
-				dao.updateStock(item);
-			}
-		}
-		// 장바구니에서 삭제
-		dao.deleteCart(cart);
-		
-		//매개값으로 넘길 거
-		// orderList, kw 넣은 cart, buyer_no 넣은 buyer
-		
 		return buy_no;
 	}
 	
@@ -209,23 +170,33 @@ public class ShopController {
 
 		if(buy_no.equals("no")) {
 			buyer.setMem_id(member.getMem_id());
-			System.out.println("아이디로 조회 " + buyer.getMem_id());
-			
 			mav.addObject("buyList", dao.selectOrderList(buyer));
 			
 		} else {
 			buyer.setBuy_no(buy_no);
-			System.out.println("번호로 조회 " + buyer.getBuy_no());
-			
 			mav.addObject("buyList", dao.selectOrderList(buyer));
-			
 		}
 		mav.setViewName("shop/buyList");
 		return mav; 
 	}
 	
 	
-	
+	@RequestMapping(value="/buyList_D")
+	@ResponseBody
+	public List<HashMap<String,Object>> buyList_D (HttpServletRequest request, Cart cart) throws IOException{
+		String buy_no = request.getParameter("buy_no");	
+		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+		list = dao.OrderListDetail(buy_no);
+		
+		// 대표이미지 1개만 넣기
+		for(int i=0; i < list.size(); i++) {
+			String pic = (String) list.get(i).get("PIC");
+			String[] pic_d = pic.split(",");
+			list.get(i).put("PIC", pic_d[0]);
+		}
+		
+		return list;
+	}
 	
 	
 	

@@ -9,11 +9,14 @@
 		
 		// 카테고리별 필터링
 		$("#type").change(function() {
-			/* type = $("#type :selected").val();
-			$(location).attr('href','${pageContext.request.contextPath}/shopMain?type=' + type); */
-			$("#keyword").focus();
-
+			type = $("#type :selected").val();
+			$(location).attr('href','${pageContext.request.contextPath}/shopMain?type=' + type);
 		});
+		$("#newmax").change(function() {
+			newmax = $("#newmax :selected").val();
+			$(location).attr('href','${pageContext.request.contextPath}/shopMain?newmax=' + newmax);
+		});
+		
 		
 		$(".addCart").on('click', function() {
 			var id = "${sessionScope.member.mem_id}";
@@ -71,21 +74,27 @@
             <div class="shop__option" >
                 <div class="row">
                     <div class="col-lg-7 col-md-7">
-                        <div class="shop__option__search" >
-                            <form action="${pageContext.request.contextPath}/shopMain">
+                        <!-- <div class="shop__option__search" > -->
+                            <%-- <form action="${pageContext.request.contextPath}/shopMain"> --%>
                                 <select id="type" name="type">
+                                	<option value="">ALL</option>
                                     <option value="TOP">TOP</option>
                                     <option value="BOTTOM">BOTTOM</option>
                                     <option value="SHOES">SHOES</option>
                                     <option value="BAG">BAG</option>
                                     <option value="ETC">ETC</option>
                                 </select>
-                                <input type="text" placeholder="Search" name="keyword" id="keyword">
+                               <!--  <input type="text" placeholder="Search" name="keyword" id="keyword">
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
-                        </div>
+                        </div> -->
                     </div>
-                   
+                    <div style="padding-left: 30%;">
+	                   	<select id="newmax" name="newmax">
+                        	<option value="NEW">최신순</option>
+                            <option value="MAX">판매순</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row" style="min-height: 300px;">

@@ -156,7 +156,7 @@ $(function() {
                     <nav class="header__menu mobile-menu">
                         <ul class="menu">
                             <li class="active"><a href="${pageContext.request.contextPath}/home">Home</a></li>
-                            <li id="shop"><a href="${pageContext.request.contextPath}/shopMain">Shop</a></li>
+                            <li id="shop"><a href="${pageContext.request.contextPath}/shopMain?type=no">Shop</a></li>
                             <li id="cart"><a class="my" href="#">Cart</a></li>
                             <li id="order"><a class="my" href="#">Order</a></li>
                             <li id="myPage"><a class="my" href="#">My Page</a>

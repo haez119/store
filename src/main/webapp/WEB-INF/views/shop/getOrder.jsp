@@ -163,7 +163,7 @@ $(function() {
                             </div>
                             <div class="checkout__input">
                                 <p>전화번호<span>*</span></p>
-                                <input type="text" value="${sessionScope.member.phone}" id="m_phone" class="old">
+                                <input type="text" value="${sessionScope.member.phone}" id="m_phone" class="old" placeholder="-없이 입력">
                             </div>
                             <div class="checkout__input">
                                 <p>이메일<span>*</span></p>
@@ -209,7 +209,7 @@ $(function() {
                             </div>
                             <div class="checkout__input">
                                 <p>전화번호<span>*</span></p>
-                                <input type="text" id="phone" name="phone" class="new">
+                                <input type="text" id="phone" name="phone" class="new" placeholder="-없이 입력">
                             </div>
                             <div class="checkout__input">
                                 <p>이메일<span>*</span></p>
