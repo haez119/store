@@ -1,7 +1,10 @@
 package com.min.store.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.min.store.impl.BoardMapper;
@@ -25,22 +27,33 @@ public class ReviewController {
 	
 	private String BUYD_NO;
 	private String ITEM_NO;
+	private String UPDATE;
 
 	@Autowired ShopMapper shopDao;
 	@Autowired BoardMapper dao;
 	
 	
 	@RequestMapping(value="/reviewInsertForm/{item_no}/{buyd_no}")
-	public ModelAndView reviewInsertForm(@PathVariable String item_no, @PathVariable String buyd_no, ModelAndView mav, Item item) throws IOException{
+	public ModelAndView reviewInsertForm(@PathVariable String item_no, @PathVariable String buyd_no, HttpServletRequest request, ModelAndView mav, Item item) throws IOException{
 		
+		UPDATE = request.getParameter("update");
+
 		item = shopDao.itemDetail(item_no);
 		ITEM_NO = item.getItem_no();
 		BUYD_NO = buyd_no;
 		String pics = item.getPic();
 		String[] pic = pics.split(",");
 		item.setPic(pic[0]);
-		
 		mav.addObject("item", item);
+		
+		if(UPDATE.equals("true")) {
+			List<Review> list = new ArrayList<Review>();
+			Review review = new Review();
+			review.setBuyd_no(BUYD_NO);
+			list = dao.reviewList(review); // 다건 조회도 같이 해서 리턴값이 list 임
+			mav.addObject("review", list.get(0)); //update면 작성했던 내용 전달
+		}
+		
 		mav.setViewName("review/reviewInsert");
 		return mav;
 	}
@@ -49,19 +62,16 @@ public class ReviewController {
 	@RequestMapping(value="/reviewInsert" , method=RequestMethod.POST)
 	public ModelAndView reviewInsert(HttpSession session, Review review, Member member) throws IOException{
 		member = (Member) session.getAttribute("member");
-		
 		review.setMem_id(member.getMem_id());
 		review.setItem_no(ITEM_NO);
 		review.setBuyd_no(BUYD_NO);
-		System.out.println("필드값  === " + ITEM_NO + " = = = " + BUYD_NO);
-		System.out.println("=====컨트롤러 들어옴   == " + review.getBuyd_no());
 		
-		System.out.println("===== 제목 == " + review.getTitle());
-		System.out.println("===== 내용 == " + review.getContent());
-		System.out.println("===== 태그 == " + review.getTag());
-		
-		dao.insertReview(review);
-		
+		if(UPDATE.equals("true")) {
+			dao.updateReview(review);
+		} else {
+			dao.insertReview(review);
+		}
+
 		return new ModelAndView("redirect:buyList");
 
 	}

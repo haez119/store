@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.min.store.impl.BoardMapper;
 import com.min.store.impl.ShopMapper;
 import com.min.store.service.ShopService;
 import com.min.store.vo.Buyer;
@@ -24,6 +25,7 @@ import com.min.store.vo.Buyer_d;
 import com.min.store.vo.Cart;
 import com.min.store.vo.Item;
 import com.min.store.vo.Member;
+import com.min.store.vo.Review;
 
 
 
@@ -32,6 +34,8 @@ public class ShopController {
 	
 	@Autowired ShopMapper dao;
 	@Autowired ShopService service;
+	
+	@Autowired BoardMapper boDao;
 	
 	ArrayList<Cart> orderList = new ArrayList<Cart>();
 	String[] kw;
@@ -61,6 +65,12 @@ public class ShopController {
 		mav.addObject("picD", picD); //forEach 돌려서 출력
 		mav.addObject("item", item);
 		mav.addObject("sellerList", dao.itemSeller(seller_id));
+		
+		// 리뷰글 같이 
+		Review review = new Review();
+		review.setItem_no(no);
+		mav.addObject("reviewList", boDao.reviewList(review));
+		
 		mav.setViewName("shop/shopDetail");
 		return mav; 
 	}
@@ -185,9 +195,10 @@ public class ShopController {
 	
 	@RequestMapping(value="/buyList_D")
 	@ResponseBody
-	public List<HashMap<String,Object>> buyList_D (HttpServletRequest request, Cart cart) throws IOException{
+	public HashMap<String,Object> buyList_D (HttpServletRequest request, Cart cart) throws IOException{
 		String buy_no = request.getParameter("buy_no");	
 		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+		HashMap<String,Object> map = new HashMap<String,Object>();
 		list = dao.OrderListDetail(buy_no);
 		
 		// 대표이미지 1개만 넣기
@@ -196,8 +207,11 @@ public class ShopController {
 			String[] pic_d = pic.split(",");
 			list.get(i).put("PIC", pic_d[0]);
 		}
+		Review review = new Review();
+		map.put("buyList", list);
+		map.put("reviewList", boDao.reviewList(review));
 		
-		return list;
+		return map;
 	}
 	
 	

@@ -138,7 +138,12 @@
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="row d-flex justify-content-center">
                                 <div class="col-lg-8">
-                                    <p>후기 최신순으로 5~10개만</p>
+                                	<p>텝으로 나눠서 포토리뷰만 보기 / 전체보기 </p>
+                                	<p>포토리뷰만 보기 -> 사진만 뜨고 사진 클릭시 내용 뜸</p>
+                                	<p>전체보기 -> 제목 / 별점  / 해시태그..?</p>
+                                    <c:forEach var="review" items="${reviewList}">
+                                    	<p>${review.title} , ${review.star} </p>
+                                    </c:forEach>
                                 </div>
                             </div>
                         </div>

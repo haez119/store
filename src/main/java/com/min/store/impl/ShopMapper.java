@@ -38,4 +38,7 @@ public interface ShopMapper {
 	public List<HashMap<String,Object>> selectOrderList(Buyer buyer);
 	public List<HashMap<String,Object>> OrderListDetail(String buy_no);
 	
+	
+	
+	
 }

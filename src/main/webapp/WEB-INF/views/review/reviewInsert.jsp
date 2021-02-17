@@ -45,9 +45,33 @@ ul li.tag-item {
 <script>
 var counter = 0;
 var tag =[];
+
 $(function() {
 	var star = 5;
+	
+	// update 일 경우
+	var re_star = "${review.star}"; // 별 가져와서
+	
+	if(re_star != null && re_star != '' ) {
+		$("#star").val("");
+		$("#star").val(re_star);
+		$(".starRev").children('span').removeClass('on'); 
+		$("." + re_star).addClass('on').prevAll('span').addClass('on'); // 별 달아주고
 
+		// 태그 가져와서
+		var re_tag = "${review.tag}"
+		
+		if(re_tag != null && re_tag != '' ) {
+			re_tag = re_tag.split(",");
+			
+			for(var i=0; i < re_tag.length; i++) { // 태그 달아주고
+				$("#tag-list").append("<li class='tag-item'>"+re_tag[i]+"<span class='del-btn' idx='"+i+"'>x</span></li>");
+				addTag (re_tag[i]);
+			}
+		}
+	}
+	
+	
 	$('.starRev span').click(function(){
 		  $(this).parent().children('span').removeClass('on');
 		  $(this).addClass('on').prevAll('span').addClass('on');
@@ -60,7 +84,11 @@ $(function() {
 	$("#tag").on("keypress", function (e) {
 		var self = $(this);
 		//특수문자 금지
-		if((e.keyCode >= 123 && e.keyCode <= 130) || (e.keyCode >= 33 && e.keyCode <= 47) || (e.keyCode >= 58 && e.keyCode <= 64) || (e.keyCode >= 91 && e.keyCode <= 96)){ 
+		if(  (e.keyCode >= 123 && e.keyCode <= 130) || 
+			 (e.keyCode >= 33 && e.keyCode <= 47) || 
+			 (e.keyCode >= 58 && e.keyCode <= 64) || 
+			 (e.keyCode >= 91 && e.keyCode <= 94) ||
+			 (e.keyCode == 96) ){ 
 			e.preventDefault(); 
 		}
 		// 엔터나 스페이스바 눌렀을 때
@@ -89,41 +117,25 @@ $(function() {
 	// 태그 삭제하기
 	 $("body").on("click", ".del-btn", function (e) {
          var index = $(this).attr("idx");
-         tag[index] = "";
+         console.log("삭제 기준되는 인덱스 " , index)
+         tag.splice(index, 1);
          $(this).parent().remove();
+         counter--;
      });
 	
 	$("#btnReview").on('click', function() {
 		$("#tagNone").val(tag);
 		alert("등록 되었습니다.")
 		$("#frmInsert").attr('action','${pageContext.request.contextPath}/reviewInsert');
-		$("#frmInsert").submit()
-		
-/* 		$.ajax({
-		    url: "${pageContext.request.contextPath}/reviewInsert",  
-		    type: 'POST',  
-		    data : $("#frmInsert").serialize(),
-		    dataType: "json",
-		    success: function(data) {
-	         	console.log(data);
-		    	alert("작성되었습니다.");
-	         	location.href = "${pageContext.request.contextPath}/buyList?buy_no=no"; 
-		    }, 
-		    error:function(xhr, status, message) { 
-		        alert(" status: "+status+" er:"+message);
-		    }
-		}); */
-
+		$("#frmInsert").submit();
 	}); 
 	
 });
 
 function addTag (value) {
-    /* tag[counter] = value; // 태그를 Object 안에 추가
-    counter++; // counter 증가 삭제를 위한 del-btn 의 고유 id 가 된다. */
-    tag.push(value);
-    console.log("tag에 넣기" , tag)
-    $("#tagNone").val(tag);
+    tag[counter] = value;
+    counter++;
+    $("#tagNone").val(tag); 
 }
 
 </script>
@@ -136,11 +148,11 @@ function addTag (value) {
 <form id="frmInsert" method="post" accept-charset="utf-8">
 	<div align="center" >
 		<div class="starRev" style="padding-bottom: 40px;">
-		  <span class="starR on">1</span>
-		  <span class="starR on">2</span>
-		  <span class="starR on">3</span>
-		  <span class="starR on">4</span>
-		  <span class="starR on">5</span>
+		  <span class="starR on 1">1</span>
+		  <span class="starR on 2">2</span>
+		  <span class="starR on 3">3</span>
+		  <span class="starR on 4">4</span>
+		  <span class="starR on 5">5</span>
 		  <input id="star" name="star" value="5" style="display: none;"> 
 		</div>
 		<table>
@@ -155,10 +167,10 @@ function addTag (value) {
 		
 	</div>
 	<div class="checkout__input" align="center" > 
-		<input type="text" id="title" name="title" placeholder="제목">
+		<input type="text" id="title" name="title" placeholder="제목" value="${review.title}">
 	</div>
 	<div class="container" style="padding: 10px 0px 20px 0px;">
-  		<textarea class="summernote" name="content" id="summernote"></textarea>    
+  		<textarea class="summernote" name="content" id="summernote">${review.content}</textarea>    
 	</div>
 	
 	<div align="center" style="padding-bottom: 20px;">

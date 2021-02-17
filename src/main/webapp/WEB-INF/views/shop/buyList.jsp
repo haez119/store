@@ -34,6 +34,12 @@
 .tblmodal tfoot tr td {
 	padding: 10px 25px 10px 25px; 
 }
+
+.review {
+	background-color: #fdf3ea;
+	color: #f08632;
+
+}
 </style>
 
 <script>
@@ -48,7 +54,7 @@
 			var button = $(event.relatedTarget); 
 			buy_no = button.data('no'); 
 			var modal = $(this);
-			console.log('주문번호: ' + buy_no);
+			
 			modal.find('.modal-title').text('주문 상세 내역');
 			modal.find('thead tr .buy_no').text(buy_no);
 			
@@ -57,24 +63,40 @@
 				type : 'POST',
 				data : { buy_no : buy_no },
 				success : function (data) {
+					review = data.reviewList
+					buy = data.buyList
+					console.log(review)
+					// if 태그 달아서 상품후기 / 후기 수정  이런식으로 되게 해야겟네
 					$('.modalbody').empty();
-					for(var i=0; i<data.length; i++){
+					for(var i=0; i<buy.length; i++){
+						var btn = null;
+						
+						for(var j=0; j < review.length; j++) {
+							
+							if(buy[i].BUYD_NO == review[j].buyd_no) {
+								btn = '<a type="button" class="btn primary-btn review" href="${pageContext.request.contextPath}/reviewInsertForm/'+buy[i].ITEM_NO+'/'+buy[i].BUYD_NO+'?update=true">후기 수정</button></td>';
+								break;
+							} else {
+								btn = '<a type="button" class="btn primary-btn" href="${pageContext.request.contextPath}/reviewInsertForm/'+buy[i].ITEM_NO+'/'+buy[i].BUYD_NO+'?update=false">상품 후기</button></td>';
+							}
+						}
+
 						$('.modalbody').append('<tr class="tr1">'
-											 + '<td class="pic" rowspan="2"><img style="height: 80px;" src="${pageContext.request.contextPath}/images/item/'+data[i].PIC+'"></td>'
+											 + '<td class="pic" rowspan="2"><img style="height: 80px;" src="${pageContext.request.contextPath}/images/item/'+buy[i].PIC+'"></td>'
 											 + '<td class="name"><b>상품명</b></td>'
-											 + '<td class="name2" colspan="3">'+data[i].TITLE+'</td>'
+											 + '<td class="name2" colspan="3">'+buy[i].TITLE+'</td>'
 											 + '<td class="reorder" rowspan="2">'
-											 + '<a type="button" class="btn primary-btn" href="${pageContext.request.contextPath}/reviewInsertForm/'+data[i].ITEM_NO+'/'+data[i].BUYD_NO+'">상품후기</button></td>'
+											 + btn
 											 + '</tr>'
 											 + '<tr class="tr2">'
 											 + '<td style="border-bottom: 3px solid #ebebeb;"><b>구매수량</b></td>'
-											 + '<td style="border-bottom: 3px solid #ebebeb; text-align: right;">'+data[i].QUANTITY+'개</td>'
+											 + '<td style="border-bottom: 3px solid #ebebeb; text-align: right;">'+buy[i].QUANTITY+'개</td>'
 											 + '<td style="border-bottom: 3px solid #ebebeb;"><b>구매금액</b></td>'
-											 + '<td style="border-bottom: 3px solid #ebebeb; text-align: right;">'+data[i].PRICE+'원</td>'
+											 + '<td style="border-bottom: 3px solid #ebebeb; text-align: right;">'+buy[i].PRICE+'원</td>'
 											 + '</tr>');
 						
 					}				
-					modal.find('.pay').text(data[0].PAYMENT + '원');
+					modal.find('.pay').text(buy[0].PAYMENT + '원');
 						
 					}, error : function(xhr, status){
 					alert(buy_no + ', ' + "실패! status: " + status);

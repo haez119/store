@@ -16,4 +16,24 @@
 				#{buyd_no} )
 	</insert>
 
+	<select id="reviewList" resultType="Review" parameterType="Review">
+		SELECT REVIEW_NO, ITEM_NO, MEM_ID, TITLE, STAR, TAG, BUYD_NO , CONTENT 
+		FROM REVIEW
+		<if test=" buyd_no != null and buyd_no != '' ">
+			WHERE BUYD_NO = #{buyd_no}
+		</if>
+		<if test=" item_no != null and item_no != ''  ">
+			WHERE ITEM_NO =  #{item_no}
+		</if>
+	</select>
+	
+	<update id="updateReview" parameterType="Review">
+		UPDATE REVIEW 
+				SET TITLE = #{title}, 
+					CONTENT = #{content}, 
+					STAR = #{star}, 
+					TAG = #{tag}
+		WHERE BUYD_NO = #{buyd_no}
+	</update>
+
 </mapper>
