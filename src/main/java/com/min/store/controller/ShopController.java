@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.min.store.impl.BoardMapper;
 import com.min.store.impl.ShopMapper;
 import com.min.store.service.ShopService;
@@ -62,15 +65,20 @@ public class ShopController {
 		String pic_d = item.getPic_d();
 		String[] picD = pic_d.split(","); //콤마 단위로 잘라서
 		
-		mav.addObject("picD", picD); //forEach 돌려서 출력
-		mav.addObject("item", item);
-		mav.addObject("sellerList", dao.itemSeller(seller_id));
-		
 		// 리뷰글 같이 
 		Review review = new Review();
 		review.setItem_no(no);
-		mav.addObject("reviewList", boDao.reviewList(review));
+		List<Review> reList = new ArrayList<Review>();
+		reList =  boDao.reviewList(review);
 		
+		Gson gson = new GsonBuilder().create();
+		String reviewList = gson.toJson(reList);
+		
+		mav.addObject("picD", picD); //forEach 돌려서 출력
+		mav.addObject("item", item);
+		mav.addObject("sellerList", dao.itemSeller(seller_id));
+		mav.addObject("reList", reList);
+		mav.addObject("reviewList", reviewList);
 		mav.setViewName("shop/shopDetail");
 		return mav; 
 	}

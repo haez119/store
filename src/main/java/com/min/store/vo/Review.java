@@ -13,5 +13,7 @@ public class Review {
 	private String tag;
 	
 	private String buyd_no;
+	private String insert_date;
+	
 	
 }

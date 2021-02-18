@@ -17,7 +17,7 @@
 	</insert>
 
 	<select id="reviewList" resultType="Review" parameterType="Review">
-		SELECT REVIEW_NO, ITEM_NO, MEM_ID, TITLE, STAR, TAG, BUYD_NO , CONTENT 
+		SELECT REVIEW_NO, ITEM_NO, MEM_ID, TITLE, STAR, TAG, BUYD_NO , CONTENT, TO_CHAR(INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') as INSERT_DATE
 		FROM REVIEW
 		<if test=" buyd_no != null and buyd_no != '' ">
 			WHERE BUYD_NO = #{buyd_no}
@@ -25,6 +25,7 @@
 		<if test=" item_no != null and item_no != ''  ">
 			WHERE ITEM_NO =  #{item_no}
 		</if>
+		ORDER BY 1 DESC
 	</select>
 	
 	<update id="updateReview" parameterType="Review">
