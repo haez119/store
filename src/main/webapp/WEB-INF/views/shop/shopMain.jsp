@@ -11,8 +11,8 @@
 		$("#type").change(function() {
 			type = $("#type :selected").val();
 			$(location).attr('href','${pageContext.request.contextPath}/shopMain?type=' + type);
-		});
-		$("#newmax").change(function() {
+		}); 
+		$("#newmax").change(function() {  //이거 인기순 말고 평점순으로 해야겟당
 			newmax = $("#newmax :selected").val();
 			$(location).attr('href','${pageContext.request.contextPath}/shopMain?newmax=' + newmax);
 		});

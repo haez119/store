@@ -36,5 +36,37 @@
 					TAG = #{tag}
 		WHERE BUYD_NO = #{buyd_no}
 	</update>
+	
+	<!--상품별 리뷰점수 -->
+	<select id="avgStar" parameterType="string" resultType="string">
+		SELECT NVL(ROUND(AVG(STAR),1),0) AS STAR
+		FROM REVIEW 
+		WHERE ITEM_NO = #{no}
+	</select>
+	
+	<!--문의글 등록 -->
+	<insert id="insertIquiry" parameterType="Inquiry">
+		INSERT INTO INQUIRY(INQUIRY_NO, ITEM_NO, MEM_ID, TYPE, TITLE, CONTENT, SECRET)
+		VALUES(INQ_SEQ.NEXTVAL,
+		       #{item_no} ,
+		       #{mem_id} ,
+		       #{type} ,
+		       #{title} ,
+		       #{content} ,
+		       #{secret} )
+	</insert>
+	
+	<!--문의글 리스트 -->
+	<select id="inquiryList" resultType="Inquiry" parameterType="Inquiry">
+		SELECT ROWNUM AS NO, INQUIRY_NO, ITEM_NO, MEM_ID, TYPE, TITLE, CONTENT, SECRET, TO_CHAR(INSERT_DATE, 'YYYY-MM-DD') AS INSERT_DATE, ANSWER, TO_CHAR(ANSWER_DATE, 'YYYY-MM-DD HH24:MI:SS') AS ANSWER_DATE
+		FROM INQUIRY
+		<if test="item_no != null and item_no != ''">
+			WHERE ITEM_NO = #{item_no}
+		</if>
+		<if test="inquiry_no != null and inquiry_no != ''">
+			WHERE INQUIRY_NO = #{inquiry_no}
+		</if>
+		ORDER BY 2
+	</select>
 
 </mapper>

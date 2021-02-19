@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +25,7 @@ import com.min.store.service.ShopService;
 import com.min.store.vo.Buyer;
 import com.min.store.vo.Buyer_d;
 import com.min.store.vo.Cart;
+import com.min.store.vo.Inquiry;
 import com.min.store.vo.Item;
 import com.min.store.vo.Member;
 import com.min.store.vo.Review;
@@ -58,7 +58,7 @@ public class ShopController {
 	@RequestMapping(value="/shopDetail")
 	public ModelAndView shopDetail(ModelAndView mav , HttpServletRequest request) throws IOException{
 		
-		String no = request.getParameter("no");
+		String no = request.getParameter("no"); //item_no
 		Item item = dao.itemDetail(no);
 		
 		String seller_id = item.getSeller_id(); 
@@ -74,7 +74,19 @@ public class ShopController {
 		Gson gson = new GsonBuilder().create();
 		String reviewList = gson.toJson(reList);
 		
-		mav.addObject("picD", picD); //forEach 돌려서 출력
+		// 문의글 리스트
+		Inquiry inquiry = new Inquiry();
+		List<Inquiry> inquirySt = new ArrayList<Inquiry>();
+		
+		inquiry.setItem_no(no);
+		inquirySt = boDao.inquiryList(inquiry);
+		
+		gson = new GsonBuilder().create();
+		String inquiryList = gson.toJson(inquirySt);
+		
+		mav.addObject("inquiryList", inquiryList);
+		mav.addObject("avgStar", boDao.avgStar(no));
+		mav.addObject("picD", picD);
 		mav.addObject("item", item);
 		mav.addObject("sellerList", dao.itemSeller(seller_id));
 		mav.addObject("reList", reList);

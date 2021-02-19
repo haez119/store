@@ -38,8 +38,8 @@ ul.rews li.current {
 .starR{
 	  background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat right 0;
 	  background-size: auto 100%;
-	  width: 25px;
-	  height: 25spx;
+	  width: 20px;
+	  height: 20px;
 	  display: inline-block;
 	  text-indent: -9999px;
 	  cursor: pointer;
@@ -57,6 +57,27 @@ ul li.tag-item {
     margin: 3px 3px;
     background-color: #f5f5f5;
     color: #000;
+}
+
+.reHr {
+	border: solid 1px #f08632;
+	background-color: #f08632;
+}
+
+textarea {
+			width: 100%;
+			height: 200px;
+			padding: 10px;
+			box-sizing: border-box;
+			border: solid 2px #ced4da;
+			border-radius: 5px;
+			font-size: 16px;
+			resize: both;
+	}
+	
+.inqIcon {
+	width: 20px; 
+	height: 20px;
 }
 </style>
 
@@ -98,7 +119,6 @@ ul li.tag-item {
 		$('ul.rews li').click(function() { // 포토리뷰/전체리뷰
 			
 			var tab_id = $(this).attr('data-tab');
-			console.log(tab_id);
 			$('ul.rews li').removeClass('current');
 			$('.rew-content').removeClass('current');
 
@@ -108,6 +128,11 @@ ul li.tag-item {
 		});
 		
 		var reviewList = ${reviewList};
+		
+		if(reviewList.length == 0) {
+			$("#noneRe").css('display', '');
+			$("#nonePhoto").css('display', '');
+		}
 		
 		for(var i=0; i < reviewList.length; i++) {
 			//포토리뷰 이미지만 찾기 
@@ -121,7 +146,7 @@ ul li.tag-item {
 			
 			// 사진이 있을 때
 			if(start != -1) {
-				
+				$("#nonePhoto").css('display', 'none');
 				$("#for-" + reviewList[i].review_no).css('display', ''); //포토 리뷰만 화면에 띄우기
 				
 				var end = content.indexOf('"', start + 5); // "를 찾음 start+5부터 
@@ -138,10 +163,9 @@ ul li.tag-item {
 				for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
 					$("#tag-list-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
 				}
-			} // if end
+			}
 			
 			//전체보기
-			
 			if(re_star != null && re_star != '' ) {
 				$("#all-"+reviewList[i].buyd_no).children('span').removeClass('on'); //별 지우고
 				$("#all-"+reviewList[i].buyd_no).children('span').eq(re_star-1).addClass('on').prevAll('span').addClass('on');
@@ -161,7 +185,105 @@ ul li.tag-item {
 			// 태그로 검색할꺼야
 		});
 		
+		var avgStar = "${avgStar}";
+		
+		if(avgStar != 0 ) {
+			avgStar = Math.round(avgStar);
+			$("#avgStar").children('span').removeClass('on'); //별 지우고
+			$("#avgStar").children('span').eq(avgStar-1).addClass('on').prevAll('span').addClass('on');
+		}
+		
+		//문의 리스트
+		var inquiry = ${inquiryList};
+		
+		if(inquiry.length == 0) {
+			$("#inqTable").html("<div align= center><h4>등록된 문의가 없습니다.</h4><div>")
+		}
+
+		for(var i=0; i < inquiry.length; i++) {
+			
+			var secret = (inquiry[i].secret == 1) ? "<img src='${pageContext.request.contextPath}/images/etc/secret.png' class='inqIcon'>" : " ";
+			var answer = (inquiry[i].answer == null) ? 0 : 1
+			
+			$("#inqTbody").append("<tr class='inqTr'>"
+					+ "<td style='display: none;'><a>"+ inquiry[i].mem_id +"</a><a>"+ inquiry[i].inquiry_no +"</a></td>"
+					+ "<td><a style='display: none;'>"+ inquiry[i].mem_id +"</a><div align='center'>" + inquiry[i].no + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].type + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].title + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].insert_date + "</div></td>"
+					+ "<td><div align='center'>"+ secret +"</div>"
+					+ "<td><div align='center'><img src='${pageContext.request.contextPath}/images/etc/answer.png' class='inqIcon'> &nbsp; (" + answer + ")</div></td>"        
+					);
+
+		}
+		
+		
+		// 문의 상세확인
+		$(".inqTr").on('click', function() {
+			var secret = $(this).children().eq(5).children().children().html();
+			var mem_id = $(this).children().eq(0).children().eq(0).text();
+			var inquiry_no = $(this).children().eq(0).children().eq(1).text();
+			var s_mem_id = "${sessionScope.member.mem_id}";
+			
+			if(secret == undefined) {
+				inquiryModal(inquiry_no);
+			} else {
+				if(mem_id == s_mem_id) {
+					inquiryModal(inquiry_no);
+				} else {
+					alert("등록한 회원만 확인할 수 있습니다.");
+				}
+			}
+		});
+		
+		
+		// 문의글 등록
+		$("#btnInquiry").on('click', function() {
+			
+			var item_no = "${item.item_no}";
+			console.log(item_no);
+			
+			$.ajax({
+				url : '${pageContext.request.contextPath}/inquiryInsert',
+				type : 'POST' ,
+				data : $("#frmInquiry").serialize(), 
+				success : function (data) {
+					alert("문의가 등록되었습니다.");
+					$(location).attr('href','${pageContext.request.contextPath}/shopDetail?no=' + item_no);
+					}, error : function(xhr, status){
+						alert("실패! status: " + status);
+				}
+			}); 
+		})
+		
 	});
+	
+	function inquiryModal(inquiry_no) {
+		
+		var modal = $("#inq_Detail");
+		
+		$.ajax({
+			  url: '${pageContext.request.contextPath}/inquiryDetail?no=' + inquiry_no ,
+			  success: function(data) {
+				  
+				 $("#answerDiv").css('display', 'none');
+				 modal.find('#de_answer_date').text("");
+				 modal.find('#de_answer').text("");
+				  
+				 modal.find('#d_type').text(data[0].type);
+				 modal.find('#de_insert_date').text(data[0].insert_date);
+				 modal.find('#de_title').text(data[0].title);
+				 modal.find('#de_content').text(data[0].content);
+				
+				 if(data[0].answer != null && data[0].answer != '') {
+					 $("#answerDiv").css('display', '');
+					 modal.find('#de_answer_date').text(data[0].answer_date);
+					 modal.find('#de_answer').text(data[0].answer);
+				 }
+				 modal.modal('show');
+			  },
+	  });
+	}
 
 </script>
 
@@ -213,12 +335,23 @@ ul li.tag-item {
                 <div class="col-lg-6">
                     <div class="product__details__text">
                         <div class="product__label">${item.nic_name}</div>
-                        <h4>${item.title}</h4>
+                        <h4>  ${item.title} &nbsp; &nbsp;
+                        	<span class="starRev" style="padding-bottom: 0px;" id="avgStar">
+								  <span class="starR 1">&nbsp;</span>
+								  <span class="starR 2">&nbsp;</span>
+								  <span class="starR 3">&nbsp;</span>
+								  <span class="starR 4">&nbsp;</span>
+								  <span class="starR 5">&nbsp;</span>
+							</span>
+                        
+                        </h4>
+                       	
                         <h5>${item.price} 원</h5>
                         <p>${item.content}</p>
                         <ul>
                             <li>SKU: <span>${item.stock}</span></li>
                             <li>Category: <span>${item.type}</span></li>
+                            <li>Star: <span>${avgStar}</span></li>
                         </ul>
                         <div class="product__details__option">
                             <div class="quantity">
@@ -278,50 +411,62 @@ ul li.tag-item {
 	                                <div id="photo" class="rew-content current" style="text-align: center;">
 	                                	<div id="imgDiv"></div>
 	                                	<div>
+		                                	<div style="height: 300px; display: none;" align="center" id="nonePhoto">
+		                                		<h2 style="padding-top: 150px;">등록된 포토 리뷰가 없습니다.</h2>
+		                                	</div>
+		                                
 	                                		<c:forEach var="review" items="${reList}">
-	                                		<div id="for-${review.review_no}" style="display: none;">
-	                                			<hr>
-	                                			<div align="center"> 
-	                                				<span style="float: left">작성자 : ${review.mem_id}</span>
-	                                				<span style="float: right;">등록일 : ${review.insert_date}</span>
-	                                			</div><br>
-	                                			
-	                                			<div align="center" style="padding-top: 30px;">
-		                                			<div align="right" class="starRev" style="padding-bottom: 40px;" id="${review.buyd_no}" >
-														  <span class="starR on 1">&nbsp;</span>
-														  <span class="starR on 2">&nbsp;</span>
-														  <span class="starR on 3">&nbsp;</span>
-														  <span class="starR on 4">&nbsp;</span>
-														  <span class="starR on 5">&nbsp;</span>
-													</div>
-			                                    	<h5><b>${review.title}</b></h5>
-			                                    	<div style="width: 70%; margin: 5px; font-size: 13px;">${review.content}</div>
-			                                    	<ul id="tag-list-${review.review_no}" style="padding-top: 10px;"></ul>
-		                                    	</div>
-		                                    </div>
+		                                		<div id="for-${review.review_no}" style="display: none;">
+		                                			<hr class="reHr">
+		                                			<div align="center" style="padding-top: 20px;"> 
+		                                				<span style="float: left">${review.mem_id}</span>
+		                                				<span style="float: right;">${review.insert_date}</span>
+		                                			</div><br>
+		                                			
+		                                			<div align="center" style="padding-top: 30px;">
+			                                			<div align="right" class="starRev" style="padding-bottom: 0px;" id="${review.buyd_no}" >
+															  <span class="starR 1">&nbsp;</span>
+															  <span class="starR 2">&nbsp;</span>
+															  <span class="starR 3">&nbsp;</span>
+															  <span class="starR 4">&nbsp;</span>
+															  <span class="starR 5">&nbsp;</span>
+														</div>
+														<hr>
+				                                    	<h5><b>${review.title}</b></h5>
+				                                    	<hr>
+				                                    	<div style="width: 70%; margin: 5px; font-size: 13px;">${review.content}</div>
+				                                    	<ul id="tag-list-${review.review_no}" style="padding-top: 10px;"></ul>
+			                                    	</div>
+			                                    </div>
 		                                    </c:forEach>
 	                                	</div> 
 	                                </div>
 	                                
 	                                <div id="all" class="rew-content" style="text-align: center;">
 	                                
+	                                <div style="height: 300px; display: none;" align="center" id="noneRe">
+                                		<h2 style="padding-top: 150px;">등록된 리뷰가 없습니다.</h2>
+                                	</div>
+                                	
 		                                <c:forEach var="review" items="${reList}">
 		                               		<div>
-		                               			<hr>
-		                               			<div align="center"> 
+		                               			<hr class="reHr">
+		                               			<div align="center" style="padding-top: 20px;"> 
 		                               				<span style="float: left">작성자 : ${review.mem_id}</span>
 		                               				<span style="float: right;">등록일 : ${review.insert_date}</span>
 		                               			</div><br>
 		                               			
 		                               			<div align="center" style="padding-top: 30px;">
-		                                			<div align="right" class="starRev" style="padding-bottom: 40px;" id="all-${review.buyd_no}" >
-														  <span class="starR on 1">&nbsp;</span>
-														  <span class="starR on 2">&nbsp;</span>
-														  <span class="starR on 3">&nbsp;</span>
-														  <span class="starR on 4">&nbsp;</span>
-														  <span class="starR on 5">&nbsp;</span>
+		                                			<div align="right" class="starRev" style="padding-bottom: 0px;" id="all-${review.buyd_no}" >
+														  <span class="starR 1">&nbsp;</span>
+														  <span class="starR 2">&nbsp;</span>
+														  <span class="starR 3">&nbsp;</span>
+														  <span class="starR 4">&nbsp;</span>
+														  <span class="starR 5">&nbsp;</span>
 													</div>
+													<hr>
 			                                    	<h5><b>${review.title}</b></h5>
+			                                    	<hr>
 			                                    	<div style="width: 70%; margin: 5px; font-size: 13px;">${review.content}</div>
 			                                    	<ul id="tag-all-${review.review_no}" style="padding-top: 10px;"></ul>
 		                                    	</div>
@@ -336,10 +481,35 @@ ul li.tag-item {
                     </div>
                     
                     <div class="tab-pane" id="tabs-3" role="tabpanel">
-                       <div class="row d-flex justify-content-center">
-                           <div class="col-lg-8">
-                               <p> 문의글 최신순 5~10개</p>
+                    	<c:if test="${sessionScope.member.mem_id ne null }">
+	                       	<div align="right" style="padding-top: 20px;" class="continue__btn">
+	                       		<a data-toggle="modal" href="#insertInquiry" class="">문의 하기</a>
+	                       	</div>
+	                    </c:if>
+                       		
+                       <div class="row d-flex justify-content-center" >
+                       		
+                       	   <div class="col-lg-8" align="center"><h2 style="padding-top: 50px;">상품 문의</h2></div>
+                           <div class="col-lg-8" style="min-height: 300px;">
+                           <div style="padding-top: 80px;" id="inqTable">
+                               <table  class="table table-hover">
+                               	<thead>
+                               		<tr>
+                               			<th style="width: 5%"><div align="center">No</div></th>
+                               			<th style="width: 15%"><div align="center">분류</div></th>
+                               			<th style="width: 30%"><div align="center">제목</div></th>
+                               			<th style="width: 20%"><div align="center">등록일</div></th>
+                               			<th style="width: 10%"></th>
+                               			<th style="width: 20%"></th>
+                               		</tr>
+                               	</thead>
+                               	<tbody id="inqTbody"></tbody>
+                               </table>
+                             </div>
                            </div>
+                       </div>
+                       <div align="center">
+                     		<a>페이징</a>
                        </div>
                    </div>
                    
@@ -391,5 +561,112 @@ ul li.tag-item {
             </div>
         </div>
     </section>
+    
+<div class="modal fade" id="insertInquiry" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  style="max-width: 100%; width: auto; display: table;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">문의 등록</h5>
+      </div>
+      <div class="modal-body">
+      	
+			<form id="frmInquiry" method="post">
+				<div class="form-group row">
+					<div class="col-md-6 mb-6 mb-lg-6">
+						<select id="type" name="type">
+                        	<option value="">선택</option>
+                            <option value="배송">배송</option>
+                            <option value="사이즈">사이즈</option>
+                            <option value="입고">입고</option>
+                            <option value="환불 및 교환">환불 및 교환</option>
+                            <option value="기타">기타</option>
+                        </select>
+					</div>
+				</div>
+			
+				<div class="form-group row">
+					<div class="col-md-12 mb-12 mb-lg-12">
+						<input type="text" class="form-control" placeholder="제목" id="title" name="title">
+						<input type="text" id="item_no" name="item_no" value="${item.item_no}" style="display: none;">
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-md-12 mb-12 mb-lg-12">
+						<textarea rows="20" cols="70" id="content" name="content"></textarea>
+					</div>
+				</div>
+				 <div class="checkout__input__checkbox" style="padding-top: 10px;">
+                    <label for="secret">
+                        	비밀글
+                        <input type="checkbox" id="secret" name="secret">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+			</form>  	
+      	
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-secondary" id="btnInquiry" >등록하기</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div><!-- modal end -->
+
+
+<div class="modal fade" id="inq_Detail" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  style="max-width: 100%; width: auto; display: table;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">문의 확인</h5>
+      </div>
+      <div class="modal-body">
+		<div class="form-group row">
+			<div class="col-md-6 mb-6 mb-lg-6">
+				<div><b id="d_type" style="color: #f08632; font-size: 20px;"></b></div>
+			</div>
+		</div>
+	
+		<div class="form-group row">
+			<div class="col-md-12 mb-12 mb-lg-12">
+				<span style="float: left" id="de_title"></span>
+				<span style="float: right" id="de_insert_date"></span>
+			</div>
+		</div>
+		<div class="form-group row">
+			<div class="col-md-12 mb-12 mb-lg-12">
+				<textarea rows="20" cols="70" id="de_content" readonly="readonly"></textarea>
+			</div>
+		</div>
+		<div id="answerDiv" style="display: none;">
+			<div class="form-group row">
+				<div class="col-md-12 mb-12 mb-lg-12">
+					<span style="float: left">답변</span>
+					<span style="float: right" id="de_answer_date"></span>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-12 mb-12 mb-lg-12">
+					<textarea rows="20" cols="70" id="de_answer" readonly="readonly"></textarea>
+				</div>
+			</div>
+		</div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div><!-- modal end -->
+
+
+
 </section>
     <!-- Related Products Section End -->
+    
+    
+    
+    
+    
+    

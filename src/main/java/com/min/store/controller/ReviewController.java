@@ -2,6 +2,7 @@ package com.min.store.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,12 +11,16 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.min.store.impl.BoardMapper;
 import com.min.store.impl.ShopMapper;
+import com.min.store.vo.Cart;
+import com.min.store.vo.Inquiry;
 import com.min.store.vo.Item;
 import com.min.store.vo.Member;
 import com.min.store.vo.Review;
@@ -73,7 +78,36 @@ public class ReviewController {
 		}
 
 		return new ModelAndView("redirect:buyList");
-
+	}
+	
+	// 문의글 상세 조회
+	@RequestMapping(value="/inquiryDetail" )
+	@ResponseBody
+	public List<Inquiry> inquiryDetail (HttpServletRequest request, HttpSession session) throws IOException{
+		
+		String inquiry_no = request.getParameter("no");
+		Inquiry inquiry = new Inquiry();
+		inquiry.setInquiry_no(inquiry_no);
+		
+		return dao.inquiryList(inquiry);
+	}
+	
+	
+	// 문의글 등록
+	@RequestMapping(value="/inquiryInsert" , method=RequestMethod.POST)
+	@ResponseBody
+	public boolean inquiryInsert (HttpServletRequest request, HttpSession session ,Inquiry inquiry) throws IOException{
+		
+		Member member = (Member) session.getAttribute("member");
+		inquiry.setMem_id(member.getMem_id());
+		
+		String secret = inquiry.getSecret();
+		secret = (secret == null || secret.equals("") ? "0" : "1");
+		
+		inquiry.setSecret(secret);
+		
+		dao.insertIquiry(inquiry);
+		return true;
 	}
 
 }

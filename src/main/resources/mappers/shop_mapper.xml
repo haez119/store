@@ -170,7 +170,7 @@
 		AND D.BUY_NO =  #{buy_no}
 	
 	</select>
-
+	
 
 
 </mapper>
