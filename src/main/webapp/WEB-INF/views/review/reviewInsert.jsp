@@ -125,9 +125,20 @@ $(function() {
 	
 	$("#btnReview").on('click', function() {
 		$("#tagNone").val(tag);
-		alert("등록 되었습니다.")
-		$("#frmInsert").attr('action','${pageContext.request.contextPath}/reviewInsert');
-		$("#frmInsert").submit();
+		
+		if( $("#title").val() == null || $("#title").val() == '') {
+			alert("제목을 입력해주세요.");
+			$("#title").focus();
+			event.preventDefault();
+		} else if( $("#summernote").val() == null || $("#summernote").val() == '' ) {
+			alert("내용을 입력해주세요.");
+			event.preventDefault();
+		} else {
+			alert("등록 되었습니다.");
+			$("#frmInsert").attr('action','${pageContext.request.contextPath}/reviewInsert');
+			$("#frmInsert").submit();
+		}
+		
 	}); 
 	
 });

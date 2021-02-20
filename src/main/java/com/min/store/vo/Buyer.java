@@ -15,5 +15,9 @@ public class Buyer {
 	private String addr_d;
 	private String email;
 	
+	// 페이징 처리
+	private int first; 
+	private int last;
+	
 	
 }

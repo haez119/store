@@ -28,6 +28,7 @@ import com.min.store.vo.Cart;
 import com.min.store.vo.Inquiry;
 import com.min.store.vo.Item;
 import com.min.store.vo.Member;
+import com.min.store.vo.Paging;
 import com.min.store.vo.Review;
 
 
@@ -46,11 +47,28 @@ public class ShopController {
 	@RequestMapping(value="/shopMain")
 	public ModelAndView shopMain(ModelAndView mav , HttpServletRequest request, Item item) throws IOException{
 		String type = request.getParameter("type");
-		type = (type == null || "".equals(type)) ? "no" : type; 
 		item.setType(type);
 		item.setNewmax(request.getParameter("newmax"));
 		
-		mav.addObject("itemList",dao.itemAll(item));
+		
+		String strp = request.getParameter("p");
+		int p = 1;
+		
+		if(strp != null && !strp.equals("")) {
+			p = Integer.parseInt(strp);
+		}
+		Paging paging = new Paging();
+		paging.setPageUnit(12); // 12로 바꿀꺼야
+		paging.setPageSize(2); // 페이지 번호 수 이전 123 다음 . 기본10
+		paging.setPage(p); // 현재 페이지 지정
+		
+		item.setFirst(paging.getFirst());
+		item.setLast(paging.getLast());
+		
+		paging.setTotalRecord(dao.itemAllCnt(item));
+
+		mav.addObject("paging", paging);
+		mav.addObject("itemList", dao.itemAll(item));
 		mav.setViewName("shop/shopMain");
 		return mav; 
 	}
@@ -195,19 +213,36 @@ public class ShopController {
 	public ModelAndView orderList (ModelAndView mav , HttpServletRequest request, HttpSession session , Member member) throws IOException{
 		
 		String buy_no = request.getParameter("buy_no");
-		buy_no = (buy_no == null || "".equals(buy_no)) ? "no" : buy_no;
 		
 		member = (Member) session.getAttribute("member");
 		Buyer buyer = new Buyer();
+		
+		String strp = request.getParameter("p");
+		int p = 1;
+		if(strp != null && !strp.equals("")) {
+			p = Integer.parseInt(strp);
+		}
+		Paging paging = new Paging();
+		
+		paging.setPageUnit(3); // 5로 바꿀꺼야
+		paging.setPageSize(3); // 페이지 번호 수 이전 123 다음 . 기본10
+		paging.setPage(p); // 현재 페이지 지정
+		
+		buyer.setFirst(paging.getFirst());
+		buyer.setLast(paging.getLast());
 
-		if(buy_no.equals("no")) {
+		if(buy_no == null || buy_no.equals("")) {
 			buyer.setMem_id(member.getMem_id());
+			paging.setTotalRecord(dao.OrderListCnt(buyer));
 			mav.addObject("buyList", dao.selectOrderList(buyer));
 			
 		} else {
 			buyer.setBuy_no(buy_no);
+			paging.setTotalRecord(dao.OrderListCnt(buyer));
 			mav.addObject("buyList", dao.selectOrderList(buyer));
 		}
+		
+		mav.addObject("paging", paging);
 		mav.setViewName("shop/buyList");
 		return mav; 
 	}

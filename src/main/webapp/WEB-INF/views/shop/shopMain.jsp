@@ -1,7 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="my"%>  
+
+
+<style>
+.pagination li {
+	display: inline-block;
+}
+
+.pagination {
+	display: inline-block;
+}
+
+.pagination a {
+	color: #f08632;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
+	transition: background-color .3s;
+	border: 1px solid #f08632;
+	margin: 0 4px;
+	border-radius: 70%;
+}
+
+.pagination a.active {
+	background-color: #f08632 ;
+	color: white;
+	border: 1px solid #f08632 ;
+}
+
+
+</style>
 <script>
 	$(function() {
 		$(".menu").children().removeClass('active');
@@ -73,9 +104,11 @@
         <div class="container" >
             <div class="shop__option" >
                 <div class="row">
-                    <div class="col-lg-7 col-md-7">
+                
+                    <div class="col-lg-12 col-md-12">
                         <!-- <div class="shop__option__search" > -->
                             <%-- <form action="${pageContext.request.contextPath}/shopMain"> --%>
+                            <span style="float: left;"> 
                                 <select id="type" name="type">
                                 	<option value="">ALL</option>
                                     <option value="TOP">TOP</option>
@@ -84,17 +117,20 @@
                                     <option value="BAG">BAG</option>
                                     <option value="ETC">ETC</option>
                                 </select>
+                             </span>
                                <!--  <input type="text" placeholder="Search" name="keyword" id="keyword">
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
                         </div> -->
+                        
+                        <span style="float: right;">
+		                   	<select id="newmax" name="newmax">
+	                        	<option value="NEW">최신순</option>
+	                            <option value="MAX">판매순</option>
+	                        </select>
+                    	</span>
                     </div>
-                    <div style="padding-left: 30%;">
-	                   	<select id="newmax" name="newmax">
-                        	<option value="NEW">최신순</option>
-                            <option value="MAX">판매순</option>
-                        </select>
-                    </div>
+                    
                 </div>
             </div>
             <div class="row" style="min-height: 300px;">
@@ -128,25 +164,23 @@
             </c:forEach > 
             
             </div>
-            <c:if test="${fn:length(itemList) ne 0}">
+            
             <div class="shop__last__option">
-                <div class="row">
+                <div align="center">
                     <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="shop__pagination">
-                            <a href="#">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#"><span class="arrow_carrot-right"></span></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <!-- <div class="shop__last__text">
-                            <p>Showing 1-9 of 10 results</p>
-                        </div> -->
+                        <div class="pagination" align="center">
+							<script>
+								function goPage(p) {
+									location.href="shopMain?p="+p
+								}
+							</script>
+							
+							<my:paging paging="${paging}" jsfunc="goPage" /> 
+						</div>
                     </div>
                 </div>
             </div>
-            </c:if>
+            
         </div>
     </section>
     <!-- Shop Section End -->

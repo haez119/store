@@ -6,18 +6,29 @@
 	
 	<!--전체조회 + 필터링 -->
 	<select id="itemAll" resultType="Item" parameterType="Item">
-		SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
+		SELECT * FROM ( SELECT A.*, ROWNUM RN FROM (
+ 			SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
+			FROM ITEM
+			<if test="type != null and type != '' ">
+				WHERE TYPE = #{type}
+			</if>
+			<if test="newmax == null or newmax == '' or newmax == 'NEW'">
+				ORDER BY 1 DESC
+			</if>
+			<if test="newmax == 'MAX' ">
+				ORDER BY STOCK
+			</if>
+		 ) A ) B WHERE RN BETWEEN #{first} AND #{last}
+
+	</select>
+	
+	<!--shopMain Paging-->
+	<select id="itemAllCnt" parameterType="Item" resultType="int">
+		SELECT COUNT(*) 
 		FROM ITEM
-		<if test="type != 'no'">
+		<if test="type != null and type != '' ">
 			WHERE TYPE = #{type}
 		</if>
-		<if test="newmax == null or newmax == '' or newmax == 'NEW'">
-			ORDER BY 1 DESC
-		</if>
-		<if test="newmax == 'MAX' ">
-			ORDER BY STOCK
-		</if>
-		
 	</select>
 	
 	<!--검색 -->
@@ -150,7 +161,22 @@
 
 	<!--주문 리스트 -->
 	<select id="selectOrderList" parameterType="Buyer" resultType="map">
-		SELECT BUY_NO, MEM_ID, PAYMENT, TO_CHAR(PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') AS PAY_TIME , NAME, PHONE, ADDR || ' ' || ADDR_D AS ADDR, ADDR_NO
+		SELECT * FROM ( SELECT A.*, ROWNUM RN FROM (
+			SELECT BUY_NO, MEM_ID, PAYMENT, TO_CHAR(PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') AS PAY_TIME , NAME, PHONE, ADDR || ' ' || ADDR_D AS ADDR, ADDR_NO
+			FROM BUYER 
+			<if test="buy_no == null or buy_no == '' ">
+				WHERE MEM_ID = #{mem_id}
+			</if>
+			<if test="mem_id == null or mem_id =='' ">
+				WHERE BUY_NO = #{buy_no}
+			</if>
+			ORDER BY 1 DESC
+		 ) A ) B WHERE RN BETWEEN #{first} AND #{last}
+	</select>
+	
+	
+	<select id="OrderListCnt" parameterType="Buyer" resultType="int">
+		SELECT COUNT(*)
 		FROM BUYER 
 		<if test="buy_no == null or buy_no == '' ">
 			WHERE MEM_ID = #{mem_id}
@@ -158,7 +184,6 @@
 		<if test="mem_id == null or mem_id =='' ">
 			WHERE BUY_NO = #{buy_no}
 		</if>
-		ORDER BY 1 DESC
 	</select>
 
 	<!--주문리스트 상세-->

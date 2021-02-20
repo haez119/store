@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="my"%>  
 <style>
 .wishlist__cart__table table tbody tr td {
     padding-top: 10px;
@@ -38,8 +39,35 @@
 .review {
 	background-color: #fdf3ea;
 	color: #f08632;
-
 }
+
+.pagination li {
+	display: inline-block;
+}
+
+.pagination {
+	display: inline-block;
+}
+
+.pagination a {
+	color: #f08632;
+	float: left;
+	padding: 8px 16px;
+	text-decoration: none;
+	transition: background-color .3s;
+	border: 1px solid #f08632;
+	margin: 0 4px;
+	border-radius: 70%;
+}
+
+.pagination a.active {
+	background-color: #f08632 ;
+	color: white;
+	border: 1px solid #f08632 ;
+}
+
+
+
 </style>
 
 <script>
@@ -193,6 +221,19 @@
                     </div>
                 </div>
             </div>
+            
+            <div align="center">
+                 <div class="pagination" align="center">
+					<script>
+						function goPage(p) {
+							location.href="buyList?p="+p
+						}
+					</script>
+					<my:paging paging="${paging}" jsfunc="goPage" /> 
+				</div>
+           </div>
+                
+                
         </div>
         
         <!-- 모달창 -->
@@ -248,7 +289,5 @@
 				   </div>
 				</div>
 			</div>
-        
-        
     </section>
     <!-- Wishlist Section End -->

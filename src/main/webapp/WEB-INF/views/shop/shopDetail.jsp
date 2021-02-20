@@ -3,6 +3,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<!-- 데이터 테이블? -->
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/>  -->
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+<script src = "http://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js" defer ></script>
+
+
 <style>
 ul.rews {
 	margin: 0px;
@@ -66,7 +72,7 @@ ul li.tag-item {
 
 textarea {
 			width: 100%;
-			height: 200px;
+			height: 150px;
 			padding: 10px;
 			box-sizing: border-box;
 			border: solid 2px #ced4da;
@@ -79,7 +85,33 @@ textarea {
 	width: 20px; 
 	height: 20px;
 }
+
+.paginate {
+  display: ;
+}
+
+.paginate_button {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+}
+
+span a.current {
+  color: orange;
+  /* background-color: orange; */
+  
+}
+
+span a.current:hover {
+	color: orange;
+}
+
+
 </style>
+
 
 
 <script>
@@ -140,9 +172,16 @@ textarea {
 			var start = content.indexOf('src="'); // src=" s의 인덱스 번호 리턴
 			
 			var re_tag = reviewList[i].tag
-			re_tag = re_tag.split(",");
+			if(re_tag != null && re_tag != '') {
+				re_tag = re_tag.split(",");
+				
+				for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
+					$("#tag-all-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
+				}
+			}
 			
 			var re_star = parseInt(reviewList[i].star)
+			
 			
 			// 사진이 있을 때
 			if(start != -1) {
@@ -170,9 +209,8 @@ textarea {
 				$("#all-"+reviewList[i].buyd_no).children('span').removeClass('on'); //별 지우고
 				$("#all-"+reviewList[i].buyd_no).children('span').eq(re_star-1).addClass('on').prevAll('span').addClass('on');
 			}
-			for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
-				$("#tag-all-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
-			}
+			
+			
 
 		}// for end
 		
@@ -194,28 +232,7 @@ textarea {
 		}
 		
 		//문의 리스트
-		var inquiry = ${inquiryList};
-		
-		if(inquiry.length == 0) {
-			$("#inqTable").html("<div align= center><h4>등록된 문의가 없습니다.</h4><div>")
-		}
-
-		for(var i=0; i < inquiry.length; i++) {
-			
-			var secret = (inquiry[i].secret == 1) ? "<img src='${pageContext.request.contextPath}/images/etc/secret.png' class='inqIcon'>" : " ";
-			var answer = (inquiry[i].answer == null) ? 0 : 1
-			
-			$("#inqTbody").append("<tr class='inqTr'>"
-					+ "<td style='display: none;'><a>"+ inquiry[i].mem_id +"</a><a>"+ inquiry[i].inquiry_no +"</a></td>"
-					+ "<td><a style='display: none;'>"+ inquiry[i].mem_id +"</a><div align='center'>" + inquiry[i].no + "</div></td>"
-					+ "<td><div align='center'>" + inquiry[i].type + "</div></td>"
-					+ "<td><div align='center'>" + inquiry[i].title + "</div></td>"
-					+ "<td><div align='center'>" + inquiry[i].insert_date + "</div></td>"
-					+ "<td><div align='center'>"+ secret +"</div>"
-					+ "<td><div align='center'><img src='${pageContext.request.contextPath}/images/etc/answer.png' class='inqIcon'> &nbsp; (" + answer + ")</div></td>"        
-					);
-
-		}
+		inquiryList();
 		
 		
 		// 문의 상세확인
@@ -241,22 +258,89 @@ textarea {
 		$("#btnInquiry").on('click', function() {
 			
 			var item_no = "${item.item_no}";
-			console.log(item_no);
 			
-			$.ajax({
-				url : '${pageContext.request.contextPath}/inquiryInsert',
-				type : 'POST' ,
-				data : $("#frmInquiry").serialize(), 
-				success : function (data) {
-					alert("문의가 등록되었습니다.");
-					$(location).attr('href','${pageContext.request.contextPath}/shopDetail?no=' + item_no);
-					}, error : function(xhr, status){
-						alert("실패! status: " + status);
-				}
-			}); 
-		})
+			if( $("#type option:selected").val() == null || $("#type option:selected").val() == '') {
+				alert("문의 분류를 선택하세요.");
+				
+			} else if( $("#title").val() == null || $("#title").val() == '' ) {
+				alert("제목을 입력하세요.");
+				$("#title").focus();
+			}  else if( $("#content").val() == null || $("#content").val() == '' ) {
+				alert("내용을 입력하세요.");
+				$("#content").focus();
+			}else {
+				$.ajax({
+					url : '${pageContext.request.contextPath}/inquiryInsert',
+					type : 'POST' ,
+					data : $("#frmInquiry").serialize(), 
+					success : function (data) {
+						alert("문의가 등록되었습니다.");
+						$(location).attr('href','${pageContext.request.contextPath}/shopDetail?no=' + item_no);
+						}, error : function(xhr, status){
+							alert("실패! status: " + status);
+					}
+				}); 
+			}
+			
+		});
 		
 	});
+	
+	function inquiryList() {
+		var inquiry = ${inquiryList};
+		
+		console.log(inquiry[0])
+		
+		if(inquiry.length == 0) {
+			$("#inqTable").html("<div align= center><h4>등록된 문의가 없습니다.</h4><div>")
+		}
+
+		for(var i=0; i < inquiry.length; i++) {
+			console.log(inquiry[i])
+			
+			var secret = (inquiry[i].secret == 1) ? "<img src='${pageContext.request.contextPath}/images/etc/secret.png' class='inqIcon'>" : " ";
+			var answer = (inquiry[i].answer == null) ? 0 : 1
+			
+			$("#inqTbody").append("<tr class='inqTr'>"
+					+ "<td style='display: none;'><a>"+ inquiry[i].mem_id +"</a><a>"+ inquiry[i].inquiry_no +"</a></td>"
+					+ "<td><a style='display: none;'>"+ inquiry[i].mem_id +"</a><div align='center'>" + inquiry[i].no + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].type + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].title + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].insert_date + "</div></td>"
+					+ "<td><div align='center'>"+ secret +"</div>"
+					+ "<td><div align='center'><img src='${pageContext.request.contextPath}/images/etc/answer.png' class='inqIcon'> &nbsp; (" + answer + ")</div></td>"        
+					);
+
+		}
+		
+		 $('#foo-table').DataTable({
+			// 표시 건수기능 숨기기
+				"language": {
+		        "emptyTable": "데이터가 없어요.",
+		        "lengthMenu": "Show _MENU_",
+		        "infoEmpty": "데이터가 없습니다.",
+		        "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+		        "search": "검색: ",
+		        "zeroRecords": "일치하는 데이터가 없습니다.",
+		        "loadingRecords": "로딩중...",
+		        "processing":     "잠시만 기다려 주세요...",
+		        "paginate": {
+		            "next": ">",
+		            "previous": "<"
+		        }
+		    	},
+				lengthChange: true, //t-보이기 , f-숨기기
+				searching: false,
+				// ordering: true,
+				order: [ [ 1, "asc" ] ],
+				info: false,
+				paging: true,
+				lengthMenu: [ 5, 10, 15, 20 ],
+				displayLength: 5 
+		  	});
+		 
+		 
+	}
 	
 	function inquiryModal(inquiry_no) {
 		
@@ -284,7 +368,7 @@ textarea {
 			  },
 	  });
 	}
-
+	
 </script>
 
 
@@ -489,17 +573,18 @@ textarea {
                        		
                        <div class="row d-flex justify-content-center" >
                        		
-                       	   <div class="col-lg-8" align="center"><h2 style="padding-top: 50px;">상품 문의</h2></div>
-                           <div class="col-lg-8" style="min-height: 300px;">
-                           <div style="padding-top: 80px;" id="inqTable">
-                               <table  class="table table-hover">
+                       	   <div class="col-lg-10" align="center"><h2 style="padding-top: 50px;">상품 문의</h2></div>
+                           <div class="col-lg-10" style="min-height: 300px;">
+                           <div style="padding-top: 80px;" id="inqTable" align="center">
+                               <table  class="table table-hover" id="foo-table" style="width: 100%;">
                                	<thead>
                                		<tr>
-                               			<th style="width: 5%"><div align="center">No</div></th>
-                               			<th style="width: 15%"><div align="center">분류</div></th>
+                               			<th style="display: none;"></th>
+                               			<th style="width: 3%"><div align="center">No</div></th>
+                               			<th style="width: 20%"><div align="center">분류</div></th>
                                			<th style="width: 30%"><div align="center">제목</div></th>
                                			<th style="width: 20%"><div align="center">등록일</div></th>
-                               			<th style="width: 10%"></th>
+                               			<th style="width: 7%"></th>
                                			<th style="width: 20%"></th>
                                		</tr>
                                	</thead>
@@ -507,9 +592,6 @@ textarea {
                                </table>
                              </div>
                            </div>
-                       </div>
-                       <div align="center">
-                     		<a>페이징</a>
                        </div>
                    </div>
                    
@@ -523,7 +605,8 @@ textarea {
 
     <!-- Related Products Section Begin -->
     <!-- 해당 물품 올린 판매자의 품목만 보이도록 왜 4개가 보일까-->
-    <section class="related-products spad">
+    <section class="related-products spad" style="padding-top: 30px;">
+    <hr>
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -561,7 +644,8 @@ textarea {
             </div>
         </div>
     </section>
-    
+
+<!-- 등록하는 모달 -->
 <div class="modal fade" id="insertInquiry" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog"  style="max-width: 100%; width: auto; display: table;">
     <div class="modal-content">
@@ -613,7 +697,7 @@ textarea {
   </div>
 </div><!-- modal end -->
 
-
+<!-- 확인하는 모달 -->
 <div class="modal fade" id="inq_Detail" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog"  style="max-width: 100%; width: auto; display: table;">
     <div class="modal-content">
@@ -660,10 +744,9 @@ textarea {
   </div>
 </div><!-- modal end -->
 
-
-
 </section>
     <!-- Related Products Section End -->
+
     
     
     
