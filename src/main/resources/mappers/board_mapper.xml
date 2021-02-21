@@ -28,6 +28,17 @@
 		ORDER BY 1 DESC
 	</select>
 	
+	<select id="reviewListCnt" parameterType="Review" resultType="int">
+			SELECT COUNT(*)
+			FROM REVIEW
+			<if test=" buyd_no != null and buyd_no != '' ">
+				WHERE BUYD_NO = #{buyd_no}
+			</if>
+			<if test=" item_no != null and item_no != ''  ">
+				WHERE ITEM_NO =  #{item_no}
+			</if>
+	</select>
+	
 	<update id="updateReview" parameterType="Review">
 		UPDATE REVIEW 
 				SET TITLE = #{title}, 

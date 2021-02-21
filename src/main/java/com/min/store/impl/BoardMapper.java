@@ -12,10 +12,13 @@ public interface BoardMapper {
 	public void updateReview(Review review);
 	
 	public List<Review> reviewList(Review review);
+	public int reviewListCnt(Review review);
 	
 	public String avgStar(String no);
 	
 	public void insertIquiry(Inquiry inquiry);
 	public List<Inquiry> inquiryList(Inquiry inquiry);
+	
+	
 	
 }

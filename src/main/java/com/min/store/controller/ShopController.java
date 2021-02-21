@@ -83,32 +83,30 @@ public class ShopController {
 		String pic_d = item.getPic_d();
 		String[] picD = pic_d.split(","); //콤마 단위로 잘라서
 		
-		// 리뷰글 같이 
+		// 리뷰
+		Gson gson = new GsonBuilder().create();
+		List<Review> reList = new ArrayList<Review>();
 		Review review = new Review();
 		review.setItem_no(no);
-		List<Review> reList = new ArrayList<Review>();
 		reList =  boDao.reviewList(review);
-		
-		Gson gson = new GsonBuilder().create();
 		String reviewList = gson.toJson(reList);
+		
 		
 		// 문의글 리스트
 		Inquiry inquiry = new Inquiry();
-		List<Inquiry> inquirySt = new ArrayList<Inquiry>();
-		
 		inquiry.setItem_no(no);
+		List<Inquiry> inquirySt = new ArrayList<Inquiry>();
 		inquirySt = boDao.inquiryList(inquiry);
-		
 		gson = new GsonBuilder().create();
 		String inquiryList = gson.toJson(inquirySt);
 		
-		mav.addObject("inquiryList", inquiryList);
-		mav.addObject("avgStar", boDao.avgStar(no));
-		mav.addObject("picD", picD);
-		mav.addObject("item", item);
-		mav.addObject("sellerList", dao.itemSeller(seller_id));
-		mav.addObject("reList", reList);
-		mav.addObject("reviewList", reviewList);
+		mav.addObject("inquiryList", inquiryList); //문의 리스트
+		mav.addObject("avgStar", boDao.avgStar(no)); // 상품 평균 별점
+		mav.addObject("picD", picD); // 상품 대표사진
+		mav.addObject("item", item); // 상품정보
+		mav.addObject("sellerList", dao.itemSeller(seller_id)); //판매자의 다른 상품
+		mav.addObject("reList", reList);  // 리뷰 리스트
+		mav.addObject("reviewList", reviewList);  // gson 리뷰 리스트
 		mav.setViewName("shop/shopDetail");
 		return mav; 
 	}

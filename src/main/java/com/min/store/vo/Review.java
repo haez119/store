@@ -15,5 +15,8 @@ public class Review {
 	private String buyd_no;
 	private String insert_date;
 	
+	private int first;
+	private int last;
+	
 	
 }

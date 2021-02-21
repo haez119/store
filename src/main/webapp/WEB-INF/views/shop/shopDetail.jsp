@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="my"%>
+
 
 <!-- 데이터 테이블? -->
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/>  -->
@@ -109,6 +111,20 @@ span a.current:hover {
 	color: orange;
 }
 
+#imgDiv{
+width:100%;
+height:200px;
+white-space:nowrap;
+overflow-x:scroll;
+}
+
+ .rew_content {
+ 	  padding: 30px;
+      width: 100%;
+      height: 500px;
+      overflow: auto;
+  }
+
 
 </style>
 
@@ -159,35 +175,42 @@ span a.current:hover {
 			
 		});
 		
+		// 리뷰
 		var reviewList = ${reviewList};
 		
+		// 리뷰가 없을 때 '리뷰 없음' 출력
 		if(reviewList.length == 0) {
 			$("#noneRe").css('display', '');
 			$("#nonePhoto").css('display', '');
 		}
 		
+		
 		for(var i=0; i < reviewList.length; i++) {
+			
 			//포토리뷰 이미지만 찾기 
 			var content = reviewList[i].content;
 			var start = content.indexOf('src="'); // src=" s의 인덱스 번호 리턴
 			
-			var re_tag = reviewList[i].tag
+			// 태그 담아서
+			var re_tag = reviewList[i].tag;
+			// 태그가 있을 때 출력
 			if(re_tag != null && re_tag != '') {
 				re_tag = re_tag.split(",");
-				
 				for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
 					$("#tag-all-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
 				}
 			}
-			
-			var re_star = parseInt(reviewList[i].star)
-			
+			// 리뷰 별점 담아서
+			var re_star = parseInt(reviewList[i].star);
 			
 			// 사진이 있을 때
 			if(start != -1) {
 				$("#nonePhoto").css('display', 'none');
-				$("#for-" + reviewList[i].review_no).css('display', ''); //포토 리뷰만 화면에 띄우기
 				
+				// forEach로 전체리뷰 띄운 후 display=none  사진이 있는 i만 none 해제
+				$("#for-" + reviewList[i].review_no).css('display', ''); 
+				
+				//이미지만 달기
 				var end = content.indexOf('"', start + 5); // "를 찾음 start+5부터 
 				var list = content.substring(start + 5, end);
 				$("#imgDiv").append("<img src='" + list + "' style='width: 120px; height: 120px; margin: 20px;'>");
@@ -197,11 +220,13 @@ span a.current:hover {
 					$("#"+reviewList[i].buyd_no).children('span').removeClass('on'); //별 지우고
 					$("#"+reviewList[i].buyd_no).children('span').eq(re_star-1).addClass('on').prevAll('span').addClass('on');
 				}
-				
 				//태그 달기
-				for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
-					$("#tag-list-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
+				if(re_tag != null && re_tag != '') {
+					for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
+						$("#tag-list-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
+					}
 				}
+				
 			}
 			
 			//전체보기
@@ -213,7 +238,6 @@ span a.current:hover {
 			
 
 		}// for end
-		
 		
 		// 해시태그 클릭
 		$(".tag-item").on('click', function() {
@@ -289,14 +313,11 @@ span a.current:hover {
 	function inquiryList() {
 		var inquiry = ${inquiryList};
 		
-		console.log(inquiry[0])
-		
 		if(inquiry.length == 0) {
 			$("#inqTable").html("<div align= center><h4>등록된 문의가 없습니다.</h4><div>")
 		}
 
 		for(var i=0; i < inquiry.length; i++) {
-			console.log(inquiry[i])
 			
 			var secret = (inquiry[i].secret == 1) ? "<img src='${pageContext.request.contextPath}/images/etc/secret.png' class='inqIcon'>" : " ";
 			var answer = (inquiry[i].answer == null) ? 0 : 1
@@ -482,7 +503,7 @@ span a.current:hover {
                         
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
                             <div class="row d-flex justify-content-center">
-                                <div class="col-lg-8">
+                                <div class="col-lg-10">
                                 <div style="text-align: center;">
                                 
 									<div align="center">
@@ -493,8 +514,11 @@ span a.current:hover {
 									</div>
 		
 	                                <div id="photo" class="rew-content current" style="text-align: center;">
-	                                	<div id="imgDiv"></div>
-	                                	<div>
+	                                	<div id="imgDiv">
+	                                		<!-- 포토 리뷰 사진만 -->
+	                                	</div>
+	                                	<p></p>
+	                                	<div class="rew_content">
 		                                	<div style="height: 300px; display: none;" align="center" id="nonePhoto">
 		                                		<h2 style="padding-top: 150px;">등록된 포토 리뷰가 없습니다.</h2>
 		                                	</div>
@@ -524,9 +548,11 @@ span a.current:hover {
 			                                    </div>
 		                                    </c:forEach>
 	                                	</div> 
+	                                	
 	                                </div>
 	                                
 	                                <div id="all" class="rew-content" style="text-align: center;">
+	                                <div class="rew_content">
 	                                
 	                                <div style="height: 300px; display: none;" align="center" id="noneRe">
                                 		<h2 style="padding-top: 150px;">등록된 리뷰가 없습니다.</h2>
@@ -556,9 +582,8 @@ span a.current:hover {
 		                                    	</div>
 		                                    </div>
 	                                    </c:forEach>
-	  
 	                                </div>
-  		
+  								</div>
                                 </div>
                             </div>
                         </div>
