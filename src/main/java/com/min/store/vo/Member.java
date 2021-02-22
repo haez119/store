@@ -14,5 +14,7 @@ public class Member {
 	private String addr_no;
 	private String addr;
 	private String addr_d;
+	
+	private String item_no; //0222 추가
 
 }

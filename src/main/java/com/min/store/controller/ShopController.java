@@ -46,9 +46,8 @@ public class ShopController {
 	
 	@RequestMapping(value="/shopMain")
 	public ModelAndView shopMain(ModelAndView mav , HttpServletRequest request, Item item) throws IOException{
-		String type = request.getParameter("type");
-		item.setType(type);
-		item.setNewmax(request.getParameter("newmax"));
+		item.setType(request.getParameter("type"));
+		item.setOrderby(request.getParameter("orderby"));
 		
 		
 		String strp = request.getParameter("p");
@@ -69,12 +68,14 @@ public class ShopController {
 
 		mav.addObject("paging", paging);
 		mav.addObject("itemList", dao.itemAll(item));
+		mav.addObject("type", request.getParameter("type"));
+		mav.addObject("orderby", request.getParameter("orderby"));
 		mav.setViewName("shop/shopMain");
 		return mav; 
 	}
 	
 	@RequestMapping(value="/shopDetail")
-	public ModelAndView shopDetail(ModelAndView mav , HttpServletRequest request) throws IOException{
+	public ModelAndView shopDetail(ModelAndView mav , HttpServletRequest request, HttpSession session) throws IOException{
 		
 		String no = request.getParameter("no"); //item_no
 		Item item = dao.itemDetail(no);
@@ -100,6 +101,15 @@ public class ShopController {
 		gson = new GsonBuilder().create();
 		String inquiryList = gson.toJson(inquirySt);
 		
+		//찜하기 
+		Member member = new Member();
+		member = (Member) session.getAttribute("member");
+		if (member != null) {
+			member.setItem_no(no);
+			int wish = dao.selectWish(member);
+			mav.addObject("wish", wish);
+		}
+		 
 		mav.addObject("inquiryList", inquiryList); //문의 리스트
 		mav.addObject("avgStar", boDao.avgStar(no)); // 상품 평균 별점
 		mav.addObject("picD", picD); // 상품 대표사진
@@ -268,6 +278,18 @@ public class ShopController {
 	}
 	
 	
+	@RequestMapping(value="/wishUpdate/{wish}/{item_no}")
+	@ResponseBody
+	public void wishUpdate(@PathVariable String wish, @PathVariable String item_no, HttpSession session, HttpServletRequest request) throws IOException{
+		
+		Member member = (Member) session.getAttribute("member");
+		member.setItem_no(item_no);
+		if(wish.equals("insert")) {
+			dao.addWish(member);
+		} else {
+			dao.delWish(member);
+		}
+	}
 	
 	
 	

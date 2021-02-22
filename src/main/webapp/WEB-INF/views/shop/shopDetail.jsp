@@ -119,7 +119,7 @@ overflow-x:scroll;
 }
 
  .rew_content {
- 	  padding: 30px;
+ 	  padding: 30px 50px 30px 30px;
       width: 100%;
       height: 500px;
       overflow: auto;
@@ -131,23 +131,27 @@ overflow-x:scroll;
 
 
 <script>
+	
+	
+
 	$(function() {
+		var s_mem_id = "${sessionScope.member.mem_id}";
+		var item_no = "${item.item_no}";
 		
 		$(".menu").children().removeClass('active');
 		$("#shop").addClass('active'); //메뉴 색 
 		
 		$("#addCart").on('click', function() {
 			var q = $("#quantity").val();
-			var id = "${sessionScope.member.mem_id}";
 			var no = $(this).next().next().text();
 
  			var answer = confirm("카트에 담으시겠습니까?");
 			if(answer) {
-				if ( id == null || id == '') {
+				if ( s_mem_id == null || s_mem_id == '') {
 					alert("로그인 후에 이용할 수 있습니다.");
 				} else {
 					 $.ajax({
-						  url: '${pageContext.request.contextPath}/addCart/' + no + '/'+ q +'/' + id ,
+						  url: '${pageContext.request.contextPath}/addCart/' + no + '/'+ q +'/' + s_mem_id ,
 						  success: function(data) {
 							  if (data) {
 								  alert("카트에 담겼습니다.");
@@ -164,7 +168,7 @@ overflow-x:scroll;
 			} 
 		});
 		
-		$('ul.rews li').click(function() { // 포토리뷰/전체리뷰
+		$('ul.rews li').click(function() { // 포토리뷰/텍스트리뷰
 			
 			var tab_id = $(this).attr('data-tab');
 			$('ul.rews li').removeClass('current');
@@ -190,17 +194,7 @@ overflow-x:scroll;
 			//포토리뷰 이미지만 찾기 
 			var content = reviewList[i].content;
 			var start = content.indexOf('src="'); // src=" s의 인덱스 번호 리턴
-			
-			// 태그 담아서
 			var re_tag = reviewList[i].tag;
-			// 태그가 있을 때 출력
-			if(re_tag != null && re_tag != '') {
-				re_tag = re_tag.split(",");
-				for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
-					$("#tag-all-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
-				}
-			}
-			// 리뷰 별점 담아서
 			var re_star = parseInt(reviewList[i].star);
 			
 			// 사진이 있을 때
@@ -208,35 +202,39 @@ overflow-x:scroll;
 				$("#nonePhoto").css('display', 'none');
 				
 				// forEach로 전체리뷰 띄운 후 display=none  사진이 있는 i만 none 해제
-				$("#for-" + reviewList[i].review_no).css('display', ''); 
+				$("#photo-" + reviewList[i].review_no).css('display', ''); 
 				
 				//이미지만 달기
 				var end = content.indexOf('"', start + 5); // "를 찾음 start+5부터 
 				var list = content.substring(start + 5, end);
 				$("#imgDiv").append("<img src='" + list + "' style='width: 120px; height: 120px; margin: 20px;'>");
 				
-				// 별달기
+				 // 별달기
 				if(re_star != null && re_star != '' ) {
 					$("#"+reviewList[i].buyd_no).children('span').removeClass('on'); //별 지우고
 					$("#"+reviewList[i].buyd_no).children('span').eq(re_star-1).addClass('on').prevAll('span').addClass('on');
 				}
-				//태그 달기
-				if(re_tag != null && re_tag != '') {
-					for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
-						$("#tag-list-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
-					}
-				}
+			
+			// 사진이 없을 때
+			} else { 
+				// $("#noneRe").css('display', 'none');
+				$("#allRe-" + reviewList[i].review_no).css('display', ''); 
 				
+				// 별 달기
+				if(re_star != null && re_star != '' ) {
+					$("#all-"+reviewList[i].buyd_no).children('span').removeClass('on'); //별 지우고
+					$("#all-"+reviewList[i].buyd_no).children('span').eq(re_star-1).addClass('on').prevAll('span').addClass('on');
+				}
 			}
 			
-			//전체보기
-			if(re_star != null && re_star != '' ) {
-				$("#all-"+reviewList[i].buyd_no).children('span').removeClass('on'); //별 지우고
-				$("#all-"+reviewList[i].buyd_no).children('span').eq(re_star-1).addClass('on').prevAll('span').addClass('on');
+			//태그 달기
+			if(re_tag != null && re_tag != '') {
+				re_tag = re_tag.split(",");
+				for(var j=0; j < re_tag.length; j++) { // 태그 달아주고
+					$(".tag-list-" + reviewList[i].review_no ).append("<li class='tag-item'>"+re_tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ re_tag[j] +"</span></li>");
+				}
 			}
 			
-			
-
 		}// for end
 		
 		// 해시태그 클릭
@@ -244,7 +242,6 @@ overflow-x:scroll;
 			var tag = $(this).children().next().text();
 			console.log(tag);
 			
-			// 태그로 검색할꺼야
 		});
 		
 		var avgStar = "${avgStar}";
@@ -264,7 +261,6 @@ overflow-x:scroll;
 			var secret = $(this).children().eq(5).children().children().html();
 			var mem_id = $(this).children().eq(0).children().eq(0).text();
 			var inquiry_no = $(this).children().eq(0).children().eq(1).text();
-			var s_mem_id = "${sessionScope.member.mem_id}";
 			
 			if(secret == undefined) {
 				inquiryModal(inquiry_no);
@@ -280,8 +276,6 @@ overflow-x:scroll;
 		
 		// 문의글 등록
 		$("#btnInquiry").on('click', function() {
-			
-			var item_no = "${item.item_no}";
 			
 			if( $("#type option:selected").val() == null || $("#type option:selected").val() == '') {
 				alert("문의 분류를 선택하세요.");
@@ -308,6 +302,53 @@ overflow-x:scroll;
 			
 		});
 		
+		//찜하기
+		var wish = "${wish}";
+		
+		if(wish != 0) {
+			// 로그인 한 아이디가 wish에 있을 때
+			$(".heart__btn").children('span').removeClass(); 
+			$(".heart__btn").children('span').addClass('icon_heart'); 
+		}
+		
+		// 찜하기
+		$(".heart__btn").on('click', function() {
+			
+			if(s_mem_id == null || s_mem_id == '') {
+				alert("로그인 후에 이용할 수 있습니다.");
+				
+			} else {
+				var className = $(this).children('span').attr('class');
+				if(className == 'icon_heart_alt') {
+					// 찜하기
+					 $(this).children('span').removeClass(); 
+					 $(this).children('span').addClass('icon_heart'); 
+					 $.ajax({
+							url : '${pageContext.request.contextPath}/wishUpdate/insert/' + item_no,
+							success : function () {
+								alert("찜 목록에 담겼습니다.");
+								}, error : function(xhr, status){
+									alert("실패! status: " + status);
+							}
+						}); 
+				} else {
+					$(this).children('span').removeClass(); 
+					$(this).children('span').addClass('icon_heart_alt'); 
+					 $.ajax({
+							url : '${pageContext.request.contextPath}/wishUpdate/delete/' + item_no,
+							success : function () {
+								alert("찜 목록에서 삭제되었습니다.");
+								}, 
+							error : function(xhr, status){
+								alert("실패! status: " + status);
+							}
+						}); 
+					
+				} // if
+			} // if
+			
+		}); // click
+
 	});
 	
 	function inquiryList() {
@@ -465,7 +506,7 @@ overflow-x:scroll;
                                 </div>
                             </div>
                             <a href="#" id="addCart" class="primary-btn">Add to cart</a>
-                            <a href="#" class="heart__btn"><span class="icon_heart_alt"></span></a>
+                            <a class="heart__btn"><span class="icon_heart_alt"></span></a>
                             <a style="display: none;">${item.item_no}</a>
                         </div>
                     </div>
@@ -509,7 +550,7 @@ overflow-x:scroll;
 									<div align="center">
 										<ul class="rews" >
 											<li class="rew-link current" data-tab="photo" >포토 리뷰</li>
-											<li class="rew-link" data-tab="all" >전체 리뷰</li>
+											<li class="rew-link" data-tab="all" >텍스트 리뷰</li>
 										</ul>
 									</div>
 		
@@ -524,7 +565,7 @@ overflow-x:scroll;
 		                                	</div>
 		                                
 	                                		<c:forEach var="review" items="${reList}">
-		                                		<div id="for-${review.review_no}" style="display: none;">
+		                                		<div id="photo-${review.review_no}" style="display: none;">
 		                                			<hr class="reHr">
 		                                			<div align="center" style="padding-top: 20px;"> 
 		                                				<span style="float: left">${review.mem_id}</span>
@@ -543,7 +584,7 @@ overflow-x:scroll;
 				                                    	<h5><b>${review.title}</b></h5>
 				                                    	<hr>
 				                                    	<div style="width: 70%; margin: 5px; font-size: 13px;">${review.content}</div>
-				                                    	<ul id="tag-list-${review.review_no}" style="padding-top: 10px;"></ul>
+				                                    	<ul class="tag-list-${review.review_no}" style="padding-top: 10px;"></ul>
 			                                    	</div>
 			                                    </div>
 		                                    </c:forEach>
@@ -559,7 +600,7 @@ overflow-x:scroll;
                                 	</div>
                                 	
 		                                <c:forEach var="review" items="${reList}">
-		                               		<div>
+		                               		<div id="allRe-${review.review_no}" style="display: none;">
 		                               			<hr class="reHr">
 		                               			<div align="center" style="padding-top: 20px;"> 
 		                               				<span style="float: left">작성자 : ${review.mem_id}</span>
@@ -578,7 +619,7 @@ overflow-x:scroll;
 			                                    	<h5><b>${review.title}</b></h5>
 			                                    	<hr>
 			                                    	<div style="width: 70%; margin: 5px; font-size: 13px;">${review.content}</div>
-			                                    	<ul id="tag-all-${review.review_no}" style="padding-top: 10px;"></ul>
+			                                    	<ul class="tag-list-${review.review_no}" style="padding-top: 10px;"></ul>
 		                                    	</div>
 		                                    </div>
 	                                    </c:forEach>

@@ -79,5 +79,14 @@
 		</if>
 		ORDER BY 1
 	</select>
+	
+	<!--해시태그 검색 -->
+	<select id="selectTag" resultType="map" parameterType="string">
+		SELECT R.REVIEW_NO, R.ITEM_NO, R.MEM_ID, R.TITLE, R.STAR, R.TAG, R.CONTENT,  TO_CHAR(R.INSERT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE, I.TYPE, I.TITLE, I.PRICE
+		FROM REVIEW R, ITEM I
+		WHERE R.ITEM_NO = I.ITEM_NO
+		AND R.TAG LIKE '%' ||  #{keyword} || '%'
+	
+	</select>
 
 </mapper>

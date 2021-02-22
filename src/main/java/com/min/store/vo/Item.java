@@ -26,12 +26,14 @@ public class Item {
 //	private String stock;
 	private String mem_id;
 	
-	//최신/인기순 인기순은 일단 재고 없는 순으로..
-	private String newmax;
+	//최신/인기순
+	private String orderby;
 	
 	// 페이징 처리
 	private int first;
 	private int last;
+	
+	private int cnt; //0222 추가
 	
 
 }

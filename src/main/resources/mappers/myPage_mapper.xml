@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.min.store.impl.MyPageMapper">
+
+	<select id="myWishList" resultType="item" parameterType="string">
+		SELECT I.ITEM_NO, I.TYPE, I.TITLE, I.PRICE, I.PIC
+		FROM WISH W , ITEM I
+		WHERE W.ITEM_NO(+) = I.ITEM_NO
+		AND W.MEM_ID = #{mem_id}
+		ORDER BY 1 DESC
+	</select>
+	
+	
+</mapper>

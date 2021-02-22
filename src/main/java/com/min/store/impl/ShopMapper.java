@@ -8,6 +8,7 @@ import com.min.store.vo.Buyer;
 import com.min.store.vo.Buyer_d;
 import com.min.store.vo.Cart;
 import com.min.store.vo.Item;
+import com.min.store.vo.Member;
 
 
 public interface ShopMapper {
@@ -42,6 +43,10 @@ public interface ShopMapper {
 	public int itemAllCnt(Item item);
 	public int OrderListCnt(Buyer buyer);
 	
+	//찜하기
+	public int selectWish(Member member);
+	public void addWish(Member member);
+	public void delWish(Member member);
 	
 	
 	

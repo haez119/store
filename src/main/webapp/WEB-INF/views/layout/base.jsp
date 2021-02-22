@@ -160,8 +160,8 @@ $(function() {
                             <li id="order"><a class="my" href="#">Order</a></li>
                             <li id="myPage"><a class="my" href="#">My Page</a>
                                 <ul id="idUL" style="display: none;">
-                                    <li><a href="#">정보수정</a></li>
-                                    <li><a href="#">찜목록</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/mypage">정보수정</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/wishList">찜목록</a></li>
                                     <li><a href="#">내가 쓴 리뷰</a></li>
                                     <li><a href="#">문의 내역</a></li>
                                 </ul>

@@ -38,14 +38,21 @@
 		$(".menu").children().removeClass('active');
 		$("#shop").addClass('active'); //메뉴 색 
 		
+		var orderby = "${orderby}";
+		var type = "${type}";
+
+ 		if(type != null && type != '') { $(".current").eq(0).text(type); }
+		if(orderby == 'WISH') { $(".current").eq(1).text("인기순"); } 
+		
+		
 		// 카테고리별 필터링
 		$("#type").change(function() {
-			type = $("#type :selected").val();
+			var type = $("#type :selected").val();
 			$(location).attr('href','${pageContext.request.contextPath}/shopMain?type=' + type);
 		}); 
-		$("#newmax").change(function() {  //이거 인기순 말고 평점순으로 해야겟당
-			newmax = $("#newmax :selected").val();
-			$(location).attr('href','${pageContext.request.contextPath}/shopMain?newmax=' + newmax);
+		$("#orderby").change(function() {  //이거 인기순 말고 평점순으로 해야겟당
+			var orderby = $("#orderby :selected").val();
+			$(location).attr('href','${pageContext.request.contextPath}/shopMain?orderby=' + orderby);
 		});
 		
 		
@@ -124,9 +131,9 @@
                         </div> -->
                         
                         <span style="float: right;">
-		                   	<select id="newmax" name="newmax">
-	                        	<option value="NEW">최신순</option>
-	                            <option value="MAX">판매순</option>
+		                   	<select id="orderby" name="orderby">
+	                        	<option value="NEW" >최신순</option>
+	                            <option value="WISH">인기순</option>
 	                        </select>
                     	</span>
                     </div>
@@ -153,7 +160,7 @@
                             <h6>
                             	<a href="${pageContext.request.contextPath}/shopDetail?no=${item.item_no}" class="title">${item.title}</a>
                             </h6>
-                            <div class="product__item__price">${item.price} 원</div>
+                            <div class="product__item__price">${item.price} 원 </div>
                             <div class="cart_add">
                                 <a class="addCart" href="#">Add to cart</a>
                                 <a class="addNo" style="display: none;">${item.item_no}</a>

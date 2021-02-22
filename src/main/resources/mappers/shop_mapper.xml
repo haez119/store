@@ -7,16 +7,18 @@
 	<!--전체조회 + 필터링 -->
 	<select id="itemAll" resultType="Item" parameterType="Item">
 		SELECT * FROM ( SELECT A.*, ROWNUM RN FROM (
- 			SELECT ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') as ADD_TIME, TITLE, CONTENT, PRICE, STOCK, PIC, PIC_D 
-			FROM ITEM
+ 			SELECT COUNT(W.ITEM_NO) AS CNT, I.ITEM_NO, I.SELLER_ID, I.TYPE, TO_CHAR(I.ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, I.TITLE, I.CONTENT, I.PRICE, I.STOCK, I.PIC, I.PIC_D 
+		    FROM WISH W , ITEM I
+		    WHERE W.ITEM_NO(+) = I.ITEM_NO
 			<if test="type != null and type != '' ">
-				WHERE TYPE = #{type}
+				AND TYPE = #{type}
 			</if>
-			<if test="newmax == null or newmax == '' or newmax == 'NEW'">
+		    GROUP BY I.ITEM_NO, I.SELLER_ID, I.TYPE, I.ADD_TIME, I.TITLE , I.CONTENT, I.PRICE, I.STOCK, I.PIC, I.PIC_D 
+			<if test="orderby != 'WISH' ">
+				ORDER BY 2 DESC
+			</if>
+			<if test="orderby == 'WISH' ">
 				ORDER BY 1 DESC
-			</if>
-			<if test="newmax == 'MAX' ">
-				ORDER BY STOCK
 			</if>
 		 ) A ) B WHERE RN BETWEEN #{first} AND #{last}
 
@@ -193,9 +195,30 @@
 		WHERE  D.BUY_NO = B.BUY_NO
 		AND D.ITEM_NO = I.ITEM_NO
 		AND D.BUY_NO =  #{buy_no}
-	
 	</select>
 	
-
+	<!--찜목록 조회-->
+	<select id="selectWish" parameterType="Member" resultType="int">
+		SELECT count(*) 
+		FROM WISH
+		WHERE MEM_ID = #{mem_id}
+		AND ITEM_NO = #{item_no}
+	</select>
+	
+	<!--찜하기--> 
+	<insert id="addWish" parameterType="Member">
+		INSERT INTO WISH 
+		VALUES(  
+				#{mem_id},
+				#{item_no}
+				)
+	</insert>
+	
+	<!--찜해제-->
+	<delete id="delWish" parameterType="Member">
+		DELETE FROM WISH
+		WHERE MEM_ID = #{mem_id}
+		AND ITEM_NO = #{item_no}
+	</delete>
 
 </mapper>
