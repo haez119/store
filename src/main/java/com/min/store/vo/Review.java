@@ -18,5 +18,9 @@ public class Review {
 	private int first;
 	private int last;
 	
+	// 0223 추가
+	private String item_title;
+	private String re_title;
+	
 	
 }

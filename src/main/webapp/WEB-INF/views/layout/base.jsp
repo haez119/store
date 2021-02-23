@@ -64,7 +64,28 @@ $(function() {
 			}
 		});
 	}
-
+	
+	$("#btnPwCheck").on('click', function() {
+		var pw = $("#pw").val();
+		
+		$.ajax({
+			url : '${pageContext.request.contextPath}/pwCheck',
+			type : 'POST' ,
+			data : {"pw": pw}, 
+			success : function (data) {
+					if(data) {
+						alert("비밀번호가 일치합니다.");
+						$(location).attr('href','${pageContext.request.contextPath}/mypage');
+					} else {
+						alert("비밀번호가 일치하지 않습니다.")
+					}
+				}, 
+				error : function(xhr, status){
+					alert("실패! status: " + status);
+			}
+		}); 
+	});
+	
 });
 </script>
 
@@ -160,9 +181,9 @@ $(function() {
                             <li id="order"><a class="my" href="#">Order</a></li>
                             <li id="myPage"><a class="my" href="#">My Page</a>
                                 <ul id="idUL" style="display: none;">
-                                    <li><a href="${pageContext.request.contextPath}/mypage">정보수정</a></li>
+                                    <li><a data-toggle="modal" href="#pwModal">정보수정</a></li>
                                     <li><a href="${pageContext.request.contextPath}/wishList">찜목록</a></li>
-                                    <li><a href="#">내가 쓴 리뷰</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/myReviewList">내가 쓴 리뷰</a></li>
                                     <li><a href="#">문의 내역</a></li>
                                 </ul>
                             </li>
@@ -251,6 +272,28 @@ $(function() {
     </div>
 </div>
 <!-- Search End -->
+
+<!-- 비밀번호 확인 -->
+<div class="modal fade" id="pwModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top: 100px;">
+	<div class="modal-dialog" role="document" style="width: 300px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel" align="center">비밀번호 입력</h5>
+			</div>
+			<div class="modal-body" align="center" >
+				<div class="form-group">
+					<input type="password" id="pw" class="form-control" placeholder="비밀번호">
+				</div>
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" id="btnPwCheck">확인</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 

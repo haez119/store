@@ -12,5 +12,34 @@
 		ORDER BY 1 DESC
 	</select>
 	
+	<!--정보수정-->
+	<update id="mypageUpdate" parameterType="Member">
+		UPDATE MEMBER SET 
+			PASSWORD = #{password},
+			NAME = #{name},
+			EMAIL = #{email},
+			PHONE = #{phone},
+			ADDR_NO = #{addr_no},
+			ADDR = #{addr},
+			ADDR_D = #{addr_d}
+		WHERE MEM_ID = #{mem_id}
+	</update>
+	
+	<!--내가 쓴 리뷰 리스트-->
+	<select id="myReviewList" parameterType="string" resultType="map">
+		SELECT R.REVIEW_NO, R.MEM_ID , R.ITEM_NO, I.PIC, I.TYPE, I.TITLE, I.PRICE, R.STAR
+		FROM REVIEW R, ITEM I
+		WHERE R.ITEM_NO = I.ITEM_NO
+		AND R.MEM_ID = #{mem_id}
+	</select>
+	
+	<!--리뷰 상세-->
+	<select id="myReview_d" parameterType="string" resultType="Review">
+		SELECT R.REVIEW_NO, I.TITLE AS ITEM_TITLE, R.TITLE AS RE_TITLE, R.TAG, R.CONTENT, R.INSERT_DATE
+		FROM REVIEW R, ITEM I
+		WHERE R.ITEM_NO = I.ITEM_NO
+		AND R.REVIEW_NO = #{review_no}
+		
+	</select>
 	
 </mapper>

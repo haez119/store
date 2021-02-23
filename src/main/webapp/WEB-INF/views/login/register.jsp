@@ -87,7 +87,7 @@ $(function() {
 	});
 	
 
-	// 메일 인증
+	// 메일 중복확인
 	$("#btnMemEmail").on('click', function () {
 		
 		var mail = $("#memEmail").val();
@@ -368,7 +368,7 @@ $(function() {
             			<tr>
             				<td>이메일<z>*</z></td>
             				<td><input type="email" id="memEmail" name="email" ></td>
-            				<td><input type="button" id="btnMemEmail" value="인증" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
+            				<td><input type="button" id="btnMemEmail" value="중복확인" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
             				
             			</tr>
             			<tr>
@@ -427,7 +427,7 @@ $(function() {
             			<tr>
             				<td>사업자번호<z>*</z></td>
             				<td><input type="text" id="b_license_no" name="b_license_no" placeholder="-없이 입력"></td>
-            				<td><input type="button" id="btnSellNo" value="인증" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
+            				<td><input type="button" id="btnSellNo" value="중복확인" style="padding: 2px 7px;font-size:15px;cursor:pointer;"></td>
             			</tr>
             			<tr>
             				<td>이름<z>*</z></td>
