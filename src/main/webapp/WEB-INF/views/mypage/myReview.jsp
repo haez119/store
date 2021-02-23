@@ -17,6 +17,17 @@
 	background-position:0 0;
 }
 
+ul li.tag-item {
+    display: inline-block;
+    margin: 0 5px;
+    font-size: 14px;
+    letter-spacing: -.5px;
+    padding: 4px 8px;
+    margin: 3px 3px;
+    background-color: #f5f5f5;
+    color: #000;
+}
+
 </style>
 <script>
 	$(function() {
@@ -35,14 +46,37 @@
 		$(".btnModal").on('click', function() {
 			
 			var modal = $("#reviewDetail");
+			review_no = $(this).next().text();
+			$.ajax({
+				  url: '${pageContext.request.contextPath}/myReview_d?review_no=' + review_no ,
+				  success: function(data) {
+					$(".tag-item").remove();
+					
+					modal.find('#insert_date').text(data.insert_date);
+					modal.find('#title').text(data.title);
+					modal.find('#content').html(data.content);
 
-			modal.modal('show'); // 모달 열기
-			
-			
-			
-			
-			
-		})
+					var tag = data.tag;
+					
+					if(tag != null && tag != '') {
+						tag = tag.split(",");
+						
+						for(var j=0; j < tag.length; j++) { // 태그 달아주고
+							$("#tag-list").append("<li class='tag-item'>"+tag[j]+"<span class='del-btn' idx='"+j+"'></span><span style='display: none;'>"+ tag[j] +"</span></li>");
+						}
+					}
+					modal.modal('show');
+					
+					$("#btnUpdate").on('click', function() {
+						$(location).attr('href','${pageContext.request.contextPath}/reviewInsertForm/'+data.item_no+'/'+data.buyd_no+'?update=true');
+					});
+					
+					
+					
+				  },
+		  });
+
+		});
 		
 	});
 	
@@ -95,7 +129,7 @@
                             <div class="product__item__price">${item.PRICE} 원 </div>
                             <div class="cart_add">
                                 <a class="btnModal" >리뷰 확인</a>
-                                <a class="addNo" style="display: none;">${item.ITEM_NO}</a>
+                                <a class="addNo" style="display: none;">${item.REVIEW_NO}</a>
                             </div>
                         </div>
                         <div style="padding-top: 30px;" align="center">
@@ -124,17 +158,19 @@
       </div>
       <div class="modal-body">
 		   <div>
-		   		<span style="float:left">등록일</span>
+		   		<span id="insert_date"></span>
 		   </div>
 		   <div>
 		   		<hr>
-		   		<h5><b>제목</b></h5>
+		   		<h5 align="center"><b id="title"></b></h5>
 		   		<hr>
-		   		<div>내용</div>
-		   		<ul class="tag-list" style="padding-top: 10px;"></ul>
+		   		<div align="center" id="content" style="width: 450px; height: auto; min-height: 250px;"></div>
+		   		<div align="center"><ul id="tag-list" class="tag-list" style="padding-top: 10px;"></ul></div>
+		   		
 		   </div>
       </div>
       <div class="modal-footer">
+      	<button type="button" class="btn btn-secondary" id="btnUpdate">수정하기</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>

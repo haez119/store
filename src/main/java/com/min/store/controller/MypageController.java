@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.min.store.impl.LoginMapper;
 import com.min.store.impl.MyPageMapper;
 import com.min.store.vo.Member;
+import com.min.store.vo.Review;
 
 
 
@@ -98,13 +99,8 @@ public class MypageController {
 	// 리뷰 상세
 	@ResponseBody
 	@RequestMapping(value="/myReview_d")
-	public void myReview_d(HttpServletRequest request, Member member) throws IOException{
-		
-		
-		
-		
-		
-		
+	public Review myReview_d(HttpServletRequest request, Member member) throws IOException{
+		return dao.myReview_d(request.getParameter("review_no"));
 	}
 	
 	

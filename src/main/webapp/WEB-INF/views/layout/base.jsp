@@ -281,7 +281,7 @@ $(function() {
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel" align="center">비밀번호 입력</h5>
 			</div>
-			<div class="modal-body" align="center" >
+			<div class="modal-body" align="center" style="height: auto;">
 				<div class="form-group">
 					<input type="password" id="pw" class="form-control" placeholder="비밀번호">
 				</div>

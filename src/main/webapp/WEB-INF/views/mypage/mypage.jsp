@@ -30,6 +30,10 @@ $(function() {
 		}
 	});
 	
+	$("#email").keyup(function(){
+		mailCk = false;
+	});
+	
 	// 메일 중복확인
 	$("#btnEmail").on('click', function () {
 		

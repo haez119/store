@@ -142,7 +142,7 @@
             </div>
             <div class="row" style="min-height: 300px;">
             <c:if test="${fn:length(itemList) eq 0}">
-            	<h4 style="padding: 100px 0px 0px 500px;">검색된 결과가 없습니다.</h4>
+            	<h4 style="padding: 100px 0px 0px 500px;">등록된 상품이 없습니다.</h4>
             </c:if>
             <c:forEach  items="${itemList}" var="item" >
                 <div class="col-lg-3 col-md-6 col-sm-6">

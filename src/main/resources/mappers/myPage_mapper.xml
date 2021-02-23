@@ -31,11 +31,12 @@
 		FROM REVIEW R, ITEM I
 		WHERE R.ITEM_NO = I.ITEM_NO
 		AND R.MEM_ID = #{mem_id}
+		ORDER BY 1 DESC
 	</select>
 	
 	<!--리뷰 상세-->
 	<select id="myReview_d" parameterType="string" resultType="Review">
-		SELECT R.REVIEW_NO, I.TITLE AS ITEM_TITLE, R.TITLE AS RE_TITLE, R.TAG, R.CONTENT, R.INSERT_DATE
+		SELECT R.REVIEW_NO, R.TITLE, R.TAG, R.CONTENT, R.INSERT_DATE, R.ITEM_NO, R.BUYD_NO
 		FROM REVIEW R, ITEM I
 		WHERE R.ITEM_NO = I.ITEM_NO
 		AND R.REVIEW_NO = #{review_no}

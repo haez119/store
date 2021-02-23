@@ -135,7 +135,7 @@ $(function() {
 			event.preventDefault();
 		} else {
 			alert("등록 되었습니다.");
-			$("#frmInsert").attr('action','${pageContext.request.contextPath}/reviewInsert');
+			$("#frmInsert").attr('action','${pageContext.request.contextPath}/myReviewList');
 			$("#frmInsert").submit();
 		}
 		
