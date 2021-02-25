@@ -66,7 +66,7 @@ public class LoginController {
 			} else {
 				mav.addObject("login", true);
 				session.setAttribute("seller", seller);
-				mav.setViewName("redirect:home"); //나중에 사업자 메인화면으로 이동할꺼야
+				mav.setViewName("redirect:seller/home"); //나중에 사업자 메인화면으로 이동할꺼야
 			}
 		}
 		

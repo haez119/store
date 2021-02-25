@@ -9,6 +9,10 @@
 	<definition name="*" template="/WEB-INF/views/layout/base.jsp">
 		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
 	</definition>
+	
+	<definition name="seller/*/*" template="/WEB-INF/views/layout/sellerBase.jsp">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
 
 
 
