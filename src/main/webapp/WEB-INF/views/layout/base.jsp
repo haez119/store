@@ -184,7 +184,7 @@ $(function() {
                                     <li><a data-toggle="modal" href="#pwModal">정보수정</a></li>
                                     <li><a href="${pageContext.request.contextPath}/wishList">찜목록</a></li>
                                     <li><a href="${pageContext.request.contextPath}/myReviewList">내가 쓴 리뷰</a></li>
-                                    <li><a href="#">문의 내역</a></li>
+                                    <li><a href="${pageContext.request.contextPath}/myInquiry">문의 내역</a></li>
                                 </ul>
                             </li>
                         </ul>

@@ -40,7 +40,29 @@
 		FROM REVIEW R, ITEM I
 		WHERE R.ITEM_NO = I.ITEM_NO
 		AND R.REVIEW_NO = #{review_no}
-		
 	</select>
 	
+	<!--리뷰 삭제-->
+	<delete id="myReviewDel" parameterType="string">
+		DELETE FROM REVIEW WHERE REVIEW_NO = #{review_no}
+	</delete>
+	
+	<!--내가 쓴 문의 리스트 -->
+	<select id="myInquiry" resultType='map' parameterType="Inquiry">
+		SELECT ROW_NUMBER() OVER(ORDER BY  INQUIRY_NO DESC) AS NO, Q.INQUIRY_NO, Q.ITEM_NO, Q.MEM_ID, Q.TYPE AS Q_TYPE, Q.TITLE AS Q_TITLE, Q.CONTENT, Q.SECRET, TO_CHAR(Q.INSERT_DATE, 'YYYY-MM-DD') AS INSERT_DATE, Q.ANSWER, TO_CHAR(Q.ANSWER_DATE, 'YYYY-MM-DD') AS ANSWER_DATE, I.TYPE AS I_TYPE, I.TITLE AS I_TITLE
+		FROM INQUIRY Q , ITEM I
+		WHERE Q.ITEM_NO = I.ITEM_NO
+		<if test="mem_id != null and mem_id != '' ">
+			AND Q.MEM_ID = #{mem_id}
+		</if>
+		<if test="inquiry_no != null and inquiry_no != '' ">
+			AND Q.INQUIRY_NO = #{inquiry_no}
+		</if>
+		ORDER BY 1
+	</select>
+	
+	<!--문의 삭제-->
+	<delete id="inquiryDel" parameterType="string">
+		DELETE FROM INQUIRY WHERE INQUIRY_NO = #{inquiry_no}
+	</delete>
 </mapper>

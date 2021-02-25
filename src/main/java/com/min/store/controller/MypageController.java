@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.min.store.impl.LoginMapper;
 import com.min.store.impl.MyPageMapper;
+import com.min.store.vo.Inquiry;
 import com.min.store.vo.Member;
 import com.min.store.vo.Review;
 
@@ -103,7 +104,50 @@ public class MypageController {
 		return dao.myReview_d(request.getParameter("review_no"));
 	}
 	
+	// 리뷰 삭제
+	@ResponseBody
+	@RequestMapping(value="/myReviewDel")
+	public void myReviewDel(HttpServletRequest request, Member member) throws IOException{
+		dao.myReviewDel(request.getParameter("review_no"));
+	}
+		
 	
+	// 나의 문의
+	@RequestMapping(value="/myInquiry")
+	public ModelAndView myInquiry(ModelAndView mav, HttpSession session, Member member) throws IOException{
+		
+		member = (Member) session.getAttribute("member");
+		
+		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>(); 
+		Inquiry inquiry = new Inquiry();
+		inquiry.setMem_id(member.getMem_id());
+		list = dao.myInquiry(inquiry);
+		
+		Gson gson = new GsonBuilder().create();
+		gson = new GsonBuilder().create();
+		String myInquiry = gson.toJson(list);
+		
+		mav.addObject("myInquiryList", myInquiry);
+		mav.setViewName("mypage/myInquiry");
+		return mav;
+	}
 	
+	// 문의 상세
+	@ResponseBody
+	@RequestMapping(value="/myInquiry_d")
+	public List<HashMap<String, Object>> myInquiry_d(HttpServletRequest request, Member member) throws IOException{
+		
+		Inquiry inquiry = new Inquiry();
+		inquiry.setInquiry_no(request.getParameter("inquiry_no"));
+		
+		return dao.myInquiry(inquiry);
+	}
 	
+	// 문의 삭제
+	@ResponseBody
+	@RequestMapping(value="/myInquiryDel")
+	public void myInquiryDel(HttpServletRequest request, Member member) throws IOException{
+		dao.inquiryDel(request.getParameter("inquiry_no"));
+
+	}
 }

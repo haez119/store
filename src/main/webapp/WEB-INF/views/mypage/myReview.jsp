@@ -35,6 +35,8 @@ ul li.tag-item {
 		$(".menu").children().removeClass('active');
 		$("#myPage").addClass('active'); //메뉴 색 
 		
+		var review_no;
+		
  		var star = ${starList}
 		
 		for(var i=0; i < star.length; i++) {
@@ -70,12 +72,22 @@ ul li.tag-item {
 					$("#btnUpdate").on('click', function() {
 						$(location).attr('href','${pageContext.request.contextPath}/reviewInsertForm/'+data.item_no+'/'+data.buyd_no+'?update=true');
 					});
-					
-					
-					
 				  },
 		  });
 
+		});
+		
+		$("#btnDel").on('click', function() {
+			var del = confirm("삭제 하시겠습니까??");
+			if(del) {
+				$.ajax({
+					  url: '${pageContext.request.contextPath}/myReviewDel?review_no=' + review_no ,
+					  success: function() {
+						alert("삭제 되었습니다.");
+						$(location).attr('href','${pageContext.request.contextPath}/myReviewList');
+					  },
+			  });
+			} 
 		});
 		
 	});
@@ -170,7 +182,8 @@ ul li.tag-item {
 		   </div>
       </div>
       <div class="modal-footer">
-      	<button type="button" class="btn btn-secondary" id="btnUpdate">수정하기</button>
+      	<button type="button" class="btn btn-secondary" id="btnUpdate">수정</button>
+      	<button type="button" class="btn btn-secondary" id="btnDel">삭제</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>

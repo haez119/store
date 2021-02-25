@@ -118,12 +118,12 @@ white-space:nowrap;
 overflow-x:scroll;
 }
 
- .rew_content {
- 	  padding: 30px 50px 30px 30px;
-      width: 100%;
-      height: 500px;
-      overflow: auto;
-  }
+.rew_content {
+	  padding: 30px 50px 30px 30px;
+     width: 100%;
+     height: 500px;
+     overflow: auto;
+ }
 
 
 </style>
@@ -200,6 +200,7 @@ overflow-x:scroll;
 			// 사진이 있을 때
 			if(start != -1) {
 				$("#nonePhoto").css('display', 'none');
+				$("#imgDiv").css('display', '');
 				
 				// forEach로 전체리뷰 띄운 후 display=none  사진이 있는 i만 none 해제
 				$("#photo-" + reviewList[i].review_no).css('display', ''); 
@@ -365,7 +366,7 @@ overflow-x:scroll;
 			
 			$("#inqTbody").append("<tr class='inqTr'>"
 					+ "<td style='display: none;'><a>"+ inquiry[i].mem_id +"</a><a>"+ inquiry[i].inquiry_no +"</a></td>"
-					+ "<td><a style='display: none;'>"+ inquiry[i].mem_id +"</a><div align='center'>" + inquiry[i].no + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].no + "</div><a style='display: none;'>"+ inquiry[i].mem_id +"</a></td>"
 					+ "<td><div align='center'>" + inquiry[i].type + "</div></td>"
 					+ "<td><div align='center'>" + inquiry[i].title + "</div></td>"
 					+ "<td><div align='center'>" + inquiry[i].insert_date + "</div></td>"
@@ -393,8 +394,8 @@ overflow-x:scroll;
 		    	},
 				lengthChange: true, //t-보이기 , f-숨기기
 				searching: false,
-				// ordering: true,
-				order: [ [ 1, "asc" ] ],
+				order: [ [ 1, 'asc'] ],
+				ordering: true,
 				info: false,
 				paging: true,
 				lengthMenu: [ 5, 10, 15, 20 ],
@@ -555,7 +556,7 @@ overflow-x:scroll;
 									</div>
 		
 	                                <div id="photo" class="rew-content current" style="text-align: center;">
-	                                	<div id="imgDiv">
+	                                	<div id="imgDiv" style="display: none;">
 	                                		<!-- 포토 리뷰 사진만 -->
 	                                	</div>
 	                                	<p></p>
