@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,13 +13,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Favicon -->
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/seller/public/img/favicon.ico">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/seller/public/img/favicon.ico"> <!-- 주소창 로고? -->
     <!-- DEMO CHARTS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/seller/public/demo/chartist.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/seller/public/demo/chartist-plugin-tooltip.css">
     <!-- Template -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/seller/public/graindashboard/css/graindashboard.css">
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	
+	
 </head>
 <body class="has-sidebar has-fixed-sidebar-and-header">
 
@@ -98,25 +102,21 @@
                 <div class="dropdown mx-3 dropdown ml-2">
                     <a id="profileMenuInvoker" class="header-complex-invoker" href="#" aria-controls="profileMenu" aria-haspopup="true" aria-expanded="false" data-unfold-event="click" data-unfold-target="#profileMenu" data-unfold-type="css-animation" data-unfold-duration="300" data-unfold-animation-in="fadeIn" data-unfold-animation-out="fadeOut">
                         <!--img class="avatar rounded-circle mr-md-2" src="#" alt="John Doe"-->
-                        <span class="mr-md-2 avatar-placeholder">J</span>
-                        <span class="d-none d-md-block">John Doe</span>
+                        <span class="mr-md-2 avatar-placeholder">${fn:substring(sessionScope.seller.seller_id,0,1) } <br></span>
+                        <span class="d-none d-md-block">${sessionScope.seller.nic_name}</span>
                         <i class="gd-angle-down d-none d-md-block ml-2"></i>
                     </a>
 
                     <ul id="profileMenu" class="unfold unfold-user unfold-light unfold-top unfold-centered position-absolute pt-2 pb-1 mt-4 unfold-css-animation unfold-hidden fadeOut" aria-labelledby="profileMenuInvoker" style="animation-duration: 300ms;">
                         <li class="unfold-item">
                             <a class="unfold-link d-flex align-items-center text-nowrap" href="#">
-                    <span class="unfold-item-icon mr-3">
-                      <i class="gd-user"></i>
-                    </span>
+                    			<span class="unfold-item-icon mr-3"><i class="gd-user"></i></span>
                                 My Profile
                             </a>
                         </li>
                         <li class="unfold-item unfold-item-has-divider">
-                            <a class="unfold-link d-flex align-items-center text-nowrap" href="#">
-                    <span class="unfold-item-icon mr-3">
-                      <i class="gd-power-off"></i>
-                    </span>
+                            <a class="unfold-link d-flex align-items-center text-nowrap" href="${pageContext.request.contextPath}/logout">
+                    			<span class="unfold-item-icon mr-3"><i class="gd-power-off"></i></span>
                                 Sign Out
                             </a>
                         </li>
@@ -144,7 +144,7 @@
               <span class="side-nav-menu-icon d-flex mr-3">
                 <i class="gd-dashboard"></i>
               </span>
-                    <span class="side-nav-fadeout-on-closed media-body">Dashboard</span>
+                    <span class="side-nav-fadeout-on-closed media-body">주문정보</span>
                 </a>
             </li>
             <!-- End Dashboard -->
@@ -155,7 +155,7 @@
               <span class="side-nav-menu-icon d-flex mr-3">
                 <i class="gd-file"></i>
               </span>
-                    <span class="side-nav-fadeout-on-closed media-body">Documentation</span>
+                    <span class="side-nav-fadeout-on-closed media-body">매출정보</span>
                 </a>
             </li>
             <!-- End Documentation -->
@@ -171,7 +171,7 @@
                   <span class="side-nav-menu-icon d-flex mr-3">
                     <i class="gd-user"></i>
                   </span>
-                    <span class="side-nav-fadeout-on-closed media-body">Users</span>
+                    <span class="side-nav-fadeout-on-closed media-body">스토어 관리</span>
                     <span class="side-nav-control-icon d-flex">
                 <i class="gd-angle-right side-nav-fadeout-on-closed"></i>
               </span>
@@ -181,73 +181,18 @@
                 <!-- Users: subUsers -->
                 <ul id="subUsers" class="side-nav-menu side-nav-menu-second-level mb-0">
                     <li class="side-nav-menu-item">
-                        <a class="side-nav-menu-link" href="users.html">All Users</a>
+                        <a class="side-nav-menu-link" href="${pageContext.request.contextPath}/seller/itemList">상품 관리</a>
                     </li>
                     <li class="side-nav-menu-item">
-                        <a class="side-nav-menu-link" href="user-edit.html">Add new</a>
+                        <a class="side-nav-menu-link" href="user-edit.html">리뷰 관리</a>
+                    </li>
+                    <li class="side-nav-menu-item">
+                        <a class="side-nav-menu-link" href="user-edit.html">문의 관리</a>
                     </li>
                 </ul>
                 <!-- End Users: subUsers -->
             </li>
             <!-- End Users -->
-
-            <!-- Authentication -->
-            <li class="side-nav-menu-item side-nav-has-menu">
-                <a class="side-nav-menu-link media align-items-center" href="#"
-                   data-target="#subPages">
-              <span class="side-nav-menu-icon d-flex mr-3">
-                <i class="gd-lock"></i>
-              </span>
-                    <span class="side-nav-fadeout-on-closed media-body">Authentication</span>
-                    <span class="side-nav-control-icon d-flex">
-                <i class="gd-angle-right side-nav-fadeout-on-closed"></i>
-              </span>
-                    <span class="side-nav__indicator side-nav-fadeout-on-closed"></span>
-                </a>
-
-                <!-- Pages: subPages -->
-                <ul id="subPages" class="side-nav-menu side-nav-menu-second-level mb-0">
-                    <li class="side-nav-menu-item">
-                        <a class="side-nav-menu-link" href="login.html">Login</a>
-                    </li>
-                    <li class="side-nav-menu-item">
-                        <a class="side-nav-menu-link" href="register.html">Register</a>
-                    </li>
-                    <li class="side-nav-menu-item">
-                        <a class="side-nav-menu-link" href="password-reset.html">Forgot Password</a>
-                    </li>
-                    <li class="side-nav-menu-item">
-                        <a class="side-nav-menu-link" href="password-reset-2.html">Forgot Password 2</a>
-                    </li>
-                    <li class="side-nav-menu-item">
-                        <a class="side-nav-menu-link" href="email-verification.html">Email Verification</a>
-                    </li>
-                </ul>
-                <!-- End Pages: subPages -->
-            </li>
-            <!-- End Authentication -->
-
-            <!-- Settings -->
-            <li class="side-nav-menu-item">
-                <a class="side-nav-menu-link media align-items-center" href="settings.html">
-              <span class="side-nav-menu-icon d-flex mr-3">
-                <i class="gd-settings"></i>
-              </span>
-                    <span class="side-nav-fadeout-on-closed media-body">Settings</span>
-                </a>
-            </li>
-            <!-- End Settings -->
-
-            <!-- Static -->
-            <li class="side-nav-menu-item">
-                <a class="side-nav-menu-link media align-items-center" href="static-non-auth.html">
-              <span class="side-nav-menu-icon d-flex mr-3">
-                <i class="gd-file"></i>
-              </span>
-                    <span class="side-nav-fadeout-on-closed media-body">Static page</span>
-                </a>
-            </li>
-            <!-- End Static -->
 
         </ul>
     </aside>

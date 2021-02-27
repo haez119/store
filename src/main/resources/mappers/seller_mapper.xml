@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.min.store.impl.SellerMapper">
+	
+	<select id="itemList" parameterType="string" resultType="item">
+		SELECT ROW_NUMBER() OVER(ORDER BY  ITEM_NO DESC) AS NO, ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, TITLE, PRICE, STOCK, PIC
+		FROM ITEM 
+		WHERE SELLER_ID = #{seller_id}
+		ORDER BY 1
+	</select>
+	
+	<!--상품등록 -->
+	<insert id="insertItem" parameterType="Item">
+		INSERT INTO ITEM(ITEM_NO, SELLER_ID, TYPE, TITLE, CONTENT, CONTENT_D, PRICE, STOCK, PIC, PIC_D)
+		VALUES(  ITEM_SEQ.NEXTVAL, 
+				 #{seller_id},
+				 #{type},
+				 #{title},
+				 #{content},
+				 #{content_d},
+				 #{price},
+				 #{stock},
+				 #{pic},
+				 #{pic_d}
+			)
+	
+	</insert>
+	
+	<!--수정할 때 조회-->
+	<select id="upsetSel" resultType="Item" parameterType="string">
+		SELECT TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, TITLE, CONTENT, CONTENT_D, PRICE, STOCK, PIC, PIC_D
+		FROM ITEM 
+		WHERE ITEM_NO = #{item_no}
+	</select>
+	
+	<!--수정-->
+	<update id="itemUpdate" parameterType="Item">
+		UPDATE ITEM 
+		SET
+			<if test="pic != null and pic != '' ">
+				PIC = #{pic},
+			</if>
+			<if test="pic_d != null and pic_d != '' ">
+				PIC_D = #{pic_d},
+			</if> 
+			ADD_TIME = LOCALTIMESTAMP, 
+			TYPE = #{type},
+			TITLE = #{title},
+			CONTENT = #{content}, 
+			CONTENT_D = #{content_d}, 
+			PRICE = #{price}, 
+			STOCK = #{stock}
+		WHERE ITEM_NO = #{item_no}
+	</update>
+	
+	
+	
+	</mapper>

@@ -500,6 +500,7 @@ overflow-x:scroll;
                             <li>Category: <span>${item.type}</span></li>
                             <li>Star: <span>${avgStar}</span></li>
                         </ul>
+                        <c:if test="${item.stock ne 0}">
                         <div class="product__details__option">
                             <div class="quantity">
                                 <div class="pro-qty">
@@ -510,6 +511,14 @@ overflow-x:scroll;
                             <a class="heart__btn"><span class="icon_heart_alt"></span></a>
                             <a style="display: none;">${item.item_no}</a>
                         </div>
+                        </c:if>
+                        <c:if test="${item.stock eq 0}">
+                        <div class="product__details__option">
+                            <a href="#" class="primary-btn" >품 절</a>
+                            <a class="heart__btn"><span class="icon_heart_alt"></span></a>
+                            <a style="display: none;">${item.item_no}</a>
+                        </div>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -537,9 +546,11 @@ overflow-x:scroll;
 		                        	${item.content_d}
                                    
                                 </div>
+                                <div align="center" style="width: 100%;">
                                 <c:forEach  items="${picD}" var="pic" >
-                                	 <img src="${pageContext.request.contextPath}/images/item/${pic}" alt="">
+                                	 <img src="${pageContext.request.contextPath}/images/item/${pic}" alt="" style="padding: 10px 0px 10px 0px;"><br>
                                 </c:forEach>
+                                </div>
                             </div>
                         </div>
                         

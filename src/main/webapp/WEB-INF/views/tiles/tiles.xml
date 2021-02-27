@@ -10,8 +10,12 @@
 		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
 	</definition>
 	
-	<definition name="seller/*/*" template="/WEB-INF/views/layout/sellerBase.jsp">
+	<definition name="sel/*/*" template="/WEB-INF/views/layout/sellerBase.jsp">
 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+	
+	<definition name="sel/*/*/*" template="/WEB-INF/views/layout/sellerBase.jsp">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
 	</definition>
 
 

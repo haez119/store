@@ -9,6 +9,32 @@
 		$(".menu").children().removeClass('active');
 		$("#myPage").addClass('active'); //메뉴 색 
 		
+		$(".addCart").on('click', function() {
+			var answer = confirm("카트에 담으시겠습니까?");
+			if(answer) {
+				var id = "${sessionScope.member.mem_id}";
+				var no = $(this).next().text();
+				var stock = $(this).parent().prev().text();
+				if(stock > 0) {
+					$.ajax({
+						  url: '${pageContext.request.contextPath}/addCart/' + no + '/1/' + id ,
+						  success: function(data) {
+							  if (data) {
+								  alert("카트에 담겼습니다.");
+							  } else {
+								  alert("동일한 상품이 이미 담겨있습니다.");
+							  }
+						}
+					});
+				} else {
+					alert("품절된 상품입니다.");
+				}				
+					 
+			}
+			
+		});
+		
+		
 	});
 	
 </script>
@@ -57,7 +83,16 @@
                             <h6>
                             	<a href="${pageContext.request.contextPath}/shopDetail?no=${item.item_no}" class="title">${item.title}</a>
                             </h6>
-                            <div class="product__item__price">${item.price} 원 </div>
+                            
+                            <c:if test="${item.stock ne 0}">
+                            	<div class="product__item__price">${item.price} 원 </div>
+                            	<div style="display: none;">${item.stock}</div>
+                            </c:if>
+                            <c:if test="${item.stock eq 0}">
+                            	<div class="product__item__price" style="color: red;">품 절 </div>
+                            	<div style="display: none;">${item.stock}</div>
+                            </c:if>
+                            
                             <div class="cart_add">
                                 <a class="addCart" href="#">Add to cart</a>
                                 <a class="addNo" style="display: none;">${item.item_no}</a>

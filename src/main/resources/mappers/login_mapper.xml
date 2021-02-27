@@ -12,7 +12,7 @@
 	</select>
 	
 	<select id="loginSeller" resultType="Seller">
-		SELECT SELLER_ID, PASSWORD, NAME, PHONE, B_LICENSE_NO 
+		SELECT SELLER_ID, PASSWORD, NAME, PHONE, B_LICENSE_NO , NIC_NAME
 		FROM SELLER 
 		WHERE SELLER_ID = #{seller_id} 
 		AND PASSWORD = #{password}

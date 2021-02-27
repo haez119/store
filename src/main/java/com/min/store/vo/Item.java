@@ -35,5 +35,6 @@ public class Item {
 	
 	private int cnt; //0222 추가
 	
+	private int no; //0227 추가
 
 }

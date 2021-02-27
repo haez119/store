@@ -5,7 +5,7 @@
 <mapper namespace="com.min.store.impl.MyPageMapper">
 
 	<select id="myWishList" resultType="item" parameterType="string">
-		SELECT I.ITEM_NO, I.TYPE, I.TITLE, I.PRICE, I.PIC
+		SELECT I.ITEM_NO, I.TYPE, I.TITLE, I.PRICE, I.PIC, I.STOCK
 		FROM WISH W , ITEM I
 		WHERE W.ITEM_NO(+) = I.ITEM_NO
 		AND W.MEM_ID = #{mem_id}
