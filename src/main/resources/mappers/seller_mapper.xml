@@ -55,6 +55,27 @@
 		WHERE ITEM_NO = #{item_no}
 	</update>
 	
+	<!--주문정보 -->
+	<select id="orderList" parameterType="Buyer" resultType="map">
+		SELECT ROW_NUMBER() OVER(ORDER BY  BUYD_NO DESC) AS NO, D.BUYD_NO, D.BUY_NO, D.ITEM_NO, I.SELLER_ID, I.TYPE, I.TITLE, D.QUANTITY, I.PRICE, (D.QUANTITY * I.PRICE) AS PAYMENT ,B.MEM_ID, TO_CHAR(PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') AS PAY_TIME, B.NAME, B.PHONE, B.ADDR_NO, B.ADDR, B.ADDR_D, B.EMAIL
+		FROM BUYER_D D , ITEM I, BUYER B
+		WHERE D.ITEM_NO = I.ITEM_NO
+		AND D.BUY_NO = B.BUY_NO
+		AND I.SELLER_ID = #{seller_id}
+		<if test="pay_time != null and pay_time != '' ">
+			AND TO_CHAR(PAY_TIME,'YYYY-MM-DD') = #{pay_time}
+		</if> 
+	</select>
 	
+	<!--매출정보 -->
+	<select id="salesList" parameterType="string" resultType="map">
+		SELECT NVL2(TO_CHAR(PAY_TIME,'YYYY-MM-DD'),TO_CHAR(PAY_TIME,'YYYY-MM-DD'),'#') AS PAY_TIME, SUM(D.QUANTITY * I.PRICE) AS SUM, COUNT(TO_CHAR(PAY_TIME,'YYYY-MM-DD')) AS CNT
+		FROM BUYER_D D , ITEM I, BUYER B
+		WHERE D.ITEM_NO = I.ITEM_NO
+		AND D.BUY_NO = B.BUY_NO 
+		AND I.SELLER_ID = #{seller_id}
+		GROUP BY ROLLUP(TO_CHAR(PAY_TIME,'YYYY-MM-DD'))
+		ORDER BY 1 DESC
+	</select>
 	
 	</mapper>

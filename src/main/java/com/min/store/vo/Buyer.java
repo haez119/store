@@ -19,5 +19,7 @@ public class Buyer {
 	private int first; 
 	private int last;
 	
+	private String seller_id; //0301 추가
+	
 	
 }

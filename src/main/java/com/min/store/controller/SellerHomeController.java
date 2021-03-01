@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.min.store.impl.SellerMapper;
+import com.min.store.vo.Buyer;
 import com.min.store.vo.Item;
 import com.min.store.vo.Seller;
 
@@ -42,11 +43,11 @@ public class SellerHomeController {
 		
 		if(item_no == null || item_no.equals("")) {
 			update = false;
-			mav.setViewName("sel/seller/item/itemInsert");
+			mav.setViewName("sel/seller/itemInsert");
 		} else {
 			update = true;
 			mav.addObject("item", dao.upsetSel(item_no));
-			mav.setViewName("sel/seller/item/itemInsert");
+			mav.setViewName("sel/seller/itemInsert");
 		}
 		
 		return mav;
@@ -66,10 +67,11 @@ public class SellerHomeController {
 			list.get(i).setPic(pic[0]);
 		}
 		mav.addObject("itemList", list);
-		mav.setViewName("sel/seller/item/itemList");
+		mav.setViewName("sel/seller/itemList");
 		return mav;
 	}
 	
+	// 아이템 등록 및 수정
 	@PostMapping(value="/seller/itemInsert")
 	public ModelAndView itemInsert(ModelAndView mav , HttpServletRequest request, Item item) throws IOException{
 
@@ -100,15 +102,36 @@ public class SellerHomeController {
 		item.setSeller_id(seller_id);
 		item.setItem_no(item_no);
 		
-		if(update) {
-			dao.itemUpdate(item);
+		if(update) { 
+			dao.itemUpdate(item); // 수정
 		} else {
-			dao.insertItem(item);
+			dao.insertItem(item); // 등록
 		}
 		
 		mav.setViewName("redirect:itemList");
 		return mav;
 	}
 	
+	@RequestMapping(value="/seller/orderList")
+	public ModelAndView orderList(ModelAndView mav , HttpServletRequest request,  HttpSession session, Seller seller, Buyer buyer) throws IOException{
+		seller = (Seller) session.getAttribute("seller");
+		String pay_time = request.getParameter("pay_time");
+		
+		buyer.setSeller_id(seller.getSeller_id());
+		buyer.setPay_time(pay_time);
+		
+		mav.addObject("orderList", dao.orderList(buyer));
+		mav.setViewName("sel/seller/orderList");
+		return mav;
+	}
+	
+	@RequestMapping(value="/seller/salesList")
+	public ModelAndView salesList(ModelAndView mav , HttpServletRequest request,  HttpSession session, Seller seller, Buyer buyer) throws IOException{
+		seller = (Seller) session.getAttribute("seller");
+		
+		mav.addObject("salesList",dao.salesList(seller.getSeller_id()));
+		mav.setViewName("sel/seller/salesList");
+		return mav;
+	}
 
 }

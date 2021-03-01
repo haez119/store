@@ -6,6 +6,14 @@
 
 <script>
 $(function() {
+	$(".side-nav-menu-item").removeClass('active');
+	$("#itemMenu").removeClass("side-nav-menu-item side-nav-has-menu");
+	$("#itemMenu").addClass("side-nav-menu-item side-nav-has-menu side-nav-opened");
+	$("#subUsers").css("display", 'block');
+	$("#itemLi").addClass('active');
+	
+	
+	
 	$(".upset").on('click', function() {
 		var item_no = $(this).parent().parent().parent().children().eq(0).children().eq(1).text();
 		$(location).attr('href','${pageContext.request.contextPath}/seller/itemInsertForm?item_no=' + item_no);

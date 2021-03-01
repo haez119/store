@@ -25,6 +25,12 @@ select {
 	appearance: none; 
 }
 
+.pics {
+	width: 70px;
+	height: 70px;
+	margin: 10px;
+}
+
 </style>
 
 
@@ -37,22 +43,33 @@ select {
 			$("#type").val(item_type).prop("selected", true);
 		}
 		
-		$("#pics").change(function(){
+		$("#pics").change(function(e){
+			
 			var fileList = $(this)[0].files;
 			var nameList = '';
 			for(var i=0; i<fileList.length; i++) {
 				nameList += fileList[i].name + ",";
 			}
 			$("#pics_name").text(nameList);
+			// 이미지 미리보기
+			$("#pics_div").empty();
+			var files = e.target.files;
+		    var arr = Array.prototype.slice.call(files);
+		    preview(arr, $("#pics_div"));
 		});
 		
-		$("#pics_d").change(function(){
+		$("#pics_d").change(function(e){
 			var fileList = $(this)[0].files;
 			var nameList = '';
 			for(var i=0; i<fileList.length; i++) {
 				nameList += fileList[i].name + ",";
 			}
 			$("#pics_d_name").text(nameList);
+			// 이미지 미리보기
+			$("#pics_d_div").empty();
+			var files = e.target.files;
+		    var arr = Array.prototype.slice.call(files);
+		    preview(arr, $("#pics_d_div"));
 		});
 		
 		
@@ -86,10 +103,35 @@ select {
 			} 
 		});
 		
+		var pic = "${item.pic}";
+		var pic_d = "${item.pic_d}";
 		
+		pic = pic.split(",");		
+		pic_d = pic_d.split(",");
+		
+		for(var i=0; i < pic.length-1; i++) {
+			$("#pics_div").append("<img src='${pageContext.request.contextPath}/images/item/"+ pic[i] +"' class='pics' />")
+		}
+		
+		for(var i=0; i < pic_d.length-1; i++) {
+			$("#pics_d_div").append("<img src='${pageContext.request.contextPath}/images/item/"+ pic_d[i] +"' class='pics' />")
+		}
 		
 	});
+	
+	
+    function preview(arr, div){
+        arr.forEach(function(f){
 
+          var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+          reader.onload = function (e) { //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+            var str = '<img src="'+e.target.result+'" class="pics" />';
+            $(str).appendTo(div);
+          } 
+          reader.readAsDataURL(f);
+        });//arr.forEach
+      }
+    
 </script>
 
 <div class="content">
@@ -162,6 +204,7 @@ select {
                                     <label for="content">대표 사진<z class="stars">*</z></label><br>
                                     <input type="file" name="pics" id="pics" multiple="multiple"/><br>
                                     <p id="pics_name" style="padding-top: 8px;">${item.pic}</p>
+                                    <div id="pics_div"></div>
                                 </div>
                               </div>
                               
@@ -170,6 +213,7 @@ select {
                                     <label for="content">상세 사진<z class="stars">*</z></label><br>
                                     <input type="file" name="pics_d" id="pics_d" multiple="multiple"/><br>
                                     <p id="pics_d_name" style="padding-top: 8px;">${item.pic_d}</p>
+                                    <div id="pics_d_div"></div>
                                 </div>
                               </div>
                               

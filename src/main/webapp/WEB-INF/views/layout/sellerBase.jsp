@@ -140,9 +140,9 @@
 
             <!-- Dashboard -->
             <li class="side-nav-menu-item active">
-                <a class="side-nav-menu-link media align-items-center" href="/">
+                <a class="side-nav-menu-link media align-items-center" href="${pageContext.request.contextPath}/seller/orderList">
               <span class="side-nav-menu-icon d-flex mr-3">
-                <i class="gd-dashboard"></i>
+                <i class="gd-file"></i>
               </span>
                     <span class="side-nav-fadeout-on-closed media-body">주문정보</span>
                 </a>
@@ -150,8 +150,8 @@
             <!-- End Dashboard -->
 
             <!-- Documentation -->
-            <li class="side-nav-menu-item">
-                <a class="side-nav-menu-link media align-items-center" href="documentation/" target="_blank">
+            <li class="side-nav-menu-item" id="sales">
+                <a class="side-nav-menu-link media align-items-center" href="${pageContext.request.contextPath}/seller/salesList">
               <span class="side-nav-menu-icon d-flex mr-3">
                 <i class="gd-file"></i>
               </span>
@@ -165,7 +165,7 @@
             <!-- End Title -->
 
             <!-- Users -->
-            <li class="side-nav-menu-item side-nav-has-menu">
+            <li class="side-nav-menu-item side-nav-has-menu" id="itemMenu">
                 <a class="side-nav-menu-link media align-items-center" href="#"
                    data-target="#subUsers">
                   <span class="side-nav-menu-icon d-flex mr-3">
@@ -180,13 +180,13 @@
 
                 <!-- Users: subUsers -->
                 <ul id="subUsers" class="side-nav-menu side-nav-menu-second-level mb-0">
-                    <li class="side-nav-menu-item">
+                    <li class="side-nav-menu-item" id="itemLi">
                         <a class="side-nav-menu-link" href="${pageContext.request.contextPath}/seller/itemList">상품 관리</a>
                     </li>
-                    <li class="side-nav-menu-item">
+                    <li class="side-nav-menu-item" id="reviewLi">
                         <a class="side-nav-menu-link" href="user-edit.html">리뷰 관리</a>
                     </li>
-                    <li class="side-nav-menu-item">
+                    <li class="side-nav-menu-item" id="inquiryLi">
                         <a class="side-nav-menu-link" href="user-edit.html">문의 관리</a>
                     </li>
                 </ul>
