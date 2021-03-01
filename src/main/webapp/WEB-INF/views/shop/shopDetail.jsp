@@ -654,7 +654,7 @@ overflow-x:scroll;
                        	   <div class="col-lg-10" align="center"><h2 style="padding-top: 50px;">상품 문의</h2></div>
                            <div class="col-lg-10" style="min-height: 300px;">
                            <div style="padding-top: 80px;" id="inqTable" align="center">
-                               <table  class="table table-hover" id="foo-table" style="width: 100%;">
+                               <table  class="table table-hover" id="foo-table" style="width: 100%; min-height: 250px;">
                                	<thead>
                                		<tr>
                                			<th style="display: none;"></th>

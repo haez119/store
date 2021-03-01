@@ -17,4 +17,6 @@ public interface SellerMapper {
 	public List<HashMap<String, Object>> orderList(Buyer buyer);
 	public List<HashMap<String, Object>> salesList(String seller_id);
 	
+	public List<HashMap<String, Object>> inquiryList(String seller_id);
+	
 }

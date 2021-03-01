@@ -133,5 +133,14 @@ public class SellerHomeController {
 		mav.setViewName("sel/seller/salesList");
 		return mav;
 	}
+	
+	@RequestMapping(value="/seller/inquiryList")
+	public ModelAndView inquiryList(ModelAndView mav , HttpServletRequest request,  HttpSession session, Seller seller, Buyer buyer) throws IOException{
+		seller = (Seller) session.getAttribute("seller");
+		
+		mav.addObject("inquiryList", dao.inquiryList(seller.getSeller_id()));
+		mav.setViewName("sel/seller/inquiryList");
+		return mav;
+	}
 
 }

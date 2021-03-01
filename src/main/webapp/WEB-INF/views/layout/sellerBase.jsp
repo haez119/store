@@ -187,7 +187,7 @@
                         <a class="side-nav-menu-link" href="user-edit.html">리뷰 관리</a>
                     </li>
                     <li class="side-nav-menu-item" id="inquiryLi">
-                        <a class="side-nav-menu-link" href="user-edit.html">문의 관리</a>
+                        <a class="side-nav-menu-link" href="${pageContext.request.contextPath}/seller/inquiryList">문의 관리</a>
                     </li>
                 </ul>
                 <!-- End Users: subUsers -->

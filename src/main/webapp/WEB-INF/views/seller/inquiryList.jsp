@@ -10,19 +10,8 @@ $(function() {
 	$("#itemMenu").removeClass("side-nav-menu-item side-nav-has-menu");
 	$("#itemMenu").addClass("side-nav-menu-item side-nav-has-menu side-nav-opened");
 	$("#subUsers").css("display", 'block');
-	$("#itemLi").addClass('active');
-	
-	$(".upset").on('click', function() {
-		var item_no = $(this).parent().parent().parent().children().eq(0).children().eq(1).text();
-		$(location).attr('href','${pageContext.request.contextPath}/seller/itemInsertForm?item_no=' + item_no);
-	});
-	
-	$(".goShop").on('click', function() {
-		var item_no = $(this).parent().parent().parent().parent().children().children().next().text();
-		window.open("${pageContext.request.contextPath}/shopDetail?no=" + item_no);
-		//$(location).attr('href','${pageContext.request.contextPath}/shopDetail?no=' + item_no);
-		
-	})
+	$("#inquiryLi").addClass('active');
+
 	
 });
 
@@ -36,18 +25,15 @@ $(function() {
                     <nav class="d-none d-md-block" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="#">Item</a>
+                                <a href="#">Inquiry</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Item List</li>
+                            <li class="breadcrumb-item active" aria-current="page">Inquiry List</li>
                         </ol>
                     </nav>
                     <!-- End Breadcrumb -->
 
                     <div class="mb-3 mb-md-4 d-flex justify-content-between">
-                        <span class="h3 mb-0" style="float: left;">Items</span>
-                        <span class="h3 mb-0" style="float: right;">
-							<button type="button" class="btn btn-primary float-right" onClick="location.href='${pageContext.request.contextPath}/seller/itemInsertForm'">등록</button>
-                        </span>
+                        <span class="h3 mb-0" style="float: left;">Inquiry</span>
                     </div>
 
 
@@ -60,29 +46,21 @@ $(function() {
                                 <th class="font-weight-semi-bold border-top-0 py-2">분류</th>
                                 <th class="font-weight-semi-bold border-top-0 py-2">상품명</th>
                                 <th class="font-weight-semi-bold border-top-0 py-2">등록일</th>
-                                <th class="font-weight-semi-bold border-top-0 py-2">가격</th>
-                                <th class="font-weight-semi-bold border-top-0 py-2">재고</th>
+                                <th class="font-weight-semi-bold border-top-0 py-2">제목</th>
+                                <th class="font-weight-semi-bold border-top-0 py-2">답변일</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="item" items="${itemList}">
+                            <c:forEach var="item" items="${inquiryList}">
                             <tr>
                                 <td class="py-3">
-                                	<div>${item.no}</div>
-                                	<div style="display: none;">${item.item_no}</div>
+                                	<div>${item.NO}</div>
                                 </td>
-                                <td class="py-3">${item.type}</td>
-                                <td class="align-middle py-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="position-relative mr-2">
-                                            <div class="goShop"><img class="avatar rounded-circle" src="${pageContext.request.contextPath}/images/item/${item.pic}" /></div>
-                                        </div>
-                                        ${item.title}
-                                    </div>
-                                </td>
-                                <td class="py-3">${item.add_time}</td>
-                                <td class="py-3">${item.price}</td>
-                                <td class="py-3">${item.stock}</td>
+                                <td class="py-3">${item.TYPE}</td>
+                                <td class="align-middle py-3">${item.ITEM_TITLE}</td>
+                                <td class="py-3">${item.INSERT_DATE}</td>
+                                <td class="py-3">${item.TITLE}</td>
+                                <td class="py-3">${item.ANSWER_DATE}</td>
                                 <td class="py-3">
                                     <div class="position-relative">
                                     	<span class="upset">

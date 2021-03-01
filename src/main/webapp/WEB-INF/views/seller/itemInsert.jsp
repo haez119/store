@@ -37,6 +37,13 @@ select {
 <script>
 	$(function() {
 		
+		$(".side-nav-menu-item").removeClass('active');
+		$("#itemMenu").removeClass("side-nav-menu-item side-nav-has-menu");
+		$("#itemMenu").addClass("side-nav-menu-item side-nav-has-menu side-nav-opened");
+		$("#subUsers").css("display", 'block');
+		$("#itemLi").addClass('active');
+		
+		
 		var item_type = "${item.type}";
 		if(item_type != null && item_type != '') {
 			$("#btnItemAdd").text("수정");

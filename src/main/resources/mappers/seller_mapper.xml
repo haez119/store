@@ -78,4 +78,14 @@
 		ORDER BY 1 DESC
 	</select>
 	
+	<!--문의 정보 -->
+	<select id="inquiryList" parameterType="string" resultType="map">
+		SELECT ROW_NUMBER() OVER(ORDER BY  INQUIRY_NO DESC) AS NO, Q.INQUIRY_NO, Q.ITEM_NO, I.TITLE AS ITEM_TITLE, Q.MEM_ID, Q.TYPE, Q.TITLE, Q.CONTENT, TO_CHAR(INSERT_DATE,'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE, Q.ANSWER, TO_CHAR(ANSWER_DATE,'YYYY-MM-DD HH24:MI:SS') AS ANSWER_DATE
+		FROM INQUIRY Q, ITEM I
+		WHERE I.ITEM_NO = Q.ITEM_NO
+		AND I.SELLER_ID = #{seller_id}
+		ORDER BY 1
+	</select>
+	
+	
 	</mapper>
