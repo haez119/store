@@ -13,12 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.min.store.impl.SellerMapper;
 import com.min.store.vo.Buyer;
+import com.min.store.vo.Inquiry;
 import com.min.store.vo.Item;
 import com.min.store.vo.Seller;
 
@@ -29,6 +32,7 @@ public class SellerHomeController {
 	private String seller_id;
 	private String item_no;
 	private boolean update;
+	private String inquiry_no;
 	
 	@RequestMapping(value="/seller/home")
 	public ModelAndView home(ModelAndView mav , HttpServletResponse response, HttpServletRequest request) throws IOException{
@@ -141,6 +145,16 @@ public class SellerHomeController {
 		mav.addObject("inquiryList", dao.inquiryList(seller.getSeller_id()));
 		mav.setViewName("sel/seller/inquiryList");
 		return mav;
+	}
+	
+	@RequestMapping(value="/seller/updateAnswer", method = RequestMethod.POST)
+	@ResponseBody
+	public void addCart(HttpServletRequest request, Inquiry inquiry) throws IOException{
+		inquiry.setAnswer(request.getParameter("answer"));
+		inquiry.setInquiry_no(request.getParameter("inquiry_no"));
+		
+		dao.updateAnswer(inquiry);
+		
 	}
 
 }

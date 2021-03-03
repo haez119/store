@@ -11,11 +11,40 @@ $(function() {
 	$("#itemMenu").addClass("side-nav-menu-item side-nav-has-menu side-nav-opened");
 	$("#subUsers").css("display", 'block');
 	$("#inquiryLi").addClass('active');
+	
+	$("#tbody tr").on('click', function() {
+		var inquiry_no = $(this).children().children().eq(0).text();
+		var modal = $("#inq_Detail");
+		modal.find('#inquiry_no').text(inquiry_no);
+		
+		$.ajax({
+			url : '${pageContext.request.contextPath}/inquiryDetail?no=' + inquiry_no ,
+			type : 'POST',
+			data : { inquiry_no : inquiry_no},
+			success : function (data) {
+				 
+				modal.find('#de_answer_date').text("");
+				 modal.find('#de_answer').text("");
+				 
+				 modal.find('#d_type').text(data[0].type);
+				 modal.find('#de_insert_date').text(data[0].insert_date);
+				 modal.find('#de_title').text(data[0].title);
+				 modal.find('#de_content').text(data[0].content);
 
+				 modal.find('#de_answer_date').text(data[0].answer_date);
+				 modal.find('#de_answer').text(data[0].answer);
+				 modal.modal('show');
+
+			}
+		});
+	});
+	
 	
 });
 
 </script>
+
+
 
 <div class="content">
         <div class="py-4 px-3 px-md-4">
@@ -50,10 +79,11 @@ $(function() {
                                 <th class="font-weight-semi-bold border-top-0 py-2">답변일</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tbody">
                             <c:forEach var="item" items="${inquiryList}">
                             <tr>
                                 <td class="py-3">
+                                	<div style="display: none;">${item.INQUIRY_NO}</div>
                                 	<div>${item.NO}</div>
                                 </td>
                                 <td class="py-3">${item.TYPE}</td>
@@ -86,4 +116,7 @@ $(function() {
                 </div>
             </div>
         </div>
-    </div>
+
+</div>
+
+

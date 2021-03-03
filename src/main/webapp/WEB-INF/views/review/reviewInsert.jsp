@@ -47,6 +47,11 @@ var counter = 0;
 var tag =[];
 
 $(function() {
+	
+	$(".menu").children().removeClass('active');
+	$("#myPage").addClass('active'); //메뉴 색 
+	
+	
 	var star = 5;
 	
 	// update 일 경우
@@ -135,7 +140,7 @@ $(function() {
 			event.preventDefault();
 		} else {
 			alert("등록 되었습니다.");
-			$("#frmInsert").attr('action','${pageContext.request.contextPath}/myReviewList');
+			$("#frmInsert").attr('action','${pageContext.request.contextPath}/reviewInsert');
 			$("#frmInsert").submit();
 		}
 		

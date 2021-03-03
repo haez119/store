@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.min.store.vo.Buyer;
+import com.min.store.vo.Inquiry;
 import com.min.store.vo.Item;
 
 
@@ -18,5 +19,6 @@ public interface SellerMapper {
 	public List<HashMap<String, Object>> salesList(String seller_id);
 	
 	public List<HashMap<String, Object>> inquiryList(String seller_id);
+	public void updateAnswer(Inquiry inquiry);
 	
 }

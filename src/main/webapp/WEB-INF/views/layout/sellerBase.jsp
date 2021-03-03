@@ -8,7 +8,7 @@
 <head>
     <!-- Title -->
     <title>seller</title>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -19,10 +19,51 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/seller/public/demo/chartist-plugin-tooltip.css">
     <!-- Template -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/seller/public/graindashboard/css/graindashboard.css">
+	
+<style>
+.modalDiv {
+	padding: 10px;
+}
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+.btn-secondary {
+    color: #fff;
+    background-color: #265df1;
+    border-color: #265df1;
+}
+textarea {
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	border: solid 1px ;
+	border-radius: 5px;
+	font-size: 16px;
+	resize: both;
+		}
+</style>	
+
+<script>
+$(function() {
 	
+	$("#btnAnswer").on('click', function() {
+		var answer = $("#de_answer").val();
+		var inquiry_no = $("#inquiry_no").text();
+
+		$.ajax({
+			url : '${pageContext.request.contextPath}/seller/updateAnswer',
+			type : 'POST',
+			data : { answer : answer, inquiry_no : inquiry_no},
+			success : function (data) {
+				alert("답변이 등록되었습니다.");
+				$(location).attr('href','${pageContext.request.contextPath}/seller/inquiryList');
+			}
+		});
+	});
+})
+
+
+</script>
 	
+	 
 </head>
 <body class="has-sidebar has-fixed-sidebar-and-header">
 
@@ -197,17 +238,11 @@
         </ul>
     </aside>
     <!-- End Sidebar Nav -->
-
+    
     <div class="content">
-        
-        <tiles:insertAttribute name="body"/>
-        
-        
-        
-        
-        
-        
-
+    
+     <tiles:insertAttribute name="body"/>
+     
         <!-- Footer -->
         <footer class="small p-3 px-md-4 mt-auto">
             <div class="row justify-content-between">
@@ -235,6 +270,45 @@
         <!-- End Footer -->
     </div>
 </main>
+
+<div class="modal fade" id="inq_Detail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="height: 700px;">
+  <div class="modal-dialog" style="max-width: 100%; width: auto; display: table;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">문의 확인</h5>
+      </div>
+      <div class="modal-body" style="height: 450px;">
+			<div class="modalDiv">
+				<div>
+					<b id="d_type" style="color: #f08632; font-size: 20px;"></b>
+					<b id="inquiry_no" style="display: none;"></b>
+				</div>
+			</div>
+			<div class="modalDiv" style="height: 30px;">
+				<span style="float: left" id="de_title"></span>
+				<span style="float: right" id="de_insert_date"></span>
+			</div>
+			<div class="modalDiv">
+				<textarea rows="5" cols="70" id="de_content" readonly="readonly"></textarea>
+			</div>
+		
+		<div id="answerDiv">
+			<div class="modalDiv">
+				<span style="float: left">답변</span>
+				<span style="float: right" id="de_answer_date"></span>
+			</div>
+			<div class="modalDiv">
+				<textarea rows="5" cols="70" id="de_answer"></textarea>
+			</div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnAnswer">답변 등록</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script src="${pageContext.request.contextPath}/seller/public/graindashboard/js/graindashboard.js"></script>

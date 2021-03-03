@@ -276,7 +276,7 @@ $(function() {
 <!-- 비밀번호 확인 -->
 <div class="modal fade" id="pwModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top: 100px;">
-	<div class="modal-dialog" role="document" style="width: 300px;">
+	<div class="modal-dialog" role="document" style="width: 300px; margin-left: 40%;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel" align="center">비밀번호 입력</h5>

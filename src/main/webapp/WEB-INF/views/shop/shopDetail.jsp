@@ -181,14 +181,7 @@ overflow-x:scroll;
 		
 		// 리뷰
 		var reviewList = ${reviewList};
-		
-		// 리뷰가 없을 때 '리뷰 없음' 출력
-		if(reviewList.length == 0) {
-			$("#noneRe").css('display', '');
-			$("#nonePhoto").css('display', '');
-		}
-		
-		
+
 		for(var i=0; i < reviewList.length; i++) {
 			
 			//포토리뷰 이미지만 찾기 
@@ -218,7 +211,7 @@ overflow-x:scroll;
 			
 			// 사진이 없을 때
 			} else { 
-				// $("#noneRe").css('display', 'none');
+				$("#noneRe").css('display', 'none');
 				$("#allRe-" + reviewList[i].review_no).css('display', ''); 
 				
 				// 별 달기
@@ -256,9 +249,8 @@ overflow-x:scroll;
 		//문의 리스트
 		inquiryList();
 		
-		
 		// 문의 상세확인
-		$(".inqTr").on('click', function() {
+		$("tr").on('click', function() {
 			var secret = $(this).children().eq(5).children().children().html();
 			var mem_id = $(this).children().eq(0).children().eq(0).text();
 			var inquiry_no = $(this).children().eq(0).children().eq(1).text();
@@ -406,7 +398,6 @@ overflow-x:scroll;
 	}
 	
 	function inquiryModal(inquiry_no) {
-		
 		var modal = $("#inq_Detail");
 		
 		$.ajax({
@@ -572,8 +563,8 @@ overflow-x:scroll;
 	                                	</div>
 	                                	<p></p>
 	                                	<div class="rew_content">
-		                                	<div style="height: 300px; display: none;" align="center" id="nonePhoto">
-		                                		<h2 style="padding-top: 150px;">등록된 포토 리뷰가 없습니다.</h2>
+		                                	<div style="height: 300px;" align="center" id="nonePhoto">
+		                                		<h2 style="padding: 100px 0px 0px 100px;">등록된 포토 리뷰가 없습니다.</h2>
 		                                	</div>
 		                                
 	                                		<c:forEach var="review" items="${reList}">
@@ -607,8 +598,8 @@ overflow-x:scroll;
 	                                <div id="all" class="rew-content" style="text-align: center;">
 	                                <div class="rew_content">
 	                                
-	                                <div style="height: 300px; display: none;" align="center" id="noneRe">
-                                		<h2 style="padding-top: 150px;">등록된 리뷰가 없습니다.</h2>
+	                                <div style="height: 300px; " align="center" id="noneRe">
+                                		<h2 style="padding: 150px 0px 0px 100px;">등록된 텍스트 리뷰가 없습니다.</h2>
                                 	</div>
                                 	
 		                                <c:forEach var="review" items="${reList}">

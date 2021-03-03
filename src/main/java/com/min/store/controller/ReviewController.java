@@ -77,7 +77,7 @@ public class ReviewController {
 			dao.insertReview(review);
 		}
 
-		return new ModelAndView("redirect:buyList");
+		return new ModelAndView("redirect:myReviewList");
 	}
 	
 	// 문의글 상세 조회
