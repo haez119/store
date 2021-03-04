@@ -2,11 +2,13 @@ package com.min.store.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +37,32 @@ public class SellerHomeController {
 	
 	@Autowired SellerMapper dao;
 	@Autowired BoardMapper boDao;
-	private String seller_id;
+	//private String seller_id;
 	private String item_no;
 	private boolean update;
 	
 	@RequestMapping(value="/seller/home")
-	public ModelAndView home(ModelAndView mav , HttpServletResponse response, HttpServletRequest request) throws IOException{
+	public ModelAndView home(ModelAndView mav ,  HttpSession session, HttpServletRequest request) throws IOException{
+		
+		Seller seller = new Seller();
+		seller = (Seller) session.getAttribute("seller");
+		Buyer buyer = new Buyer();
+		buyer.setSeller_id(seller.getSeller_id());
+		List<HashMap<String, Object>> list = dao.salesList(buyer);
+		
+		mav.addObject("total", list.get(list.size()-1).get("SUM"));
+		mav.addObject("salesList", list);
+		
+		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd");
+		Date time = new Date();
+		buyer.setPay_time(format1.format(time));
+
+		list = dao.salesList(buyer);
+		Gson gson = new GsonBuilder().create();
+		String todayList = gson.toJson(list);
+		
+		mav.addObject("today", todayList);
+
 		mav.setViewName("sel/seller/home");
 		return mav;
 	}
@@ -65,7 +87,6 @@ public class SellerHomeController {
 	@RequestMapping(value="/seller/itemList")
 	public ModelAndView itemList(ModelAndView mav , HttpSession session, HttpServletRequest request, Seller seller, Item item) throws IOException{
 		seller = (Seller) session.getAttribute("seller");
-		//seller_id = seller.getSeller_id();
 		
 		String strp = request.getParameter("p");
 		int p = 1;
@@ -100,8 +121,11 @@ public class SellerHomeController {
 	
 	// 아이템 등록 및 수정
 	@PostMapping(value="/seller/itemInsert")
-	public ModelAndView itemInsert(ModelAndView mav , HttpServletRequest request, Item item) throws IOException{
-
+	public ModelAndView itemInsert(ModelAndView mav , HttpServletRequest request, Item item,  HttpSession session) throws IOException{
+		
+		Seller seller = new Seller();
+		seller = (Seller) session.getAttribute("seller");
+		
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 		List<MultipartFile> multipartFile = multipartRequest.getFiles("pics");
 		String imgname = "";
@@ -124,9 +148,9 @@ public class SellerHomeController {
 				imgname += multipartFile.get(i).getOriginalFilename() + ",";
 			}
 		}
-		item.setPic_d(imgname);
 		
-		item.setSeller_id(seller_id);
+		item.setPic_d(imgname);
+		item.setSeller_id(seller.getSeller_id());
 		item.setItem_no(item_no);
 		
 		if(update) { 
@@ -171,8 +195,9 @@ public class SellerHomeController {
 	@RequestMapping(value="/seller/salesList")
 	public ModelAndView salesList(ModelAndView mav , HttpServletRequest request,  HttpSession session, Seller seller, Buyer buyer) throws IOException{
 		seller = (Seller) session.getAttribute("seller");
-		
-		mav.addObject("salesList",dao.salesList(seller.getSeller_id()));
+
+		buyer.setSeller_id(seller.getSeller_id());
+		mav.addObject("salesList",dao.salesList(buyer));
 		mav.setViewName("sel/seller/salesList");
 		return mav;
 	}

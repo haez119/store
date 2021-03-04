@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
 
 <script>
 $(function() {
@@ -58,12 +59,12 @@ $(function() {
                         		<td>${item.CNT} 건</td>
                         	</c:if>
                         	<c:if test="${item.PAY_TIME ne '#'}">
-                        		<td>${item.SUM} 원</td>
+                        		<td><fmt:formatNumber type="number" value="${item.SUM}" pattern="##,###" /> 원 </td>
                         	</c:if>
                         	<c:if test="${item.PAY_TIME eq '#'}">
                         		<td style="color: red;"><b>Total</b></td>
                         		<td><b>${item.CNT} 건</b></td>
-                        		<td><b>${item.SUM} 원</b></td>
+                        		<td><b><fmt:formatNumber type="number" value="${item.SUM}" pattern="##,###" /> 원 </b></td>
                         	</c:if>
                         </tr>
                         </c:forEach>

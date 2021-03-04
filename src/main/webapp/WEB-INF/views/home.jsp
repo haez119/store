@@ -1,13 +1,27 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <script>
-	
-	
 	$(function() {
 		var re = "${login}";
-		if(re) {
-			alert("로그인 되었습니다.");
+		if(re) { alert("로그인 되었습니다."); }
+		
+		var mainList = ${mainList};
+
+		for(var i=0; i < 6; i++) {
+			if(i%3 == 0) {
+				var img = "<div class='col-lg-4 col-md-4 col-sm-4 col-6' ><div class='instagram__pic'><img src='${pageContext.request.contextPath}/images/item/" + mainList[i].PIC + "' ></div></div>"
+				$("#imgDiv").append(img)
+			} else {
+				var img = "<div class='col-lg-4 col-md-4 col-sm-4 col-6' ><div class='instagram__pic middle__pic'><img src='${pageContext.request.contextPath}/images/item/" + mainList[i].PIC + "' ></div></div>"
+				$("#imgDiv").append(img)
+			}
+			
 		}
+		
+		
+		
+		
 	});
 </script>
 
@@ -18,44 +32,16 @@
                 <div class="col-lg-4 p-0">
                     <div class="instagram__text">
                         <div class="section-title">
-                            <span>Follow us on instagram</span>
-                            <h2>Sweet moments are saved as memories.</h2>
+                            <span>store farm</span>
+                            <h2>Popular item</h2>
                         </div>
-                        <h5><i class="fa fa-instagram"></i> @sweetcake</h5>
+                        <h5><i class="fa fa-instagram"></i> @storeFarm</h5>
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="${pageContext.request.contextPath}/store/img/instagram/instagram-1.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic middle__pic">
-                                <img src="${pageContext.request.contextPath}/store/img/instagram/instagram-2.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="${pageContext.request.contextPath}/store/img/instagram/instagram-3.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="${pageContext.request.contextPath}/store/img/instagram/instagram-4.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic middle__pic">
-                                <img src="${pageContext.request.contextPath}/store/img/instagram/instagram-5.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4 col-6">
-                            <div class="instagram__pic">
-                                <img src="${pageContext.request.contextPath}/store/img/instagram/instagram-3.jpg" alt="">
-                            </div>
-                        </div>
+                    <div class="row" id="imgDiv">
+                        
+                       
                     </div>
                 </div>
             </div>

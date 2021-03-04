@@ -102,7 +102,10 @@ $(function() {
                             <tbody>
                             <c:forEach var="item" items="${itemList}">
                             <tr>
-                                <td class="py-3">${item.no}</td>
+                                <td class="py-3">
+                                	<div>${item.no}</div>
+                                	<div style="display: none;">${item.item_no}</div>
+                                </td>
                                 <td class="py-3">${item.type}</td>
                                 <td class="align-middle py-3">
                                     <div class="d-flex align-items-center">

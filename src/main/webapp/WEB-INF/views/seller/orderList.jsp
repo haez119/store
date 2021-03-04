@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my"%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%> 
 <style>
 
 .pagination li {
@@ -102,7 +102,7 @@ $(function() {
                             <td class="py-3">${item.TYPE}</td>
                             <td class="py-3">${item.TITLE}</td>
                             <td class="py-3">${item.QUANTITY}</td>
-                            <td class="py-3">${item.PAYMENT}</td>
+                            <td><fmt:formatNumber type="number" value="${item.PAYMENT}" pattern="##,###" /></td>
                             <td class="py-3">${item.NAME}</td>
                             <td class="py-3">${item.PHONE}</td>
                         </tr>

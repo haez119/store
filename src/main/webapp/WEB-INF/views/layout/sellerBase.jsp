@@ -77,9 +77,9 @@ $(function() {
             <!-- End Logo For Mobile View -->
 
             <!-- Logo For Desktop View -->
-            <a class="navbar-brand navbar-brand-desktop" href="/">
+            <a class="navbar-brand navbar-brand-desktop" href="${pageContext.request.contextPath}/seller/home">
                 <img class="side-nav-show-on-closed" src="${pageContext.request.contextPath}/seller/public/img/logo-mini.png" alt="Graindashboard" style="width: auto; height: 33px;">
-                <img class="side-nav-hide-on-closed" src="${pageContext.request.contextPath}/seller/public/img/logo.png" alt="Graindashboard" style="width: auto; height: 33px;">
+                <img class="side-nav-hide-on-closed" src="${pageContext.request.contextPath}/seller/public/img/logo-mini.png" alt="Graindashboard" style="width: auto; height: 33px;">
             </a>
             <!-- End Logo For Desktop View -->
         </div>
@@ -180,7 +180,7 @@ $(function() {
             <!-- End Title -->
 
             <!-- Dashboard -->
-            <li class="side-nav-menu-item active">
+            <li class="side-nav-menu-item">
                 <a class="side-nav-menu-link media align-items-center" href="${pageContext.request.contextPath}/seller/orderList">
               <span class="side-nav-menu-icon d-flex mr-3">
                 <i class="gd-file"></i>
