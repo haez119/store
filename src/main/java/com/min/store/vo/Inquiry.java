@@ -18,5 +18,6 @@ public class Inquiry {
 	private String insert_date;
 	private String answer_date;
 	
+	
 
 }

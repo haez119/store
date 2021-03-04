@@ -26,6 +26,7 @@ import com.min.store.impl.SellerMapper;
 import com.min.store.vo.Buyer;
 import com.min.store.vo.Inquiry;
 import com.min.store.vo.Item;
+import com.min.store.vo.Paging;
 import com.min.store.vo.Review;
 import com.min.store.vo.Seller;
 
@@ -62,18 +63,36 @@ public class SellerHomeController {
 	}
 	
 	@RequestMapping(value="/seller/itemList")
-	public ModelAndView itemList(ModelAndView mav , HttpSession session, Seller seller) throws IOException{
+	public ModelAndView itemList(ModelAndView mav , HttpSession session, HttpServletRequest request, Seller seller, Item item) throws IOException{
 		seller = (Seller) session.getAttribute("seller");
-		seller_id = seller.getSeller_id();
+		//seller_id = seller.getSeller_id();
 		
+		String strp = request.getParameter("p");
+		int p = 1;
+		if(strp != null && !strp.equals("")) {
+			p = Integer.parseInt(strp);
+		}
+		Paging paging = new Paging();
+		
+		paging.setPageUnit(5);
+		paging.setPageSize(5); 
+		paging.setPage(p);
+		
+		item.setFirst(paging.getFirst());
+		item.setLast(paging.getLast());
+		item.setSeller_id(seller.getSeller_id());
+		
+		paging.setTotalRecord(dao.itemCnt(seller.getSeller_id()));
+
 		List<Item> list = new ArrayList<Item>();
-		list = dao.itemList(seller_id);
+		list = dao.itemList(item);
 		
 		for(int i=0; i<list.size(); i++) {
 			String pics = list.get(i).getPic();
 			String[] pic = pics.split(",");
 			list.get(i).setPic(pic[0]);
 		}
+		mav.addObject("paging", paging);
 		mav.addObject("itemList", list);
 		mav.setViewName("sel/seller/itemList");
 		return mav;
@@ -124,10 +143,26 @@ public class SellerHomeController {
 	public ModelAndView orderList(ModelAndView mav , HttpServletRequest request,  HttpSession session, Seller seller, Buyer buyer) throws IOException{
 		seller = (Seller) session.getAttribute("seller");
 		String pay_time = request.getParameter("pay_time");
+		String strp = request.getParameter("p");
 		
+		int p = 1;
+		if(strp != null && !strp.equals("")) {
+			p = Integer.parseInt(strp);
+		}
+		Paging paging = new Paging();
+		
+		paging.setPageUnit(5);
+		paging.setPageSize(5); 
+		paging.setPage(p);
+		
+		buyer.setFirst(paging.getFirst());
+		buyer.setLast(paging.getLast());
 		buyer.setSeller_id(seller.getSeller_id());
 		buyer.setPay_time(pay_time);
 		
+		paging.setTotalRecord(dao.orderCnt(buyer));
+		
+		mav.addObject("paging", paging);
 		mav.addObject("orderList", dao.orderList(buyer));
 		mav.setViewName("sel/seller/orderList");
 		return mav;
@@ -143,10 +178,28 @@ public class SellerHomeController {
 	}
 	
 	@RequestMapping(value="/seller/inquiryList")
-	public ModelAndView inquiryList(ModelAndView mav , HttpServletRequest request,  HttpSession session, Seller seller, Buyer buyer) throws IOException{
+	public ModelAndView inquiryList(ModelAndView mav , HttpServletRequest request,  HttpSession session, Seller seller, Item item) throws IOException{
 		seller = (Seller) session.getAttribute("seller");
 		
-		mav.addObject("inquiryList", dao.inquiryList(seller.getSeller_id()));
+		String strp = request.getParameter("p");
+		int p = 1;
+		if(strp != null && !strp.equals("")) {
+			p = Integer.parseInt(strp);
+		}
+		Paging paging = new Paging();
+		
+		paging.setPageUnit(5);
+		paging.setPageSize(5); 
+		paging.setPage(p);
+		
+		item.setFirst(paging.getFirst());
+		item.setLast(paging.getLast());
+		item.setSeller_id(seller.getSeller_id());
+		
+		paging.setTotalRecord(dao.inquiryCnt(seller.getSeller_id()));
+		
+		mav.addObject("paging", paging);
+		mav.addObject("inquiryList", dao.inquiryList(item));
 		mav.setViewName("sel/seller/inquiryList");
 		return mav;
 	}

@@ -9,16 +9,21 @@ import com.min.store.vo.Item;
 
 
 public interface SellerMapper {
-	public List<Item> itemList(String seller_id);
+	public List<Item> itemList(Item item);
+	public int itemCnt(String seller_id);
 	public void insertItem(Item item);
 	
+	public List<HashMap<String, Object>> inquiryList(Item item);
+	public int inquiryCnt(String seller_id);
 	public Item upsetSel(String item_no);
 	public void itemUpdate(Item item);
 	
 	public List<HashMap<String, Object>> orderList(Buyer buyer);
+	public int orderCnt(Buyer buyer);
+	
 	public List<HashMap<String, Object>> salesList(String seller_id);
 	
-	public List<HashMap<String, Object>> inquiryList(String seller_id);
+	
 	public void updateAnswer(Inquiry inquiry);
 	
 	

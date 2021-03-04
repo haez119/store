@@ -2,7 +2,41 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="my"%>
 
+<style>
+
+.pagination li {
+	display: inline-block; 
+}
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+    min-width: 2.81rem;
+    text-align: center;
+    border-radius: .125rem;
+    transition: all .15s linear;
+    position: relative;
+    display: block;
+    padding: .63rem .5rem;
+    margin-left: 6px;
+    line-height: 1.25;
+    background-color: #fff;
+    border: 1px solid #265df1;
+}
+
+.pagination a.active {
+    background-color: #265df1;
+    color: #fff;
+    border-color: #265df1;
+}
+
+.pagination a:hover:not(.active) {
+	text-decoration: none;
+}
+</style>
 
 <script>
 $(function() {
@@ -107,9 +141,19 @@ $(function() {
                             </tbody>
                         </table>
                         <div class="card-footer d-block d-md-flex align-items-center d-print-none">
-                           <!--  <div class="d-flex mb-2 mb-md-0">Showing 1 to 8 of 24 Entries</div> -->
 
-                            <nav class="d-flex ml-md-auto d-print-none" aria-label="Pagination"><ul class="pagination justify-content-end font-weight-semi-bold mb-0">				<li class="page-item">				<a id="datatablePaginationPrev" class="page-link" href="#!" aria-label="Previous"><i class="gd-angle-left icon-text icon-text-xs d-inline-block"></i></a>				</li><li class="page-item d-none d-md-block"><a id="datatablePaginationPage0" class="page-link active" href="#!" data-dt-page-to="0">1</a></li><li class="page-item d-none d-md-block"><a id="datatablePagination1" class="page-link" href="#!" data-dt-page-to="1">2</a></li><li class="page-item d-none d-md-block"><a id="datatablePagination2" class="page-link" href="#!" data-dt-page-to="2">3</a></li><li class="page-item">				<a id="datatablePaginationNext" class="page-link" href="#!" aria-label="Next"><i class="gd-angle-right icon-text icon-text-xs d-inline-block"></i></a>				</li>				</ul></nav>
+                         <nav class="d-flex ml-md-auto d-print-none" aria-label="Pagination">
+	                          <ul class="pagination justify-content-end font-weight-semi-bold mb-0">				
+		                          <li class="page-item">				
+		                          	<script>
+										function goPage(p) {
+											location.href="itemList?p="+p
+										}
+									</script>
+									<my:paging paging="${paging}" jsfunc="goPage" /> 				
+		                          </li>
+	                          </ul>
+                         </nav>
                         </div>
                     </div>
                     <!-- End Users -->

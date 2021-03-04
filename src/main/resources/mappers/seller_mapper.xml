@@ -4,13 +4,23 @@
 
 <mapper namespace="com.min.store.impl.SellerMapper">
 	
-	<select id="itemList" parameterType="string" resultType="item">
-		SELECT ROW_NUMBER() OVER(ORDER BY  ADD_TIME DESC) AS NO, i.ITEM_NO, i.SELLER_ID, i.TYPE, TO_CHAR(i.ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, i.TITLE, i.PRICE, i.STOCK, i.PIC, COUNT(R.TITLE) AS CNT
-		FROM ITEM I, REVIEW R
-		WHERE I.ITEM_NO = R.ITEM_NO(+)
-		AND SELLER_ID = #{seller_id}
-		GROUP BY I.ITEM_NO, I.SELLER_ID, I.TYPE, I.ADD_TIME, I.TITLE, I.PRICE, I.STOCK, I.PIC
-		ORDER BY 1
+	<select id="itemList" parameterType="item" resultType="item">
+		SELECT * FROM ( SELECT A.*, ROWNUM RN FROM (
+
+		  SELECT ROW_NUMBER() OVER(ORDER BY  ADD_TIME DESC) AS NO, i.ITEM_NO, i.SELLER_ID, i.TYPE, TO_CHAR(i.ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, i.TITLE, i.PRICE, i.STOCK, i.PIC, COUNT(R.TITLE) AS CNT
+		  FROM ITEM I, REVIEW R
+		  WHERE I.ITEM_NO = R.ITEM_NO(+)
+		  AND SELLER_ID = #{seller_id}
+		  GROUP BY I.ITEM_NO, I.SELLER_ID, I.TYPE, I.ADD_TIME, I.TITLE, I.PRICE, I.STOCK, I.PIC
+		  ORDER BY 1
+		
+		) A ) B WHERE RN BETWEEN #{first} AND #{last}
+	</select>
+	
+	<select id="itemCnt" parameterType="string" resultType="int">
+		SELECT COUNT(*)
+		FROM ITEM
+		WHERE SELLER_ID =  #{seller_id}
 	</select>
 	
 	<!--상품등록 -->
@@ -59,7 +69,22 @@
 	
 	<!--주문정보 -->
 	<select id="orderList" parameterType="Buyer" resultType="map">
-		SELECT ROW_NUMBER() OVER(ORDER BY  BUYD_NO DESC) AS NO, D.BUYD_NO, D.BUY_NO, D.ITEM_NO, I.SELLER_ID, I.TYPE, I.TITLE, D.QUANTITY, I.PRICE, (D.QUANTITY * I.PRICE) AS PAYMENT ,B.MEM_ID, TO_CHAR(PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') AS PAY_TIME, B.NAME, B.PHONE, B.ADDR_NO, B.ADDR, B.ADDR_D, B.EMAIL
+		SELECT * FROM ( SELECT A.*, ROWNUM RN FROM (
+	
+		  SELECT ROW_NUMBER() OVER(ORDER BY  BUYD_NO DESC) AS NO, D.BUYD_NO, D.BUY_NO, D.ITEM_NO, I.SELLER_ID, I.TYPE, I.TITLE, D.QUANTITY, I.PRICE, (D.QUANTITY * I.PRICE) AS PAYMENT ,B.MEM_ID, TO_CHAR(PAY_TIME, 'YYYY-MM-DD HH24:MI:SS') AS PAY_TIME, B.NAME, B.PHONE, B.ADDR_NO, B.ADDR, B.ADDR_D, B.EMAIL
+				FROM BUYER_D D , ITEM I, BUYER B
+				WHERE D.ITEM_NO = I.ITEM_NO
+				AND D.BUY_NO = B.BUY_NO
+				AND I.SELLER_ID = #{seller_id}
+			<if test="pay_time != null and pay_time != '' ">
+				AND TO_CHAR(PAY_TIME,'YYYY-MM-DD') = #{pay_time}
+			</if> 
+		
+		) A ) B WHERE RN BETWEEN #{first} AND #{last}
+	</select>
+	
+	<select id="orderCnt" parameterType="Buyer" resultType="int">
+		SELECT COUNT(*)
 		FROM BUYER_D D , ITEM I, BUYER B
 		WHERE D.ITEM_NO = I.ITEM_NO
 		AND D.BUY_NO = B.BUY_NO
@@ -81,12 +106,22 @@
 	</select>
 	
 	<!--문의 정보 -->
-	<select id="inquiryList" parameterType="string" resultType="map">
-		SELECT ROW_NUMBER() OVER(ORDER BY  INQUIRY_NO DESC) AS NO, Q.INQUIRY_NO, Q.ITEM_NO, I.TITLE AS ITEM_TITLE, Q.MEM_ID, Q.TYPE, Q.TITLE, TO_CHAR(INSERT_DATE,'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE, Q.ANSWER, TO_CHAR(ANSWER_DATE,'YYYY-MM-DD HH24:MI:SS') AS ANSWER_DATE
+	<select id="inquiryList" parameterType="Item" resultType="map">
+		SELECT * FROM ( SELECT A.*, ROWNUM RN FROM (
+
+		  SELECT ROW_NUMBER() OVER(ORDER BY  INQUIRY_NO DESC) AS NO, Q.INQUIRY_NO, Q.ITEM_NO, I.TITLE AS ITEM_TITLE, Q.MEM_ID, Q.TYPE, Q.TITLE, TO_CHAR(INSERT_DATE,'YYYY-MM-DD HH24:MI:SS') AS INSERT_DATE, Q.ANSWER, TO_CHAR(ANSWER_DATE,'YYYY-MM-DD HH24:MI:SS') AS ANSWER_DATE
+				FROM INQUIRY Q, ITEM I
+				WHERE I.ITEM_NO = Q.ITEM_NO
+				AND I.SELLER_ID = #{seller_id}
+				ORDER BY 1
+		
+		) A ) B WHERE RN BETWEEN #{first} AND #{last}
+	</select>
+	<select id="inquiryCnt" parameterType="string" resultType="int">
+		SELECT COUNT(*)
 		FROM INQUIRY Q, ITEM I
 		WHERE I.ITEM_NO = Q.ITEM_NO
 		AND I.SELLER_ID = #{seller_id}
-		ORDER BY 1
 	</select>
 	
 	<!--답변 등록-->
