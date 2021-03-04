@@ -19,20 +19,24 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.min.store.impl.BoardMapper;
 import com.min.store.impl.SellerMapper;
 import com.min.store.vo.Buyer;
 import com.min.store.vo.Inquiry;
 import com.min.store.vo.Item;
+import com.min.store.vo.Review;
 import com.min.store.vo.Seller;
 
 @Controller
 public class SellerHomeController {
 	
 	@Autowired SellerMapper dao;
+	@Autowired BoardMapper boDao;
 	private String seller_id;
 	private String item_no;
 	private boolean update;
-	private String inquiry_no;
 	
 	@RequestMapping(value="/seller/home")
 	public ModelAndView home(ModelAndView mav , HttpServletResponse response, HttpServletRequest request) throws IOException{
@@ -154,7 +158,25 @@ public class SellerHomeController {
 		inquiry.setInquiry_no(request.getParameter("inquiry_no"));
 		
 		dao.updateAnswer(inquiry);
+	}
+	
+	
+	@RequestMapping(value="/seller/reviewList")
+	public ModelAndView reviewList(ModelAndView mav , HttpServletRequest request, Review review) throws IOException{
 		
+		Gson gson = new GsonBuilder().create();
+		List<Review> reList = new ArrayList<Review>();
+		
+		review.setItem_no(request.getParameter("item_no"));
+		reList =  boDao.reviewList(review);
+		String reviewList = gson.toJson(reList);
+		
+		
+		
+		mav.addObject("reviewList", reviewList);
+		mav.addObject("reList", reList);
+		mav.setViewName("sel/seller/reviewList");
+		return mav;
 	}
 
 }

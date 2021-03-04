@@ -21,4 +21,5 @@ public interface SellerMapper {
 	public List<HashMap<String, Object>> inquiryList(String seller_id);
 	public void updateAnswer(Inquiry inquiry);
 	
+	
 }

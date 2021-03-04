@@ -224,9 +224,6 @@ $(function() {
                     <li class="side-nav-menu-item" id="itemLi">
                         <a class="side-nav-menu-link" href="${pageContext.request.contextPath}/seller/itemList">상품 관리</a>
                     </li>
-                    <li class="side-nav-menu-item" id="reviewLi">
-                        <a class="side-nav-menu-link" href="user-edit.html">리뷰 관리</a>
-                    </li>
                     <li class="side-nav-menu-item" id="inquiryLi">
                         <a class="side-nav-menu-link" href="${pageContext.request.contextPath}/seller/inquiryList">문의 관리</a>
                     </li>

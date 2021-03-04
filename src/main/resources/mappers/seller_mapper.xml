@@ -5,9 +5,11 @@
 <mapper namespace="com.min.store.impl.SellerMapper">
 	
 	<select id="itemList" parameterType="string" resultType="item">
-		SELECT ROW_NUMBER() OVER(ORDER BY  ITEM_NO DESC) AS NO, ITEM_NO, SELLER_ID, TYPE, TO_CHAR(ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, TITLE, PRICE, STOCK, PIC
-		FROM ITEM 
-		WHERE SELLER_ID = #{seller_id}
+		SELECT ROW_NUMBER() OVER(ORDER BY  ADD_TIME DESC) AS NO, i.ITEM_NO, i.SELLER_ID, i.TYPE, TO_CHAR(i.ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, i.TITLE, i.PRICE, i.STOCK, i.PIC, COUNT(R.TITLE) AS CNT
+		FROM ITEM I, REVIEW R
+		WHERE I.ITEM_NO = R.ITEM_NO(+)
+		AND SELLER_ID = #{seller_id}
+		GROUP BY I.ITEM_NO, I.SELLER_ID, I.TYPE, I.ADD_TIME, I.TITLE, I.PRICE, I.STOCK, I.PIC
 		ORDER BY 1
 	</select>
 	
@@ -87,13 +89,6 @@
 		ORDER BY 1
 	</select>
 	
-	<!--문의 단건 -->
-	<select id="inquiry_d">
-		
-		
-	</select>
-	
-	
 	<!--답변 등록-->
 	<update id="updateAnswer" parameterType="Inquiry">
 		UPDATE INQUIRY 
@@ -101,6 +96,6 @@
 			ANSWER_DATE = LOCALTIMESTAMP
 		WHERE INQUIRY_NO = #{inquiry_no}
 	</update>
-	
+
 	
 	</mapper>

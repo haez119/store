@@ -17,12 +17,12 @@ $(function() {
 		$(location).attr('href','${pageContext.request.contextPath}/seller/itemInsertForm?item_no=' + item_no);
 	});
 	
-	$(".goShop").on('click', function() {
+/* 	$(".goShop").on('click', function() {
 		var item_no = $(this).parent().parent().parent().parent().children().children().next().text();
 		window.open("${pageContext.request.contextPath}/shopDetail?no=" + item_no);
 		//$(location).attr('href','${pageContext.request.contextPath}/shopDetail?no=' + item_no);
 		
-	})
+	}) */
 	
 });
 
@@ -62,27 +62,35 @@ $(function() {
                                 <th class="font-weight-semi-bold border-top-0 py-2">등록일</th>
                                 <th class="font-weight-semi-bold border-top-0 py-2">가격</th>
                                 <th class="font-weight-semi-bold border-top-0 py-2">재고</th>
+                                <th class="font-weight-semi-bold border-top-0 py-2">리뷰</th>
                             </tr>
                             </thead>
                             <tbody>
                             <c:forEach var="item" items="${itemList}">
                             <tr>
-                                <td class="py-3">
-                                	<div>${item.no}</div>
-                                	<div style="display: none;">${item.item_no}</div>
-                                </td>
+                                <td class="py-3">${item.no}</td>
                                 <td class="py-3">${item.type}</td>
                                 <td class="align-middle py-3">
                                     <div class="d-flex align-items-center">
                                         <div class="position-relative mr-2">
-                                            <div class="goShop"><img class="avatar rounded-circle" src="${pageContext.request.contextPath}/images/item/${item.pic}" /></div>
+                                           	<a href="${pageContext.request.contextPath}/shopDetail?no=${item.item_no}" target="_blank">
+                                           		<img class="avatar rounded-circle" src="${pageContext.request.contextPath}/images/item/${item.pic}" />
+                                           	</a>
                                         </div>
                                         ${item.title}
                                     </div>
                                 </td>
                                 <td class="py-3">${item.add_time}</td>
                                 <td class="py-3">${item.price}</td>
-                                <td class="py-3">${item.stock}</td>
+                                <td class="py-3">${item.stock} 개</td>
+                                <td class="py-3">
+                                	<c:if test="${item.cnt ne 0}">
+                                		<a href="${pageContext.request.contextPath}/seller/reviewList?item_no=${item.item_no}">${item.cnt} 건</a>
+                                	</c:if>
+                                	<c:if test="${item.cnt eq 0}">
+                                		${item.cnt} 건
+                                	</c:if>
+                                </td>
                                 <td class="py-3">
                                     <div class="position-relative">
                                     	<span class="upset">
