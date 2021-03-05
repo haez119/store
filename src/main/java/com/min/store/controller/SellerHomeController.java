@@ -55,13 +55,17 @@ public class SellerHomeController {
 		
 		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd");
 		Date time = new Date();
-		buyer.setPay_time(format1.format(time));
+		buyer.setPay_time(format1.format(time)); // 오늘날짜
 
 		list = dao.salesList(buyer);
 		Gson gson = new GsonBuilder().create();
 		String todayList = gson.toJson(list);
 		
+		buyer.setLast(dao.orderCnt(buyer));
+		buyer.setFirst(1);
+		
 		mav.addObject("today", todayList);
+		mav.addObject("orderList", dao.orderList(buyer));
 
 		mav.setViewName("sel/seller/home");
 		return mav;

@@ -93,7 +93,7 @@ $(function() {
 	 	var inquiry_no;
 	 	
 		// 문의 상세확인
-		$(".inqTr").on('click', function() {
+		$("#inqTbody").on('click', 'tr',function() {
 			inquiry_no = $(this).children().eq(0).children().text();
 			var modal = $("#inq_Detail");
 			
@@ -180,13 +180,13 @@ $(function() {
 	</div>
 </section>
 
-<div class="modal fade" id="inq_Detail" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog"  style="max-width: 100%; width: auto; display: table;">
+<div class="modal fade" id="inq_Detail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  style="width: 500px; display: table;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">문의 확인</h5>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="padding: 30px; max-height: 500px;">
 		<div class="form-group row">
 			<div class="col-md-6 mb-6 mb-lg-6">
 				<div><b id="d_type" style="color: #f08632; font-size: 20px;"></b></div>
@@ -202,7 +202,7 @@ $(function() {
 		<hr>
 		<div class="form-group row">
 			<div class="col-md-12 mb-12 mb-lg-12">
-				<div id="de_content" style="width: 400px; height: 200px;"></div>
+				<div id="de_content" style="width: 100%; height: auto; min-height: 100px;"></div>
 			</div>
 		</div>
 		
@@ -217,7 +217,7 @@ $(function() {
 			<hr>
 			<div class="form-group row">
 				<div class="col-md-12 mb-12 mb-lg-12">
-					<div id="de_answer" style="width: 400px; height: 200px;"></div>
+					<div id="de_answer" style="width: 100%; height: auto; min-height: 100px;"></div>
 				</div>
 			</div>
 		</div>

@@ -247,10 +247,56 @@ overflow-x:scroll;
 		}
 		
 		//문의 리스트
-		inquiryList();
+		var inquiry = ${inquiryList};
+		if(inquiry.length == 0) {
+			$("#inqTable").html("<div align= center><h4>등록된 문의가 없습니다.</h4><div>")
+		}
+
+		for(var i=0; i < inquiry.length; i++) {
+			
+			var secret = (inquiry[i].secret == 1) ? "<img src='${pageContext.request.contextPath}/images/etc/secret.png' class='inqIcon'>" : " ";
+			var answer = (inquiry[i].answer == null) ? 0 : 1
+			
+			$("#inqTbody").append("<tr class='inqTr'>"
+					+ "<td style='display: none;'><a>"+ inquiry[i].mem_id +"</a><a>"+ inquiry[i].inquiry_no +"</a></td>"
+					+ "<td><div align='center'>" + inquiry[i].no + "</div><a style='display: none;'>"+ inquiry[i].mem_id +"</a></td>"
+					+ "<td><div align='center'>" + inquiry[i].type + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].title + "</div></td>"
+					+ "<td><div align='center'>" + inquiry[i].insert_date + "</div></td>"
+					+ "<td><div align='center'>"+ secret +"</div>"
+					+ "<td><div align='center'><img src='${pageContext.request.contextPath}/images/etc/answer.png' class='inqIcon'> &nbsp; (" + answer + ")</div></td>"        
+					);
+
+		}
+		
+		 $('#foo-table').DataTable({
+			// 표시 건수기능 숨기기
+				"language": {
+		        "emptyTable": "데이터가 없어요.",
+		        "lengthMenu": "Show _MENU_",
+		        "infoEmpty": "데이터가 없습니다.",
+		        "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+		        "search": "검색: ",
+		        "zeroRecords": "일치하는 데이터가 없습니다.",
+		        "loadingRecords": "로딩중...",
+		        "processing":     "잠시만 기다려 주세요...",
+		        "paginate": {
+		            "next": ">",
+		            "previous": "<"
+		        }
+		    	},
+				lengthChange: true, //t-보이기 , f-숨기기
+				searching: false,
+				order: [ [ 1, 'asc'] ],
+				ordering: true,
+				info: false,
+				paging: true,
+				lengthMenu: [ 5, 10, 15, 20 ],
+				displayLength: 5 
+		  	});
 		
 		// 문의 상세확인
-		$("tr").on('click', function() {
+		$("#foo-table tbody").on('click', 'tr', function() {
 			var secret = $(this).children().eq(5).children().children().html();
 			var mem_id = $(this).children().eq(0).children().eq(0).text();
 			var inquiry_no = $(this).children().eq(0).children().eq(1).text();
@@ -264,7 +310,7 @@ overflow-x:scroll;
 					alert("등록한 회원만 확인할 수 있습니다.");
 				}
 			}
-		});
+		}); 
 		
 		
 		// 문의글 등록
@@ -345,55 +391,6 @@ overflow-x:scroll;
 	});
 	
 	function inquiryList() {
-		var inquiry = ${inquiryList};
-		
-		if(inquiry.length == 0) {
-			$("#inqTable").html("<div align= center><h4>등록된 문의가 없습니다.</h4><div>")
-		}
-
-		for(var i=0; i < inquiry.length; i++) {
-			
-			var secret = (inquiry[i].secret == 1) ? "<img src='${pageContext.request.contextPath}/images/etc/secret.png' class='inqIcon'>" : " ";
-			var answer = (inquiry[i].answer == null) ? 0 : 1
-			
-			$("#inqTbody").append("<tr class='inqTr'>"
-					+ "<td style='display: none;'><a>"+ inquiry[i].mem_id +"</a><a>"+ inquiry[i].inquiry_no +"</a></td>"
-					+ "<td><div align='center'>" + inquiry[i].no + "</div><a style='display: none;'>"+ inquiry[i].mem_id +"</a></td>"
-					+ "<td><div align='center'>" + inquiry[i].type + "</div></td>"
-					+ "<td><div align='center'>" + inquiry[i].title + "</div></td>"
-					+ "<td><div align='center'>" + inquiry[i].insert_date + "</div></td>"
-					+ "<td><div align='center'>"+ secret +"</div>"
-					+ "<td><div align='center'><img src='${pageContext.request.contextPath}/images/etc/answer.png' class='inqIcon'> &nbsp; (" + answer + ")</div></td>"        
-					);
-
-		}
-		
-		 $('#foo-table').DataTable({
-			// 표시 건수기능 숨기기
-				"language": {
-		        "emptyTable": "데이터가 없어요.",
-		        "lengthMenu": "Show _MENU_",
-		        "infoEmpty": "데이터가 없습니다.",
-		        "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
-		        "search": "검색: ",
-		        "zeroRecords": "일치하는 데이터가 없습니다.",
-		        "loadingRecords": "로딩중...",
-		        "processing":     "잠시만 기다려 주세요...",
-		        "paginate": {
-		            "next": ">",
-		            "previous": "<"
-		        }
-		    	},
-				lengthChange: true, //t-보이기 , f-숨기기
-				searching: false,
-				order: [ [ 1, 'asc'] ],
-				ordering: true,
-				info: false,
-				paging: true,
-				lengthMenu: [ 5, 10, 15, 20 ],
-				displayLength: 5 
-		  	});
-		 
 		 
 	}
 	
