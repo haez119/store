@@ -120,7 +120,7 @@ $(function() {
 	                       	<h5><b>${review.title}</b></h5>
 	                       	<hr>
 	                       	<div style="width: 70%; margin: 5px; font-size: 13px;">${review.content}</div>
-	                       	<ul class="tag-list-${review.review_no}" style="padding-top: 10px;"></ul>
+	                       	<ul class="tag-list-${review.review_no}" style="padding: 10px;"></ul>
                       	</div>
                       </div>
                     </c:forEach>

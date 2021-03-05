@@ -42,6 +42,10 @@
 <script>
 $(function() {
 	
+	$(".side-nav-menu-item").removeClass('active');
+	$("#order").addClass('active'); //메뉴 색 
+	
+	
 	$("#btnSearch").on('click', function() {
 		var pay_time = $("#searchTime").val();
 		$(location).attr('href','${pageContext.request.contextPath}/seller/orderList?pay_time=' + pay_time);

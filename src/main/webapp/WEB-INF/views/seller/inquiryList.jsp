@@ -125,16 +125,6 @@ $(function() {
                                 <td class="py-3">${item.INSERT_DATE}</td>
                                 <td class="py-3">${item.TITLE}</td>
                                 <td class="py-3">${item.ANSWER_DATE}</td>
-                                <td class="py-3">
-                                    <div class="position-relative">
-                                    	<span class="upset">
-	                                        <a class="link-dark d-inline-block" href="#" ><i class="gd-pencil icon-text"></i></a>
-	                                    </span>
-	                                    <span class="del">
-	                                        <a class="link-dark d-inline-block" href="#"><i class="gd-trash icon-text"></i></a>
-	                                    </span>
-                                    </div>
-                                </td>
                             </tr>
                             </c:forEach>
                             

@@ -180,7 +180,7 @@ $(function() {
             <!-- End Title -->
 
             <!-- Dashboard -->
-            <li class="side-nav-menu-item">
+            <li class="side-nav-menu-item" id="order">
                 <a class="side-nav-menu-link media align-items-center" href="${pageContext.request.contextPath}/seller/orderList">
               <span class="side-nav-menu-icon d-flex mr-3">
                 <i class="gd-file"></i>
