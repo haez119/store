@@ -34,7 +34,7 @@ public class Item {
 	private int last;
 	
 	private int cnt; //0222 추가
-	
 	private int no; //0227 추가
+	private String search; //0308 추가
 
 }

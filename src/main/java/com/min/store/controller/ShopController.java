@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.min.store.impl.BoardMapper;
+import com.min.store.impl.MainMapper;
 import com.min.store.impl.ShopMapper;
 import com.min.store.service.ShopService;
 import com.min.store.vo.Buyer;
@@ -38,17 +39,17 @@ public class ShopController {
 	
 	@Autowired ShopMapper dao;
 	@Autowired ShopService service;
-	
 	@Autowired BoardMapper boDao;
+	@Autowired MainMapper mainDao;
 	
 	ArrayList<Cart> orderList = new ArrayList<Cart>();
 	String[] kw;
 	
 	@RequestMapping(value="/shopMain")
 	public ModelAndView shopMain(ModelAndView mav , HttpServletRequest request, Item item) throws IOException{
+		
 		item.setType(request.getParameter("type"));
 		item.setOrderby(request.getParameter("orderby"));
-		
 		
 		String strp = request.getParameter("p");
 		int p = 1;
@@ -65,9 +66,15 @@ public class ShopController {
 		item.setLast(paging.getLast());
 		
 		paging.setTotalRecord(dao.itemAllCnt(item));
-
-		mav.addObject("paging", paging);
-		mav.addObject("itemList", dao.itemAll(item));
+		
+		String keyword = request.getParameter("keyword");
+		
+		if(keyword == null || keyword.equals("")) {
+			mav.addObject("paging", paging);
+			mav.addObject("itemList", dao.itemAll(item));
+		} else {
+			mav.addObject("itemList", mainDao.searchItem(keyword));
+		}
 		mav.addObject("type", request.getParameter("type"));
 		mav.addObject("orderby", request.getParameter("orderby"));
 		mav.setViewName("shop/shopMain");

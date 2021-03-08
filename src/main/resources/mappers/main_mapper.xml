@@ -13,5 +13,20 @@
 		ORDER BY 1 DESC
 	</select>
 	
+	<select id="mainCart" parameterType="string" resultType="map">
+		SELECT NVL(SUM(COUNT(C.MEM_ID)),0) AS CNT, NVL(SUM(I.PRICE * C.QUANTITY),0) AS TOTAL
+		FROM CART C, ITEM I
+		WHERE C.ITEM_NO = I.ITEM_NO
+		AND MEM_ID = #{mem_id}
+		GROUP BY I.PRICE, C.QUANTITY
+	</select>
+	
+	<select id="searchItem" parameterType="string" resultType="Item">
+		SELECT DISTINCT(I.ITEM_NO), I.SELLER_ID, I.TYPE, TO_CHAR(I.ADD_TIME, 'YYYY-MM-DD HH24:MI:SS') AS ADD_TIME, I.TITLE, I.CONTENT, I.PRICE, I.STOCK, I.PIC, I.PIC_D 
+		FROM WISH W , ITEM I
+		WHERE W.ITEM_NO(+) = I.ITEM_NO
+		AND I.TITLE LIKE '%' ||  #{keyword} || '%'
+		ORDER BY 1 DESC
+	</select>
 
 </mapper>

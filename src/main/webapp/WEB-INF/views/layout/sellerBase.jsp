@@ -47,16 +47,25 @@ $(function() {
 	$("#btnAnswer").on('click', function() {
 		var answer = $("#de_answer").val();
 		var inquiry_no = $("#inquiry_no").text();
+		
+		if(answer == null || answer == '') {
+			alert("답변 내용을 등록해주세요.");
+		} else if(answer == $("#de_answer2").val()) {
+			alert("수정된 내용이 없습니다.");
+			$(location).attr('href','${pageContext.request.contextPath}/seller/inquiryList');
+		} else {
+			$.ajax({
+				url : '${pageContext.request.contextPath}/seller/updateAnswer',
+				type : 'POST',
+				data : { answer : answer, inquiry_no : inquiry_no},
+				success : function (data) {
+					alert("답변이 등록되었습니다.");
+					$(location).attr('href','${pageContext.request.contextPath}/seller/inquiryList');
+				}
+			});
+		}
 
-		$.ajax({
-			url : '${pageContext.request.contextPath}/seller/updateAnswer',
-			type : 'POST',
-			data : { answer : answer, inquiry_no : inquiry_no},
-			success : function (data) {
-				alert("답변이 등록되었습니다.");
-				$(location).attr('href','${pageContext.request.contextPath}/seller/inquiryList');
-			}
-		});
+		
 	});
 })
 
@@ -296,6 +305,7 @@ $(function() {
 			</div>
 			<div class="modalDiv">
 				<textarea rows="5" cols="70" id="de_answer"></textarea>
+				<textarea id="de_answer2" style="display: none;"></textarea>
 			</div>
 		</div>
       </div>

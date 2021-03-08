@@ -86,6 +86,9 @@ $(function() {
 		}); 
 	});
 	
+	
+	
+	
 });
 </script>
 
@@ -98,12 +101,17 @@ $(function() {
         <div class="offcanvas__cart">
             <div class="offcanvas__cart__links">
                 <a href="#" class="search-switch" ><img src="${pageContext.request.contextPath}/store/img/icon/search.png" alt=""></a>
-                <a href="#"><img src="${pageContext.request.contextPath}/store/img/icon/heart.png" alt=""></a>
             </div>
+            <c:if test="${sessionScope.member.mem_id ne null }" >
             <div class="offcanvas__cart__item">
-                <a href="${pageContext.request.contextPath}/cartMain"><img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> <span>0</span></a>
-                <div class="cart__price">Cart: <span>$0.00</span></div>
+                <a href="${pageContext.request.contextPath}/cartMain"><img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> 
+                	<span>${sessionScope.mainCart.CNT}</span>
+                </a>
+                <div class="cart__price">
+                	Cart: <span>${sessionScope.mainCart.TOTAL} 원</span>
+                </div>
             </div>
+            </c:if>
         </div>
         <div class="offcanvas__logo">
             <a href="${pageContext.request.contextPath}/home"><img src="${pageContext.request.contextPath}/store/img/logo.png" alt=""></a>
@@ -152,17 +160,23 @@ $(function() {
                                 </ul>
                             </div>
                             <div class="header__logo">
-                                <a href="${pageContext.request.contextPath}/home"><img src="${pageContext.request.contextPath}/store/img/logo.png" alt=""></a>
+                                  <a href="${pageContext.request.contextPath}/home"><img src="${pageContext.request.contextPath}/store/img/logo.png" style="width: 120px; height: 52px;"></a>
                             </div>
                             <div class="header__top__right">
                                 <div class="header__top__right__links">
                                     <a href="#" class="search-switch" ><img src="${pageContext.request.contextPath}/store/img/icon/search.png" alt=""></a>
-                                    <a href="#"><img src="${pageContext.request.contextPath}/store/img/icon/heart.png" alt=""></a>
                                 </div>
+                                <c:if test="${sessionScope.member.mem_id ne null }" >
                                 <div class="header__top__right__cart">
-                                    <a href="${pageContext.request.contextPath}/cartMain"><img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> <span>0</span></a>
-                                    <div class="cart__price">Cart: <span>$0.00</span></div>
+                                    <a href="${pageContext.request.contextPath}/cartMain">
+                                    	<img src="${pageContext.request.contextPath}/store/img/icon/cart.png" alt=""> 
+                                    	<span>${sessionScope.mainCart.CNT}</span>
+                                    </a>
+                                    <div class="cart__price">
+                                    	Cart: <span>${sessionScope.mainCart.TOTAL} 원</span>
+                                    </div>
                                 </div>
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -214,7 +228,7 @@ $(function() {
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__logo">
-                            <a href="#"><img src="${pageContext.request.contextPath}/store/img/footer-logo.png" alt=""></a>
+                        	<a href="#"><img src="${pageContext.request.contextPath}/store/img/footer-logo.png" alt=""></a>
                         </div>
                         <p>Lorem ipsum dolor amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                         labore dolore magna aliqua.</p>
@@ -266,8 +280,8 @@ $(function() {
 <div class="search-model" id="searchModel">
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="search-close-switch" >+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
+        <form class="search-model-form" action="${pageContext.request.contextPath}/search" method="get">
+            <input type="text" id="search" name="search" placeholder="Search here.....">
         </form>
     </div>
 </div>

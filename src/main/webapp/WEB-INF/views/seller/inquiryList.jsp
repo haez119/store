@@ -67,6 +67,7 @@ $(function() {
 
 				 modal.find('#de_answer_date').text(data[0].answer_date);
 				 modal.find('#de_answer').text(data[0].answer);
+				 modal.find('#de_answer2').text(data[0].answer);
 				 modal.modal('show');
 
 			}
