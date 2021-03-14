@@ -161,7 +161,7 @@ public class ShopController {
 	
 	@RequestMapping(value="/updateCart")
 	@ResponseBody
-	public void updateCart( HttpServletRequest request, Cart cart) throws IOException{
+	public void updateCart( HttpServletRequest request, Cart cart,  HttpSession session) throws IOException{
 
 		String list = request.getParameter("list");
 		String[] kw = list.split(","); //콤마 단위로 잘라서
@@ -171,6 +171,8 @@ public class ShopController {
 			cart.setQuantity(kw[i+1]);
 			dao.updateCart(cart);
 		}
+		Member member = (Member) session.getAttribute("member");
+		session.setAttribute("mainCart", mainDao.mainCart(member.getMem_id()));
 	}
 	
 	@RequestMapping(value="/getOrder")
